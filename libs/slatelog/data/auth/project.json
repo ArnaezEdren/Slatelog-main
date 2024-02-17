@@ -1,0 +1,9 @@
+{
+	"name": "data-auth",
+	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/data/auth/src",
+	"prefix": "frontend",
+	"tags": [],
+	"projectType": "library",
+	"targets": {}
+}

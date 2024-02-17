@@ -1,0 +1,9 @@
+{
+	"name": "data-user",
+	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/data/user/src",
+	"prefix": "frontend",
+	"tags": [],
+	"projectType": "library",
+	"targets": {}
+}

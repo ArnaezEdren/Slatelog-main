@@ -1,0 +1,9 @@
+{
+  "name": "auth",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/slatelog/feat/auth/src",
+  "prefix": "frontend",
+  "tags": [],
+  "projectType": "library",
+  "targets": {}
+}
