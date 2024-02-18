@@ -2,12 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { LoginContainerComponent} from '@frontend/auth';
-import { BasicAuthInterceptor, ErrorInterceptor } from '../../../../libs/slatelog/data/auth/src';
+import { LoginContainerComponent, RegisterContainerComponent } from '@frontend/auth';
 import { AppComponent } from './app.component';
-import {
-  RegisterContainerComponent
-} from '../../../../libs/slatelog/feat/auth/src/lib/register/regiter-container.component';
+import { BasicAuthInterceptor, ErrorInterceptor } from '@frontend/data/auth';
+
 
 
 // A module is a container for components, directives, pipes, and services
@@ -17,11 +15,10 @@ import {
   imports: [
     // Needed for HttpClient
     HttpClientModule,
-
     BrowserModule,
     BrowserAnimationsModule,
-   RegisterContainerComponent,
-    LoginContainerComponent,
+RegisterContainerComponent,
+   LoginContainerComponent
   ],
   providers: [
     {

@@ -27,7 +27,8 @@
         "styles": [
           "@angular/material/prebuilt-themes/indigo-pink.css",
           "apps/slatelog/src/styles.scss"
-        ]
+        ],
+        "scripts": []
       },
       "configurations": {
         "production": {
@@ -46,9 +47,12 @@
           "outputHashing": "all"
         },
         "development": {
+
           "optimization": false,
+
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "namedChunks": true
         }
       },
       "defaultConfiguration": "production"
@@ -57,19 +61,48 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "slatelog:build:production"
+          "buildTarget": "slatelog:build:production",
+          "proxyConfig": "apps/slatelog/proxy.config.json"
         },
         "development": {
-          "buildTarget": "slatelog:build:development"
+          "buildTarget": "slatelog:build:development",
+          "proxyConfig": "apps/slatelog/proxy.config.json"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
         "buildTarget": "slatelog:build"
       }
-    }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/slatelog/**/*.ts", "apps/slatelog/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/slatelog/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "slatelog:build"
+      }
   }
-}
+}}

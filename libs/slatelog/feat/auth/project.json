@@ -1,9 +1,17 @@
 {
-  "name": "auth",
+  "name": "slatelog-feat-auth",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/slatelog/feat/auth/src",
   "prefix": "frontend",
   "tags": [],
   "projectType": "library",
-  "targets": {}
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/slatelog/feat/auth/**/*.ts", "libs/slatelog/feat/auth/**/*.html"]
+      }
+    }
+  }
 }

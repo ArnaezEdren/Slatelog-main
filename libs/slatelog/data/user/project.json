@@ -1,9 +1,17 @@
 {
-	"name": "data-user",
-	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/data/user/src",
-	"prefix": "frontend",
-	"tags": [],
-	"projectType": "library",
-	"targets": {}
+  "name": "slatelog-data-user",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/slatelog/data/user/src",
+  "prefix": "frontend",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/slatelog/data/user/**/*.ts", "libs/slatelog/data/user/**/*.html"]
+      }
+    }
+  }
 }

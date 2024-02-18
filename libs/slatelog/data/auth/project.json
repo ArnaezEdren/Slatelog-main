@@ -1,9 +1,31 @@
 {
-	"name": "data-auth",
-	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/data/auth/src",
-	"prefix": "frontend",
-	"tags": [],
-	"projectType": "library",
-	"targets": {}
+  "name": "slatelog-data-auth",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/slatelog/data/auth/src",
+  "prefix": "frontend",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/slatelog/data/auth/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/slatelog/data/auth/**/*.ts", "libs/slatelog/data/auth/**/*.html"]
+      }
+    }
+  }
 }
