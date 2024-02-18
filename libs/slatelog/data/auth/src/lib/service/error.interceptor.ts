@@ -29,7 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
      */
 
     return next.handle(req).pipe(
-      tap(() => console.error(`retry request ${req.url}`)),
+      //tap(() => console.error(`retry request ${req.url}`)),
       retry({
         // Maximum number of retry attempts
         count: this.retryMaxAttempts,
