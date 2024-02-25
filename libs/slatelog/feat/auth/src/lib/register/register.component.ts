@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CustomValidators } from '../validators/validators';
 import { RegisterFormData, RegisterFormErrorType, RegisterFormType } from '../model/register-view.model';
 import { PasswordStrengthComponent } from '../../../../../ui/src';
+import { RouterLink } from '@angular/router';
 
 
 //import {min3} from "@frontend/feat/auth/validators/validators";
@@ -25,6 +26,7 @@ import { PasswordStrengthComponent } from '../../../../../ui/src';
     MatButtonModule,
     MatIconModule,
     PasswordStrengthComponent,
+    RouterLink,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -39,11 +41,11 @@ export class RegisterComponent {
   // # is a private property in JavaScript
   // registerForm = inject(FormBuilder).nonNullable.group({
   registerForm: FormGroup<RegisterFormType> = inject(FormBuilder).nonNullable.group({
-    email: ['rene@spengergasse.at', [Validators.required, Validators.email]],
+    email: ['edren@spengergasse.at', [Validators.required, Validators.email]],
     password: ['spengergasse', [Validators.required, CustomValidators.passwordStrength(3)]],
     passwordConfirm: ['spengergasse', [Validators.required, CustomValidators.match('password')]],
-    firstName: ['rene', [Validators.required, Validators.minLength(1)]],
-    lastName: ['wenz', [Validators.required, Validators.minLength(1)]],
+    firstName: ['edren', [Validators.required, Validators.minLength(1)]],
+    lastName: ['arnaez', [Validators.required, Validators.minLength(1)]],
   });
 
   // Type Safe Forms from Angular v14 ---------------------

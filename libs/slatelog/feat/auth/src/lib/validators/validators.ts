@@ -1,7 +1,9 @@
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 // The import { ... } syntax is used for importing named exports
+import { ZXCVBNFeedback, ZXCVBNResult, ZXCVBNScore } from 'zxcvbn';
 //  The import * as syntax is used for importing the default export
-import zxcvbn, { ZXCVBNFeedback, ZXCVBNResult, ZXCVBNScore } from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 
 // Technically this is a class, but it is used as a namespace for the static methods.
 export class CustomValidators {
@@ -11,7 +13,7 @@ export class CustomValidators {
    * @param length The minimum length
    */
   static min(length: number): ValidatorFn {
-    return function(control: AbstractControl): ValidationErrors | null {
+    return function (control: AbstractControl): ValidationErrors | null {
       // If the value is too short return an error object
       if (control.value.length < length) {
         return {

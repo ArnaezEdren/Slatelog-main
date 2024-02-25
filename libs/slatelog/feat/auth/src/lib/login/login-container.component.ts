@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import { LoginFormData } from '../model/login-view.model';
 import { BasicAuthService } from '../../../../../data/auth/src';
-import { RegisterComponent } from '../register/register.component';
 import { UserLoginCommand } from '../../../../../data/user/src';
 
 // Smart Container which connects to a Service or Store.
@@ -11,7 +10,7 @@ import { UserLoginCommand } from '../../../../../data/user/src';
 @Component({
   selector: 'frontend-login-container',
   standalone: true,
-  imports: [CommonModule, LoginComponent, RegisterComponent],
+  imports: [CommonModule, LoginComponent],
   template: ` <frontend-login (login)="onLogin($event)"></frontend-login>`,
   styles: [],
 })
@@ -21,6 +20,8 @@ export class LoginContainerComponent {
   onLogin(formData: LoginFormData) {
     const command: UserLoginCommand = formData;
 
-    this.authService.login(command);
+    this.authService.login(command).catch((error) => {
+      console.error('Login failed:', error);
+    });
   }
 }

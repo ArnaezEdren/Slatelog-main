@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LoginFormData, LoginFormErrorType, LoginFormType } from '../model/login-view.model';
 import { CustomValidators } from '../validators/validators';
 import { PasswordStrengthComponent } from '../../../../../ui/src';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'frontend-login',
@@ -22,6 +23,7 @@ import { PasswordStrengthComponent } from '../../../../../ui/src';
     MatButtonModule,
     MatIconModule,
     PasswordStrengthComponent,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],

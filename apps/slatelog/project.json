@@ -49,7 +49,6 @@
         "development": {
 
           "optimization": false,
-
           "extractLicenses": false,
           "sourceMap": true,
           "namedChunks": true
@@ -69,7 +68,7 @@
           "proxyConfig": "apps/slatelog/proxy.config.json"
         }
       },
-      "defaultConfiguration": "development",
+      "defaultConfiguration": "development"
 
     },
     "extract-i18n": {
