@@ -57,7 +57,7 @@ export class UserHttpService {
     // `firstValueFrom` turns an `Observable` into a `Promise`
     // return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
     // return lastValueFrom(this.http.get<User>('/api/user/login'));
-    return lastValueFrom(this.http.get<User>('/api/user'));
+    return lastValueFrom(this.http.get<User>('/api/user/'));
   }
 
   // RxJs Demonstrations:

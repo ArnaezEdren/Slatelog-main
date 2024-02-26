@@ -1,30 +1,20 @@
 import {Route} from '@angular/router';
-import { featureAuthRoutes } from '../../../../libs/slatelog/feat/auth/src/lib/lib.routes';
+import { featureAuthRoutes } from '@frontend/auth';
+import { AuthGuard } from '../../../../libs/slatelog/data/auth/src/lib/service/auth.guard';
 
 
 export const appRoutes: Route[] = [
   // DEFAULT ROUTE
-  // { path: '', pathMatch: 'full', redirectTo: 'timeline', },
-  {path: '', pathMatch:'full', redirectTo: 'auth/login'},
+   { path: '', pathMatch: 'full', redirectTo: 'timeline', },
+ // {path: '', pathMatch:'full', redirectTo: 'auth/login'},
 
 
-  // static route, prefix matching is not relevant
-  // { path: 'products', component: ProductListContainerComponent },
-
-  // dynamic route, prefix matching important
-  // { path: 'products/detail/:id', component: ProductDetailContainerComponent },
-
-  // dynamic route, prefix matching important
-  // AUTH ROUTES with CHILDREN
-  // { path: 'auth', children: [
-  //   { path: 'login', component: LoginContainerComponent },
-  //   { path: 'register', component: RegisterContainerComponent }
-  // ] },
 
   // child routes are a concern of the library and not the app route
   { path: 'auth', children: featureAuthRoutes },
-
-  // CATCH ALL ROUTE
+  {path:'', loadChildren:()=> import('@frontend/slatelog/feat/main').then(m => m.FeatMainModule),
+  canActivate:[AuthGuard]
+  },
   { path: '**', redirectTo: '/auth/login' },
   // { path: '**', component: NotFoundComponent },
 ];

@@ -1,10 +1,10 @@
 {
-  "name": "ui",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "insta/ui/src",
-  "prefix": "frontend",
-  "tags": [],
-  "projectType": "library",
+	"name": "slatelog-feat-timeline",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/slatelog/timeline/src",
+	"prefix": "frontend",
+	"tags": [],
+	"projectType": "library",
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
@@ -24,4 +24,3 @@
     }
   }
 }
-

@@ -29,6 +29,10 @@ export class BasicAuthService {
 
   private userHttpService = inject(UserHttpService);
 
+  get isAuthenticated(){
+    return this.#authToken !=null;
+  }
+
   register(command: UserRegistrationCommand): Promise<User> {
     console.log('BasicAuthService#register', command);
 

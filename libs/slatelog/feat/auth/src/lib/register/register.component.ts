@@ -41,11 +41,11 @@ export class RegisterComponent {
   // # is a private property in JavaScript
   // registerForm = inject(FormBuilder).nonNullable.group({
   registerForm: FormGroup<RegisterFormType> = inject(FormBuilder).nonNullable.group({
-    email: ['edren@spengergasse.at', [Validators.required, Validators.email]],
-    password: ['spengergasse', [Validators.required, CustomValidators.passwordStrength(3)]],
-    passwordConfirm: ['spengergasse', [Validators.required, CustomValidators.match('password')]],
-    firstName: ['edren', [Validators.required, Validators.minLength(1)]],
-    lastName: ['arnaez', [Validators.required, Validators.minLength(1)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, CustomValidators.passwordStrength(3)]],
+    passwordConfirm: ['', [Validators.required, CustomValidators.match('password')]],
+    firstName: ['', [Validators.required, Validators.minLength(1)]],
+    lastName: ['', [Validators.required, Validators.minLength(1)]],
   });
 
   // Type Safe Forms from Angular v14 ---------------------

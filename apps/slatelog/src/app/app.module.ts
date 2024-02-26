@@ -27,7 +27,7 @@ import { appRoutes } from './app.routes';
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    // Needed for HttpClient
+
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
