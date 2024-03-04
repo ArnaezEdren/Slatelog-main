@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { inject, Injectable } from '@angular/core';
-import { lastValueFrom, retry, catchError, throwError, timeout, mergeMap } from 'rxjs';
+import { lastValueFrom, catchError, throwError } from 'rxjs';
 import { User } from '../model/user-domain.model';
 import { UserRegistrationCommand } from '../action/user.actions';
 
@@ -42,43 +42,45 @@ import { UserRegistrationCommand } from '../action/user.actions';
 
 @Injectable({ providedIn: 'root' })
 export class UserHttpService {
-  // injection preferred over constructor injection
-  private http = inject(HttpClient);
+	// injection preferred over constructor injection
+	private http = inject(HttpClient);
 
-  // constructor(private http: HttpClient) {
-  // }
+	// constructor(private http: HttpClient) {
+	// }
 
-  register(command: UserRegistrationCommand): Promise<User> {
-    // `firstValueFrom` turns an `Observable` into a `Promise`
-    return lastValueFrom(this.http.post<User>(`/api/registration`, command));
-  }
+	register(command: UserRegistrationCommand): Promise<User> {
+		// `firstValueFrom` turns an `Observable` into a `Promise`
+		return lastValueFrom(this.http.post<User>(`/api/registration`, command));
+	}
 
-  login(): Promise<User> {
-    // `firstValueFrom` turns an `Observable` into a `Promise`
-    // return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
-    // return lastValueFrom(this.http.get<User>('/api/user/login'));
-    return lastValueFrom(this.http.get<User>('/api/user/login'));
-  }
+	login(): Promise<User> {
+		// `firstValueFrom` turns an `Observable` into a `Promise`
+		// return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
+		// return lastValueFrom(this.http.get<User>('/api/user/login'));
+		return lastValueFrom(this.http.get<User>('/api/user'));
+	}
 
-  // RxJs Demonstrations:
+	// RxJs Demonstrations:
 
-  // CATCH ERROR DEMO ---------------------------------------------------------
-  // - Catches an error and replaces it with a new Observable
-  // - If the source observable errors out, it's in an error state and will not emit anymore values
-  catchErrorDemo(command: UserRegistrationCommand): Promise<User> {
-    // this.http.post<User>('/api/request', command) -> Observable<User>
-    // It's called the `Source Observable`
-    return lastValueFrom(
-      this.http.post<User>('/api/request', command).pipe(
-        // - Replace with a new Error Observable:
-        catchError((err) => throwError(() => new Error('blabla failed for reason: ' + err)))
-        // - Replace with a new Value Observable:
-        // catchError((err) =>  of(...))
-      )
-    );
-  }
+	// CATCH ERROR DEMO ---------------------------------------------------------
+	// - Catches an error and replaces it with a new Observable
+	// - If the source observable errors out, it's in an error state and will not emit anymore values
+	catchErrorDemo(command: UserRegistrationCommand): Promise<User> {
+		// this.http.post<User>('/api/request', command) -> Observable<User>
+		// It's called the `Source Observable`
+		return lastValueFrom(
+			this.http.post<User>('/api/request', command).pipe(
+				// - Replace with a new Error Observable:
+				catchError((err) =>
+					throwError(() => new Error('blabla failed for reason: ' + err))
+				)
+				// - Replace with a new Value Observable:
+				// catchError((err) =>  of(...))
+			)
+		);
+	}
 
-  /*
+	/*
   // RETRY DEMO ---------------------------------------------------------------
   // - Retry tries to re-execute the source-observable if it errors out
   retryDemo(command: UserRegistrationCommand): Promise<User> {
