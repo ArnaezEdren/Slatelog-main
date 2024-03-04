@@ -15,15 +15,15 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@frontend/auth": ["libs/slatelog/feat/auth/src/index.ts"],
-			"@frontend/data/auth": ["libs/slatelog/data/auth/src/index.ts"],
-			"@frontend/data/user": ["libs/slatelog/data/user/src/index.ts"],
-			"@frontend/feat/auth": ["libs/slatelog/feat/auth/src/index.ts"],
-			"@frontend/feat/auth/validators": ["libs/slatelog/feat/auth/validators/validators.ts"],
-			"@frontend/slatelog/feat-timeline": ["libs/slatelog/feat-timeline/src/index.ts"	],
-			"@frontend/slatelog/feat/main": ["libs/slatelog/feat/main/src/index.ts"],
-			"@frontend/ui/strengthbar": ["libs/slatelog/ui/src/index.ts"]
-		}
+      "@frontend/data/auth": ["libs/slatelog/data/auth/src/index.ts"],
+      "@frontend/data/user": ["libs/slatelog/data/user/src/index.ts"],
+      "@frontend/feat/auth": ["libs/slatelog/feat/auth/src/index.ts"],
+      "@frontend/feat/main": ["libs/slatelog/feat/main/src/index.ts"],
+      "@frontend/feat/timeline": ["libs/slatelog/feat/timeline/src/index.ts"],
+      "@frontend/slatelog/feat/profile": ["libs/slatelog/feat/profile/src/index.ts"],
+      "@frontend/ui/strengthbar": ["libs/slatelog/ui/strengthbar/src/index.ts"],
+      "@frontend/util": ["libs/slatelog/util/index.ts"]
+    }
 	},
 	"exclude": ["node_modules", "tmp"]
 }

@@ -1,7 +1,7 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import {CanActivate, Router, UrlTree } from '@angular/router';
 import { inject, Injectable } from '@angular/core';
 import { BasicAuthService } from './basic-auth.service';
-import { Observable } from 'rxjs';
+
 
 
 @Injectable({providedIn: 'root'})

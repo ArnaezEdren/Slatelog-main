@@ -17,9 +17,9 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpHeaders, HttpRequest } from '@angular/common/http';
-import { AuthToken } from '../model/auth.model';
-import { User, UserHttpService, UserLoginCommand, UserRegistrationCommand } from '../../../../user/src';
+import { User, UserHttpService, UserLoginCommand, UserRegistrationCommand } from '@frontend/data/user';
 import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
+import { AuthToken } from '../model/auth.model';
 
 // Basic Auth
 @Injectable({ providedIn: 'root' })
@@ -36,7 +36,7 @@ export class BasicAuthService {
   register(command: UserRegistrationCommand): Promise<User> {
     console.log('BasicAuthService#register', command);
 
-    return this.userHttpService.register(command);
+return this.userHttpService.register(command);
   }
 
   async login(command: UserLoginCommand): Promise<User> {

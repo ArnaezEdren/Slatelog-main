@@ -1,6 +1,6 @@
 import {Route} from '@angular/router';
-import { TimelineContainerComponent } from '../../../../timeline/src';
 import { MainShellComponent } from './main-shell.component';
+import { TimelineContainerComponent } from '../../../../timeline/src';
 
 
 
