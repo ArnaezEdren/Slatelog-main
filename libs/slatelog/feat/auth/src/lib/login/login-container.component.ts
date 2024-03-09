@@ -5,13 +5,14 @@ import { UserLoginCommand } from '@frontend/data/user';
 import { LoginComponent } from './login.component';
 import { LoginFormData } from '../model/login-view.model';
 import { Router } from '@angular/router';
+import { FeatMainModule } from '../../../../main/src';
 
 // Smart Container which connects to a Service or Store.
 // -> See also login.component.ts
 @Component({
 	selector: 'frontend-login-container',
 	standalone: true,
-	imports: [CommonModule, LoginComponent],
+	imports: [CommonModule, LoginComponent, FeatMainModule], //FeatMainModule entfernen
 	template: `<frontend-login (login)="onLogin($event)"></frontend-login>`,
 	styles: [],
 })
