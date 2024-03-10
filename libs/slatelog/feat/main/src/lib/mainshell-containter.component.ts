@@ -6,7 +6,7 @@ import { MainShellComponent1 } from './mainshell.component';
 @Component({
 	selector: 'main-shell-containter',
 	standalone: true,
-	imports: [CommonModule, LoginComponent, MainShellComponent1],
+	imports: [CommonModule, MainShellComponent1, LoginComponent],
 	template: `<main-shell></main-shell>`,
 	styles: [],
 })

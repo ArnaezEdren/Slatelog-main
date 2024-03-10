@@ -1,0 +1,9 @@
+{
+	"name": "createevent",
+	"$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "slatelog/feat/createevent/src",
+	"prefix": "frontend",
+	"tags": [],
+	"projectType": "library",
+	"targets": {}
+}

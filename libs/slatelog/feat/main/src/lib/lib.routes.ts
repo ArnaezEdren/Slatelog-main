@@ -8,7 +8,6 @@ export const featureMainRoutes: Route[] = [
 		component: MainShellComponent,
 		children: [
 			{ path: 'timeline', component: TimelineContainerComponent },
-
 			{ path: '**', redirectTo: 'timeline' },
 		],
 	},

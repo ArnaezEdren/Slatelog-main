@@ -15,6 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
+			"@frontend/createevent": ["slatelog/feat/createevent/src/index.ts"],
 			"@frontend/data/auth": ["libs/slatelog/data/auth/src/index.ts"],
 			"@frontend/data/user": ["libs/slatelog/data/user/src/index.ts"],
 			"@frontend/feat/auth": ["libs/slatelog/feat/auth/src/index.ts"],
