@@ -1,19 +1,14 @@
 <div>
-	<a routerLink="../timeline"> Timeline </a>
+	<a routerLink="../timeline">Timeline</a>
 	<mat-card>
-		<mat-form-field>
+		<mat-form-field appearance="fill">
 			<mat-label>Event-Name</mat-label>
 			<input matInput />
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field appearance="fill">
 			<mat-label>Address</mat-label>
 			<input matInput />
-		</mat-form-field>
-
-		<mat-form-field>
-			<mat-label>Description</mat-label>
-			<textarea matInput></textarea>
 		</mat-form-field>
 
 		<div class="datetime-fields">
@@ -35,8 +30,13 @@
 			</mat-form-field>
 		</div>
 
+		<mat-form-field appearance="fill">
+			<mat-label>Description</mat-label>
+			<textarea matInput></textarea>
+		</mat-form-field>
+
 		<form [formGroup]="emailForm">
-			<div formArrayName="emails">
+			<div formArrayName="emails" class="input-fields">
 				<div
 					*ngFor="let emailGroup of getEmailControls()?.controls; let i = index"
 				>
@@ -54,20 +54,61 @@
 								getEmailControls()?.at(i)?.hasError('email') &&
 								!getEmailControls()?.at(i)?.pristine
 							"
-							>Please enter a valid email address
+						>
+							Please enter a valid email address
 						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>
 			<div class="button-container">
-				<button
-					class="button-addmail"
-					mat-raised-button
-					color="primary"
-					(click)="addEmail()"
-				>
+				<button mat-raised-button color="primary" (click)="addEmail()">
 					Add Email
 				</button>
+			</div>
+
+			<div formArrayName="dateTimes">
+				<div
+					*ngFor="let dateTimeGroup of getDateTimes().controls; let i = index"
+					[formGroupName]="i"
+					class="date-time-row"
+				>
+					<mat-form-field appearance="fill" class="date-field">
+						<mat-label>Datum</mat-label>
+						<input
+							matInput
+							[matDatepicker]="picker"
+							placeholder="Wählen Sie ein Datum"
+						/>
+						<mat-datepicker-toggle
+							matSuffix
+							[for]="picker"
+						></mat-datepicker-toggle>
+						<mat-datepicker #picker="matDatepicker"></mat-datepicker>
+					</mat-form-field>
+
+					<mat-form-field appearance="fill" class="time-field">
+						<mat-label>Uhrzeit</mat-label>
+						<input matInput type="time" formControlName="time" />
+					</mat-form-field>
+
+					<button
+						mat-mini-fab
+						aria-label="Feld entfernen"
+						(click)="removeDateTimeField(i)"
+						class="remove-button"
+					>
+						<mat-icon>remove</mat-icon>
+					</button>
+				</div>
+				<div class="button-add-date">
+					<button
+						mat-raised-button
+						color="primary"
+						(click)="addDateTimeField()"
+					>
+						Add date
+					</button>
+				</div>
 			</div>
 		</form>
 	</mat-card>

@@ -1,7 +1,7 @@
 :host {
   display: flex;
   justify-content: center;
-  margin: 200px;
+  margin: 50px;
 }
 .datetime-fields {
   display: flex;
@@ -17,4 +17,29 @@
   display: flex;
   justify-content: center;
   margin-top: 20px; /* Abstand vom oberen Element hinzufügen, falls gewünscht */
+}
+.date-time-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.date-field, .time-field {
+  flex: 1;
+}
+
+.button-add-date {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Abstand vom oberen Element hinzufügen, falls gewünscht */
+}
+
+.remove-button {
+  transform: scale(0.6);
+  background-color: black; /* Blau */
+  color: white; /* Textfarbe */
+}
+
+.remove-button mat-icon {
+  color: white; /* Farbe des Icons */
 }

@@ -1,35 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MatFormField } from '@angular/material/form-field';
-import { MatLabel } from '@angular/material/form-field';
-import { MatOption, MatSelect } from '@angular/material/select';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCard } from '@angular/material/card';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCardModule } from '@angular/material/card';
 import {
-	ErrorStateMatcher,
-	provideNativeDateAdapter,
-} from '@angular/material/core';
+	MatDatepicker,
+	MatDatepickerModule,
+} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import {
-	FormArray,
 	FormBuilder,
-	FormControl,
+	FormArray,
 	FormGroup,
-	FormGroupDirective,
-	NgForm,
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
-import {
-	MatChip,
-	MatChipInput,
-	MatChipInputEvent,
-} from '@angular/material/chips';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
 	selector: 'frontend-createevent',
@@ -37,51 +28,71 @@ import { MatButton } from '@angular/material/button';
 	imports: [
 		CommonModule,
 		RouterLink,
-		MatFormField,
-		MatSelect,
-		MatOption,
 		MatFormFieldModule,
-		MatSelect,
 		MatSelectModule,
 		MatInputModule,
 		MatLabel,
-		MatCard,
+		MatCardModule,
 		MatDatepickerModule,
-		MatChip,
-		MatIcon,
-		MatChipInput,
-		MatChip,
+		MatChipsModule,
+		MatIconModule,
 		ReactiveFormsModule,
-		MatButton,
+		MatButtonModule,
 	],
 	templateUrl: './createevent.component.html',
-	styleUrl: './createevent.component.css',
+	styleUrls: ['./createevent.component.css'],
 	providers: [provideNativeDateAdapter()],
 })
 export class CreateEventComponent implements OnInit {
-	emailForm: FormGroup = {} as FormGroup;
+	emailForm: FormGroup;
 
-	constructor(private fb: FormBuilder) {}
-
-	ngOnInit() {
+	constructor(private fb: FormBuilder) {
 		this.emailForm = this.fb.group({
 			emails: this.fb.array([
 				this.fb.control('', [Validators.required, Validators.email]),
 			]),
+			dateTimes: this.fb.array([this.createDateTimeGroup()]),
 		});
 	}
+
+	separatorKeysCodes: number[] = [ENTER, COMMA]; // ENTER und COMMA müssen definiert sein, z.B. aus @angular/cdk/keycodes
+
+	ngOnInit() {}
 
 	getEmailControls(): FormArray {
 		return this.emailForm.get('emails') as FormArray;
 	}
 
-	addEmail() {
+	getDateTimes(): FormArray {
+		return this.emailForm.get('dateTimes') as FormArray;
+	}
+
+	createDateTimeGroup(): FormGroup {
+		return this.fb.group({
+			date: ['', Validators.required],
+			time: ['', Validators.required],
+		});
+	}
+
+	addEmail(): void {
 		this.getEmailControls().push(
 			this.fb.control('', [Validators.required, Validators.email])
 		);
 	}
 
-	removeEmail(index: number) {
+	removeEmail(index: number): void {
 		this.getEmailControls().removeAt(index);
+	}
+
+	addDateTimeField(): void {
+		this.getDateTimes().push(this.createDateTimeGroup());
+	}
+
+	removeDateTimeField(index: number): void {
+		this.getDateTimes().removeAt(index);
+	}
+
+	openDatePicker(picker: MatDatepicker<Date>): void {
+		picker.open();
 	}
 }
