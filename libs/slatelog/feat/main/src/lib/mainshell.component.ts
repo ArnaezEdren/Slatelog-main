@@ -7,6 +7,7 @@ import {
 	MatSidenavContainer,
 } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
 	selector: 'main-shell',
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 		MatSidenavContainer,
 		MatButtonModule,
 		MatDrawer,
+		RouterLink,
 	],
 	templateUrl: 'mainshell.component.html',
 	styleUrl: 'mainshell.component.css',
