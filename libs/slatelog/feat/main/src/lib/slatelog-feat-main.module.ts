@@ -11,6 +11,7 @@ import { MainshellContainterComponent } from './mainshell-containter.component';
 		RouterModule.forChild(featureMainRoutes),
 		MainshellContainterComponent,
 	],
+
 	declarations: [MainShellComponent],
 
 	exports: [MainShellComponent],

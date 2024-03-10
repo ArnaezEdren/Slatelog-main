@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BasicAuthService } from '@frontend/data/auth';
-import { UserLoginCommand } from '@frontend/data/user';
+
 import { LoginComponent } from './login.component';
 import { LoginFormData } from '../model/login-view.model';
 import { Router } from '@angular/router';
 import { FeatMainModule } from '../../../../main/src';
+import { BasicAuthService } from '../../../../../data/auth/src';
+import { UserLoginCommand } from '../../../../../data/user/src';
 
 // Smart Container which connects to a Service or Store.
 // -> See also login.component.ts
