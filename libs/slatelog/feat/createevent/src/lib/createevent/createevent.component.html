@@ -3,18 +3,22 @@
 	<mat-card>
 		<mat-form-field appearance="fill">
 			<mat-label>Event-Name</mat-label>
-			<input matInput />
+			<input formControlName="eventname" matInput />
 		</mat-form-field>
 
 		<mat-form-field appearance="fill">
 			<mat-label>Address</mat-label>
-			<input matInput />
+			<input formControlName="address" matInput />
 		</mat-form-field>
 
 		<div class="datetime-fields">
 			<mat-form-field>
 				<mat-label>Deadline of Voting</mat-label>
-				<input matInput [matDatepicker]="picker" />
+				<input
+					formControlName="deadlineDate"
+					matInput
+					[matDatepicker]="picker"
+				/>
 				<mat-hint>MM/DD/YYYY</mat-hint>
 				<mat-datepicker-toggle
 					matIconSuffix
@@ -25,14 +29,14 @@
 
 			<mat-form-field class="example-full-width">
 				<mat-label>Time</mat-label>
-				<input matInput type="time" />
+				<input formControlName="deadlineTime" matInput type="time" />
 				<mat-hint>hh:mm</mat-hint>
 			</mat-form-field>
 		</div>
 
 		<mat-form-field appearance="fill">
 			<mat-label>Description</mat-label>
-			<textarea matInput></textarea>
+			<textarea formControlName="description" matInput></textarea>
 		</mat-form-field>
 
 		<form [formGroup]="emailForm">
