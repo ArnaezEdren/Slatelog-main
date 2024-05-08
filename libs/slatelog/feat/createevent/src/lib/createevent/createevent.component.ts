@@ -21,6 +21,7 @@ import { EventHttpService } from '../service/createevent-http.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { catchError, retry, Subscription, throwError } from 'rxjs';
+import { convertElementSourceSpanToLoc } from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
 
 @Component({
 	selector: 'frontend-createevent',
@@ -44,46 +45,56 @@ import { catchError, retry, Subscription, throwError } from 'rxjs';
 	providers: [provideNativeDateAdapter()],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
 })
-export class CreateEventComponent implements OnInit {
+export class CreateEventComponent {
 	@Output() create = new EventEmitter<any>();
-	createForm: FormGroup;
-	private subscription: Subscription | null = null;
+
+	createForm: FormGroup = this.fb.group({
+		title: ['title', [Validators.required, Validators.minLength(3)]],
+		description: ['descrition', [Validators.maxLength(500)]],
+		location: this.fb.group({
+			street: ['street', [Validators.required]],
+			city: ['city', [Validators.required]],
+			postalCode: [
+				'1120',
+				[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
+			], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
+			country: ['country', [Validators.required]],
+		}),
+		poll: this.fb.group({
+			timePoints: this.fb.array([], Validators.minLength(1)),
+			options: this.fb.array([], Validators.minLength(1)),
+		}),
+		invitations: this.fb.array([]),
+	});
 
 	constructor(
 		private fb: FormBuilder,
 		private createService: EventHttpService
-	) {
-		this.createForm = this.fb.group({
-			title: [''],
-			description: [''],
-			poll: this.fb.group({
-				timePoints: this.fb.array([]),
-				options: this.fb.array([]),
-			}),
-			location: this.fb.group({
-				street: [''],
-				city: [''],
-				postalCode: [''],
-				country: [''],
-			}),
-			invitations: this.fb.array([this.createInvitationGroup()]),
-		});
-	}
+	) {}
 
-	ngOnInit() {}
+	get timePoints(): FormArray {
+		return this.createForm.get('poll.timePoints') as FormArray;
+	}
 
 	get invitations(): FormArray {
 		return this.createForm.get('invitations') as FormArray;
 	}
 
-	createInvitationGroup(): FormGroup {
-		return this.fb.group({
-			email: ['', [Validators.required, Validators.email]],
-		});
+	addTimePoint(): void {
+		this.timePoints.push(
+			this.fb.group({
+				date: ['', Validators.required],
+				time: ['', Validators.required],
+			})
+		);
 	}
 
-	get timePoints(): FormArray {
-		return this.createForm.get('poll.timePoints') as FormArray;
+	addInvitation(): void {
+		this.invitations.push(
+			this.fb.group({
+				email: ['', [Validators.required, Validators.email]],
+			})
+		);
 	}
 
 	removeTimePoint(index: number): void {
@@ -94,52 +105,19 @@ export class CreateEventComponent implements OnInit {
 		this.invitations.removeAt(index);
 	}
 
-	addTimePoint(): void {
-		this.timePoints.push(this.createDateTimeGroup());
-	}
-
-	// TypeScript-Komponente
-
-	addInvitation(): void {
-		this.invitations.push(this.createInvitationGroup());
-	}
-
-	createDateTimeGroup(): FormGroup {
-		return this.fb.group({
-			date: ['', Validators.required],
-			time: ['', Validators.required],
-		});
-	}
-
-	ngOnDestroy(): void {
-		if (this.subscription) {
-			this.subscription.unsubscribe();
-		}
-	}
-
 	onSubmit(): void {
 		if (this.createForm.valid) {
-			this.createService
-				.createEvent(this.createForm.value)
-				.pipe(
-					retry(3), // Versuchen Sie es bis zu dreimal
-					catchError((error) => {
-						console.error('An error occurred:', error);
-						return throwError(() => new Error('Failed to create event.'));
-					})
-				)
-				.subscribe({
-					next: (response) => {
-						console.log('Event created successfully', response);
-						// Weitere Aktionen nach erfolgreichem Erstellen, z.B. Navigation oder Anzeigen einer Erfolgsmeldung
-					},
-					error: (error) => {
-						console.error('Error creating event', error);
-						// Hier können Sie Fehlerbehandlung durchführen, z.B. Anzeigen einer Fehlermeldung im UI
-					},
-				});
+			console.log('Form data being submitted:', this.createForm.value);
+			this.createService.createEvent(this.createForm.value).subscribe({
+				next: (response) => {
+					console.log('Event created successfully', response);
+					this.create.emit(response);
+				},
+				error: (error) => {
+					console.error('Error creating event', error);
+				},
+			});
 		} else {
-			// Optionale Validierungsfehler-Handling hier
 			console.error('Form is not valid');
 		}
 	}

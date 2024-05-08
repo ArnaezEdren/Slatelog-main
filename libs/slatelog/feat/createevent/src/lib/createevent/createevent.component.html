@@ -78,7 +78,9 @@
 							</button>
 						</div>
 					</div>
-					<button mat-button (click)="addTimePoint()">Add Time Point</button>
+					<button mat-button (click)="addTimePoint()" type="button">
+						Add Time Point
+					</button>
 				</div>
 
 				<div class="invitation" formArrayName="invitations">
@@ -97,7 +99,7 @@
 							<mat-icon>remove</mat-icon>
 						</button>
 					</div>
-					<button mat-button (click)="addInvitation()">
+					<button mat-button (click)="addInvitation()" type="button">
 						Add Email for Invitation
 					</button>
 				</div>

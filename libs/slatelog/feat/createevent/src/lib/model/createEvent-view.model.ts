@@ -10,21 +10,26 @@ export interface Address {
 	country: string;
 }
 
+export interface TimePoint {
+	dateTime: DateTime;
+}
+export interface Poll {
+	timePoints: TimePoint[];
+}
+
 export interface DateTime {
 	date: Date;
-	time: string;
+	time: string; // Angenommen, dies ist eine Zeitangabe im String-Format
+	answers: AnswerNull;
 }
 
-export interface Poll {
-	timePoints: DateTime[];
-	options: Answer[];
-}
-
-interface Answer {
+export interface Answer {
 	voter: string; // Email des Abstimmenden
 	votedAt: Date;
 	option: AnswerOption;
 }
+
+export interface AnswerNull {}
 
 enum AnswerOption {
 	YES,
