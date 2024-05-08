@@ -1,45 +1,85 @@
-:host {
+.time-point-entry {
   display: flex;
-  justify-content: center;
-  margin: 50px;
+  align-items: center;
+  gap: 10px; /* Adjust the gap to your preference */
 }
-.datetime-fields {
+
+.createevent {
   display: flex;
-  flex-wrap: wrap; /* Ermöglicht den Umbruch auf kleinen Bildschirmen */
-  gap: 20px; /* Abstand zwischen den Feldern */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.mat-card {
+  width: 100%;
+  box-shadow: none;
 }
 
 .mat-form-field {
-  flex-grow: 1; /* Erlaubt den Feldern, den verfügbaren Platz zu nutzen */
+  width: 100%; /* Ensures full width for alignment */
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px; /* Abstand vom oberen Element hinzufügen, falls gewünscht */
+
+.mat-card-content,
+.mat-card-actions {
+  width: 100%; /* Ensures alignment */
 }
-.date-time-row {
+
+.mat-card-actions {
+  justify-content: center; /* Centers the buttons within the card actions */
+}
+/* Style for the remove button in time points */
+.addresse {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-}
-
-.date-field, .time-field {
-  flex: 1;
-}
-
-.button-add-date {
-  display: flex;
   justify-content: center;
-  margin-top: 20px; /* Abstand vom oberen Element hinzufügen, falls gewünscht */
+  width: 100%; /* Ensures the container takes full width */
 }
 
-.remove-button {
-  transform: scale(0.6);
-  background-color: black; /* Blau */
-  color: white; /* Textfarbe */
+.location-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centering fields within the grid */
+  gap: 20px; /* Provides spacing between the fields */
+  width: 100%; /* Full width to maximize space usage */
 }
 
-.remove-button mat-icon {
-  color: white; /* Farbe des Icons */
+.location-grid .mat-form-field {
+  flex: 1 1 45%; /* Adjusts the flex-basis to allow two fields per row with proper spacing */
+  max-width: 300px; /* Optional: Set a max-width for each field to prevent them from stretching too wide */
 }
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .location-grid .mat-form-field {
+    flex: 1 1 100%; /* Stacks the fields vertically on smaller screens */
+  }
+}
+.adresse-title {
+  text-align: center;
+  width: 100%;
+}
+
+.createevent
+{
+  text-align: center;
+  width: 100%;
+}
+
+.invitation
+{
+  text-align: center;
+  width: 100%;
+}
+
+.poll
+{
+  text-align: center;
+  width: 100%;
+}
+

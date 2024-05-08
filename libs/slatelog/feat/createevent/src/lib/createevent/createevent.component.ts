@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
-import {
-	MatDatepicker,
-	MatDatepickerModule,
-} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
 	FormBuilder,
 	FormArray,
 	FormGroup,
 	ReactiveFormsModule,
 	Validators,
+	FormControl,
 } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
+import { EventHttpService } from '../service/createevent-http.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { catchError, retry, Subscription, throwError } from 'rxjs';
 
 @Component({
 	selector: 'frontend-createevent',
@@ -42,29 +42,66 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 	templateUrl: './createevent.component.html',
 	styleUrls: ['./createevent.component.css'],
 	providers: [provideNativeDateAdapter()],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
 })
 export class CreateEventComponent implements OnInit {
-	emailForm: FormGroup;
+	@Output() create = new EventEmitter<any>();
+	createForm: FormGroup;
+	private subscription: Subscription | null = null;
 
-	constructor(private fb: FormBuilder) {
-		this.emailForm = this.fb.group({
-			emails: this.fb.array([
-				this.fb.control('', [Validators.required, Validators.email]),
-			]),
-			dateTimes: this.fb.array([this.createDateTimeGroup()]),
+	constructor(
+		private fb: FormBuilder,
+		private createService: EventHttpService
+	) {
+		this.createForm = this.fb.group({
+			title: [''],
+			description: [''],
+			poll: this.fb.group({
+				timePoints: this.fb.array([]),
+				options: this.fb.array([]),
+			}),
+			location: this.fb.group({
+				street: [''],
+				city: [''],
+				postalCode: [''],
+				country: [''],
+			}),
+			invitations: this.fb.array([this.createInvitationGroup()]),
 		});
 	}
 
-	separatorKeysCodes: number[] = [ENTER, COMMA]; // ENTER und COMMA müssen definiert sein, z.B. aus @angular/cdk/keycodes
-
 	ngOnInit() {}
 
-	getEmailControls(): FormArray {
-		return this.emailForm.get('emails') as FormArray;
+	get invitations(): FormArray {
+		return this.createForm.get('invitations') as FormArray;
 	}
 
-	getDateTimes(): FormArray {
-		return this.emailForm.get('dateTimes') as FormArray;
+	createInvitationGroup(): FormGroup {
+		return this.fb.group({
+			email: ['', [Validators.required, Validators.email]],
+		});
+	}
+
+	get timePoints(): FormArray {
+		return this.createForm.get('poll.timePoints') as FormArray;
+	}
+
+	removeTimePoint(index: number): void {
+		this.timePoints.removeAt(index);
+	}
+
+	removeInvitation(index: number): void {
+		this.invitations.removeAt(index);
+	}
+
+	addTimePoint(): void {
+		this.timePoints.push(this.createDateTimeGroup());
+	}
+
+	// TypeScript-Komponente
+
+	addInvitation(): void {
+		this.invitations.push(this.createInvitationGroup());
 	}
 
 	createDateTimeGroup(): FormGroup {
@@ -74,25 +111,36 @@ export class CreateEventComponent implements OnInit {
 		});
 	}
 
-	addEmail(): void {
-		this.getEmailControls().push(
-			this.fb.control('', [Validators.required, Validators.email])
-		);
+	ngOnDestroy(): void {
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
 	}
 
-	removeEmail(index: number): void {
-		this.getEmailControls().removeAt(index);
-	}
-
-	addDateTimeField(): void {
-		this.getDateTimes().push(this.createDateTimeGroup());
-	}
-
-	removeDateTimeField(index: number): void {
-		this.getDateTimes().removeAt(index);
-	}
-
-	openDatePicker(picker: MatDatepicker<Date>): void {
-		picker.open();
+	onSubmit(): void {
+		if (this.createForm.valid) {
+			this.createService
+				.createEvent(this.createForm.value)
+				.pipe(
+					retry(3), // Versuchen Sie es bis zu dreimal
+					catchError((error) => {
+						console.error('An error occurred:', error);
+						return throwError(() => new Error('Failed to create event.'));
+					})
+				)
+				.subscribe({
+					next: (response) => {
+						console.log('Event created successfully', response);
+						// Weitere Aktionen nach erfolgreichem Erstellen, z.B. Navigation oder Anzeigen einer Erfolgsmeldung
+					},
+					error: (error) => {
+						console.error('Error creating event', error);
+						// Hier können Sie Fehlerbehandlung durchführen, z.B. Anzeigen einer Fehlermeldung im UI
+					},
+				});
+		} else {
+			// Optionale Validierungsfehler-Handling hier
+			console.error('Form is not valid');
+		}
 	}
 }

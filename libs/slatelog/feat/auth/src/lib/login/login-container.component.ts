@@ -13,7 +13,7 @@ import { UserLoginCommand } from '../../../../../data/user/src';
 @Component({
 	selector: 'frontend-login-container',
 	standalone: true,
-	imports: [CommonModule, LoginComponent, FeatMainModule], //FeatMainModule entfernen
+	imports: [CommonModule, LoginComponent], //FeatMainModule entfernen
 	template: `<frontend-login (login)="onLogin($event)"></frontend-login>`,
 	styles: [],
 })
