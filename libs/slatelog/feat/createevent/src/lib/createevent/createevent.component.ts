@@ -61,16 +61,16 @@ export class CreateEventComponent {
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 		], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
 		country: ['country', [Validators.required]],
-		deadlineDate: ['', [Validators.required]],
-		deadlineTime: ['', [Validators.required]],
+		deadlineDate: ['2024-05-08', [Validators.required]],
+		deadlineTime: ['14:00', [Validators.required]],
 		timePoints: this.fb.array([]),
 		invitations: this.fb.array([]),
 	});
 
 	addTimePoint(): void {
 		const timePointForm = this.fb.group({
-			date: ['', Validators.required],
-			time: ['', Validators.required],
+			date: ['2020-05-18', Validators.required],
+			time: ['18:00', Validators.required],
 			vote: [''], // optional, initial leer
 		});
 		this.timePoints.push(timePointForm);
@@ -92,7 +92,7 @@ export class CreateEventComponent {
 
 	addInvitation(): void {
 		const group = this.fb.group({
-			email: ['', [Validators.required, Validators.email]],
+			email: ['edren@home.at', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
@@ -128,18 +128,16 @@ export class CreateEventComponent {
 			locationCity: formData.city,
 			locationZipCode: formData.postalCode,
 			locationState: formData.country,
-
-			pollOptions: formData.timePoints.map((tp: any) => ({
-				date: this.datePipe.transform(tp.date, 'yyyy-MM-dd'),
-				time: tp.time,
-			})),
-
-			invitationsEmails: formData.invitations.map((inv: any) => inv.email),
+			pollOptions: formData.timePoints.map(
+				(tp: any) =>
+					`${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${tp.time}:00Z`
+			), // Assuming time is in HH:mm format and Z is added for UTC
+			invitationEmails: formData.invitations.map((inv: any) => inv.email),
 			deadlineDate: this.datePipe.transform(
 				formData.deadlineDate,
 				'yyyy-MM-dd'
-			), // Format the voting deadline date
-			deadlineTime: formData.deadlineTime, // This remains unchanged
+			),
+			deadlineTime: formData.deadlineTime,
 		};
 	}
 }

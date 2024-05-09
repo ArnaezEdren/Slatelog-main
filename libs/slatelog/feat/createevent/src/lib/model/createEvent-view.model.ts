@@ -41,7 +41,7 @@ export interface CreateFormData {
 	country: string;
 	deadlineDate: string;
 	deadlineTime: string;
-	timePoints: TimePoint[];
+	timePoints: TimePoint;
 	invitations: Invitation[];
 }
 
