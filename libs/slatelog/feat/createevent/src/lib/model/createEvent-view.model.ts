@@ -1,31 +1,21 @@
 // This is a model for the view e.g. `login.component.ts`.
 // It is not the model for our data e.g. `data/user/model`.
 
-import { FormControl } from '@angular/forms';
-
-export interface Address {
-	street: string;
-	city: string;
-	postalCode: string;
-	country: string;
-}
+import { FormControl, Validators } from '@angular/forms';
 
 export interface TimePoint {
-	dateTime: DateTime;
-}
-export interface Poll {
-	timePoints: TimePoint[];
+	dateTime: DateTime[];
 }
 
 export interface DateTime {
-	date: Date;
-	time: string; // Angenommen, dies ist eine Zeitangabe im String-Format
-	answers: AnswerNull;
+	date: string;
+	time: string;
+	vote?: string | null;
 }
 
 export interface Answer {
 	voter: string; // Email des Abstimmenden
-	votedAt: Date;
+	votedAt: string;
 	option: AnswerOption;
 }
 
@@ -37,20 +27,35 @@ enum AnswerOption {
 	MAYBE,
 }
 
+export interface Invitation {
+	email: string;
+	name: string;
+}
+
 export interface CreateFormData {
 	title: string;
 	description: string;
-	poll: Poll;
-	location: Address;
-	invitations: Map<string, string>;
+	street: string;
+	city: string;
+	postalCode: string;
+	country: string;
+	deadlineDate: string;
+	deadlineTime: string;
+	timePoints: TimePoint[];
+	invitations: Invitation[];
 }
 
 export interface Event {
 	title: string;
 	description: string;
-	poll: Poll;
-	location: Address;
-	invitations: Map<string, string>;
+	street: string;
+	city: string;
+	postalCode: string;
+	country: string;
+	deadlineDate: string;
+	deadlineTime: string;
+	timePoints: TimePoint[];
+	invitations: Invitation[];
 }
 
 // type FormKeyType = 'email' | 'password' | 'passwordConfirm';

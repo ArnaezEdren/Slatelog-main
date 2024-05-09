@@ -3,9 +3,7 @@
 	<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
 		<mat-card>
 			<mat-card-title>Create New Event</mat-card-title>
-
 			<br />
-
 			<mat-card-content>
 				<mat-form-field appearance="fill">
 					<mat-label>Title</mat-label>
@@ -18,72 +16,96 @@
 				</mat-form-field>
 
 				<h3 class="adresse-title">Adresse</h3>
-				<div class="addresse">
-					<mat-card-content class="mat-card-content">
-						<div class="location-grid" formGroupName="location">
-							<mat-form-field appearance="fill">
-								<mat-label>Street</mat-label>
-								<input matInput formControlName="street" />
-							</mat-form-field>
+				<div class="location-grid">
+					<mat-form-field appearance="fill">
+						<mat-label>Street</mat-label>
+						<input matInput formControlName="street" />
+					</mat-form-field>
 
-							<mat-form-field appearance="fill">
-								<mat-label>City</mat-label>
-								<input matInput formControlName="city" />
-							</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>City</mat-label>
+						<input matInput formControlName="city" />
+					</mat-form-field>
 
-							<mat-form-field appearance="fill">
-								<mat-label>Postal Code</mat-label>
-								<input matInput formControlName="postalCode" />
-							</mat-form-field>
+					<mat-form-field appearance="fill">
+						<mat-label>Postal Code</mat-label>
+						<input matInput formControlName="postalCode" />
+					</mat-form-field>
 
-							<mat-form-field appearance="fill">
-								<mat-label>Country</mat-label>
-								<input matInput formControlName="country" />
-							</mat-form-field>
-						</div>
-					</mat-card-content>
+					<mat-form-field appearance="fill">
+						<mat-label>Country</mat-label>
+						<input matInput formControlName="country" />
+					</mat-form-field>
 				</div>
 
-				<div class="poll" formGroupName="poll">
+				<div formArrayName="timePoints">
 					<div
-						formArrayName="timePoints"
 						*ngFor="let timePoint of timePoints.controls; let i = index"
+						[formGroupName]="i"
+						class="time-point-item"
 					>
-						<div [formGroupName]="i" class="time-point-entry">
-							<mat-form-field appearance="fill">
-								<mat-label>Date</mat-label>
-								<input
-									matInput
-									[matDatepicker]="picker"
-									formControlName="date"
-								/>
-								<mat-datepicker-toggle
-									matSuffix
-									[for]="picker"
-								></mat-datepicker-toggle>
-								<mat-datepicker #picker></mat-datepicker>
-							</mat-form-field>
+						<mat-form-field appearance="fill">
+							<mat-label>Date</mat-label>
+							<input matInput [matDatepicker]="picker" formControlName="date" />
+							<mat-datepicker-toggle
+								matSuffix
+								[for]="picker"
+							></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+						</mat-form-field>
 
-							<mat-form-field appearance="fill">
-								<mat-label>Time</mat-label>
-								<input matInput formControlName="time" type="time" />
-							</mat-form-field>
+						<mat-form-field appearance="fill">
+							<mat-label>Time</mat-label>
+							<input matInput formControlName="time" type="time" />
+						</mat-form-field>
 
-							<button
-								mat-icon-button
-								color="primary"
-								(click)="removeTimePoint(i)"
-							>
-								<mat-icon>remove</mat-icon>
-							</button>
-						</div>
+						<!--            <mat-form-field appearance="fill">-->
+						<!--              <mat-label>Vote</mat-label>-->
+						<!--              <input matInput formControlName="vote" />-->
+						<!--            </mat-form-field>-->
+
+						<button
+							mat-icon-button
+							color="warn"
+							(click)="removeTimePoint(i)"
+							aria-label="Remove Time Point"
+						>
+							<mat-icon>remove_circle_outline</mat-icon>
+						</button>
 					</div>
-					<button mat-button (click)="addTimePoint()" type="button">
+
+					<button
+						mat-button
+						(click)="addTimePoint()"
+						type="button"
+						class="add-time-point-button"
+					>
 						Add Time Point
 					</button>
 				</div>
 
-				<div class="invitation" formArrayName="invitations">
+				<br />
+
+				<mat-form-field>
+					<mat-label>Voting Deadline Date</mat-label>
+					<input
+						matInput
+						[matDatepicker]="votingDatePicker"
+						formControlName="deadlineDate"
+					/>
+					<mat-datepicker-toggle
+						matSuffix
+						[for]="votingDatePicker"
+					></mat-datepicker-toggle>
+					<mat-datepicker #votingDatePicker></mat-datepicker>
+				</mat-form-field>
+
+				<mat-form-field>
+					<mat-label>Voting Deadline Time</mat-label>
+					<input matInput type="time" formControlName="deadlineTime" />
+				</mat-form-field>
+
+				<div formArrayName="invitations">
 					<div
 						*ngFor="let invitation of invitations.controls; let i = index"
 						[formGroupName]="i"

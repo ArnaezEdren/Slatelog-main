@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,6 +15,8 @@ import {
 	ReactiveFormsModule,
 	Validators,
 	FormControl,
+	ValidatorFn,
+	AbstractControl,
 } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { EventHttpService } from '../service/createevent-http.service';
@@ -22,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { catchError, retry, Subscription, throwError } from 'rxjs';
 import { convertElementSourceSpanToLoc } from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
+import { TimePoint } from '../model/createEvent-view.model';
 
 @Component({
 	selector: 'frontend-createevent',
@@ -42,7 +45,7 @@ import { convertElementSourceSpanToLoc } from '@angular-eslint/template-parser/d
 	],
 	templateUrl: './createevent.component.html',
 	styleUrls: ['./createevent.component.css'],
-	providers: [provideNativeDateAdapter()],
+	providers: [provideNativeDateAdapter(), DatePipe],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
 })
 export class CreateEventComponent {
@@ -50,51 +53,48 @@ export class CreateEventComponent {
 
 	createForm: FormGroup = this.fb.group({
 		title: ['title', [Validators.required, Validators.minLength(3)]],
-		description: ['descrition', [Validators.maxLength(500)]],
-		location: this.fb.group({
-			street: ['street', [Validators.required]],
-			city: ['city', [Validators.required]],
-			postalCode: [
-				'1120',
-				[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
-			], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
-			country: ['country', [Validators.required]],
-		}),
-		poll: this.fb.group({
-			timePoints: this.fb.array([], Validators.minLength(1)),
-			options: this.fb.array([], Validators.minLength(1)),
-		}),
+		description: ['description', [Validators.maxLength(500)]],
+		street: ['street', [Validators.required]],
+		city: ['city', [Validators.required]],
+		postalCode: [
+			'1120',
+			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
+		], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
+		country: ['country', [Validators.required]],
+		deadlineDate: ['', [Validators.required]],
+		deadlineTime: ['', [Validators.required]],
+		timePoints: this.fb.array([]),
 		invitations: this.fb.array([]),
 	});
 
+	addTimePoint(): void {
+		const timePointForm = this.fb.group({
+			date: ['', Validators.required],
+			time: ['', Validators.required],
+			vote: [''], // optional, initial leer
+		});
+		this.timePoints.push(timePointForm);
+	}
+
 	constructor(
 		private fb: FormBuilder,
-		private createService: EventHttpService
+		private createService: EventHttpService,
+		private datePipe: DatePipe
 	) {}
 
 	get timePoints(): FormArray {
-		return this.createForm.get('poll.timePoints') as FormArray;
+		return this.createForm.get('timePoints') as FormArray;
 	}
 
 	get invitations(): FormArray {
 		return this.createForm.get('invitations') as FormArray;
 	}
 
-	addTimePoint(): void {
-		this.timePoints.push(
-			this.fb.group({
-				date: ['', Validators.required],
-				time: ['', Validators.required],
-			})
-		);
-	}
-
 	addInvitation(): void {
-		this.invitations.push(
-			this.fb.group({
-				email: ['', [Validators.required, Validators.email]],
-			})
-		);
+		const group = this.fb.group({
+			email: ['', [Validators.required, Validators.email]],
+		});
+		this.invitations.push(group);
 	}
 
 	removeTimePoint(index: number): void {
@@ -104,21 +104,42 @@ export class CreateEventComponent {
 	removeInvitation(index: number): void {
 		this.invitations.removeAt(index);
 	}
-
 	onSubmit(): void {
 		if (this.createForm.valid) {
-			console.log('Form data being submitted:', this.createForm.value);
-			this.createService.createEvent(this.createForm.value).subscribe({
-				next: (response) => {
-					console.log('Event created successfully', response);
-					this.create.emit(response);
+			const formattedData = this.formatEventData(this.createForm.value);
+			console.log('Formatted Data to be sent:', formattedData);
+			this.createService.createEvent(formattedData).subscribe(
+				(response) => {
+					console.log('Event successfully created:', response);
+					this.create.emit(response); // Emit event creation success
 				},
-				error: (error) => {
-					console.error('Error creating event', error);
-				},
-			});
+				(error) => console.error('Failed to create event:', error)
+			);
 		} else {
-			console.error('Form is not valid');
+			console.log('Form is not valid:', this.createForm.errors);
 		}
+	}
+
+	private formatEventData(formData: any): any {
+		return {
+			title: formData.title,
+			description: formData.description,
+			locationStreet: formData.street,
+			locationCity: formData.city,
+			locationZipCode: formData.postalCode,
+			locationState: formData.country,
+
+			pollOptions: formData.timePoints.map((tp: any) => ({
+				date: this.datePipe.transform(tp.date, 'yyyy-MM-dd'),
+				time: tp.time,
+			})),
+
+			invitationsEmails: formData.invitations.map((inv: any) => inv.email),
+			deadlineDate: this.datePipe.transform(
+				formData.deadlineDate,
+				'yyyy-MM-dd'
+			), // Format the voting deadline date
+			deadlineTime: formData.deadlineTime, // This remains unchanged
+		};
 	}
 }
