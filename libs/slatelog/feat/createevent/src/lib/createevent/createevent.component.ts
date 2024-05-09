@@ -25,11 +25,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { catchError, retry, Subscription, throwError } from 'rxjs';
 import { convertElementSourceSpanToLoc } from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
 import { TimePoint } from '../model/createEvent-view.model';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'frontend-createevent',
 	standalone: true,
 	imports: [
+		MatSnackBarModule,
 		CommonModule,
 		RouterLink,
 		MatFormFieldModule,
@@ -79,7 +83,9 @@ export class CreateEventComponent {
 	constructor(
 		private fb: FormBuilder,
 		private createService: EventHttpService,
-		private datePipe: DatePipe
+		private datePipe: DatePipe,
+		private snackBar: MatSnackBar,
+		private router: Router
 	) {}
 
 	get timePoints(): FormArray {
@@ -107,16 +113,38 @@ export class CreateEventComponent {
 	onSubmit(): void {
 		if (this.createForm.valid) {
 			const formattedData = this.formatEventData(this.createForm.value);
-			console.log('Formatted Data to be sent:', formattedData);
 			this.createService.createEvent(formattedData).subscribe(
 				(response) => {
 					console.log('Event successfully created:', response);
 					this.create.emit(response); // Emit event creation success
+					this.snackBar.open('Event created successfully!', 'Close', {
+						duration: 3000,
+						horizontalPosition: 'right',
+						verticalPosition: 'top',
+					});
+					this.createForm.reset(); // Optional: Reset form
+					this.router.navigate(['../timeline']); // Modify this route as needed
 				},
-				(error) => console.error('Failed to create event:', error)
+				(error) => {
+					console.error('Failed to create event:', error);
+					this.snackBar.open('Failed to create event!', 'Close', {
+						duration: 3000,
+						horizontalPosition: 'right',
+						verticalPosition: 'top',
+					});
+				}
 			);
 		} else {
 			console.log('Form is not valid:', this.createForm.errors);
+			this.snackBar.open(
+				'Form is not valid, please review your entries!',
+				'Close',
+				{
+					duration: 3000,
+					horizontalPosition: 'right',
+					verticalPosition: 'top',
+				}
+			);
 		}
 	}
 
