@@ -1,8 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
-import { Event } from '../model/createEvent-view.model';
-import { CreateFormType } from '../model/createEvent-view.model';
 import { User } from '../../../../../data/user/src';
 
 @Injectable({
@@ -45,6 +43,25 @@ export class EventHttpService {
 		}
 		return throwError(
 			() => new Error('Something bad happened; please try again later.')
+		);
+	}
+}
+export class DataService {
+	constructor(private http: HttpClient) {}
+
+	login(): Promise<User> {
+		// `firstValueFrom` turns an `Observable` into a `Promise`
+		// return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
+		// return lastValueFrom(this.http.get<User>('/api/user/login'));
+		return lastValueFrom(this.http.get<User>('/api/user'));
+	}
+
+	public getData(url: '/api/event'): Observable<any> {
+		return this.http.get(url).pipe(
+			catchError((error) => {
+				console.error('Error fetching data', error);
+				return throwError(() => new Error('Error fetching data'));
+			})
 		);
 	}
 }

@@ -14,17 +14,11 @@ import {
 	FormGroup,
 	ReactiveFormsModule,
 	Validators,
-	FormControl,
-	ValidatorFn,
-	AbstractControl,
 } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { EventHttpService } from '../service/createevent-http.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { catchError, retry, Subscription, throwError } from 'rxjs';
-import { convertElementSourceSpanToLoc } from '@angular-eslint/template-parser/dist/convert-source-span-to-loc';
-import { TimePoint } from '../model/createEvent-view.model';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
