@@ -8,6 +8,9 @@ import {
 } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
+import { MatMenu, MatMenuItem } from '@angular/material/menu';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
 	selector: 'main-shell',
@@ -20,8 +23,18 @@ import { RouterLink } from '@angular/router';
 		MatButtonModule,
 		MatDrawer,
 		RouterLink,
+		MatInput,
+		MatMenu,
+		NgOptimizedImage,
+		MatMenuItem,
+		MatFormField,
+		MatSuffix,
 	],
 	templateUrl: 'mainshell.component.html',
 	styleUrl: 'mainshell.component.css',
 })
-export class MainShellComponent1 {}
+export class MainShellComponent1 {
+	search: boolean = false;
+
+	protected readonly RouterLink = RouterLink;
+}
