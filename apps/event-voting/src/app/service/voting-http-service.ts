@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+	HttpClient,
+	HttpErrorResponse,
+	HttpParams,
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -18,12 +22,20 @@ export class PollService {
 	 * @returns An Observable of the event data.
 	 */
 	getPollEvent(eventId: string, emailToken: string): Observable<any> {
+		// Construct the URL with proper query parameters
 		const params = new HttpParams()
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
-		return this.http
-			.get(`${this.baseUrl}/poll`, { params })
-			.pipe(catchError(this.handleError));
+
+		// Use the constructed URL and params to make the HTTP GET request
+		return this.http.get(`${this.baseUrl}/poll`, { params }).pipe(
+			catchError((error: HttpErrorResponse) => {
+				console.error('Error fetching event:', error.message);
+				return throwError(
+					() => new Error('Error fetching the event. Please try again later.')
+				);
+			})
+		);
 	}
 
 	/**
@@ -51,16 +63,33 @@ export class PollService {
 	 * @param error The error response object.
 	 * @returns An Observable throwing an error suitable for client-side consumption.
 	 */
-	private handleError(error: any): Observable<never> {
-		let errorMessage = 'An unknown error occurred!';
+	private handleError(error: HttpErrorResponse): Observable<never> {
 		if (error.error instanceof ErrorEvent) {
-			// Client-side errors
-			errorMessage = `Error: ${error.error.message}`;
+			// Client-side or network error occurred
+			console.error('An error occurred:', error.error.message);
 		} else {
-			// Server-side errors
-			errorMessage = `Error Status: ${error.status}\nMessage: ${error.message}`;
+			// The backend returned an unsuccessful response code
+			console.error(
+				`Backend returned code ${error.status}, body was: `,
+				error.error
+			);
 		}
-		console.error(errorMessage);
-		return throwError(errorMessage);
+
+		// Here, we can check if the response body is parseable and log it
+		if (error.error && typeof error.error === 'string') {
+			try {
+				const errorData = JSON.parse(error.error);
+				console.error('Parsed error body:', errorData);
+			} catch (e) {
+				console.error('Error parsing the error response:', error.error);
+			}
+		}
+
+		// Return a more specific error message or handle specific statuses
+		const errorMessage =
+			error.status === 404
+				? 'Resource not found'
+				: 'Something bad happened; please try again later.';
+		return throwError(() => new Error(errorMessage));
 	}
 }
