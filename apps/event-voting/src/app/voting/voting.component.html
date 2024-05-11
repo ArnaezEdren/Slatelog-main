@@ -1,7 +1,8 @@
 <div class="voting-container">
+	<!-- Safe navigation operator used to guard against null and undefined values in the template -->
 	<h1>{{ event?.title }}</h1>
 	<p>{{ event?.description }}</p>
-	<div *ngIf="event.pollOptions; else noPollData">
+	<div *ngIf="event?.pollOptions; else noPollData">
 		<form (ngSubmit)="submitVotes()">
 			<div *ngFor="let option of event.pollOptions; let i = index">
 				<div class="poll-option">
@@ -17,7 +18,6 @@
 			<button type="submit" class="btn btn-primary">Submit Votes</button>
 		</form>
 	</div>
-
 	<ng-template #noPollData>
 		<p>No poll data available.</p>
 	</ng-template>

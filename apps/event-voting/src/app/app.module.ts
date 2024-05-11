@@ -1,22 +1,24 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { VotingComponent } from './voting/voting.component'; // Ensure this import is correct
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app.routes';
+import { VotingComponent } from './voting/voting.component'; // Ensure this is imported
 
 @NgModule({
 	declarations: [
-		AppComponent, // Declare AppComponent here
+		AppComponent,
+		// other components
 	],
 	imports: [
 		BrowserModule,
-		HttpClientModule,
-		RouterModule.forRoot([]),
+		HttpClientModule, // This should be listed in imports
+		AppRoutingModule,
 		VotingComponent,
-		// Example routing setup
+		// Make sure your routing is set up correctly
+		// other modules
 	],
 	providers: [],
-	bootstrap: [AppComponent], // Bootstrap AppComponent here
+	bootstrap: [AppComponent],
 })
 export class AppModule {}

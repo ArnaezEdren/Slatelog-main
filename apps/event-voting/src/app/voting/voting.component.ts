@@ -26,10 +26,15 @@ export class VotingComponent implements OnInit {
 		this.route.queryParams.subscribe((params) => {
 			const eventId = params['eventId'];
 			const emailToken = params['emailToken'];
-			if (eventId && emailToken) {
-				this.loadEvent(eventId, emailToken);
+
+			// Überprüfen Sie, ob beide Parameter vorhanden sind
+			if (!eventId || !emailToken) {
+				console.error(
+					'Required parameters are missing: eventId and emailToken are required.'
+				);
+				// Hier können Sie weitere Maßnahmen ergreifen, z. B. eine Fehlermeldung anzeigen oder zur Startseite umleiten
 			} else {
-				console.error('Required parameters are missing');
+				this.loadEvent(eventId, emailToken);
 			}
 		});
 	}
@@ -40,7 +45,10 @@ export class VotingComponent implements OnInit {
 				this.event = data;
 				this.votes = new Array(data.pollOptions.length).fill(null);
 			},
-			error: (error) => console.error('Failed to load event', error),
+			error: (error) => {
+				console.error('Failed to load event', error);
+				this.event = undefined; // Make sure to handle this case in your template
+			},
 		});
 	}
 
