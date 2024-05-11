@@ -1,15 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
-import { VotingComponent } from './voting/voting.component';
 
 @Component({
-	standalone: true,
-	imports: [NxWelcomeComponent, RouterModule, VotingComponent],
-	selector: 'frontend-root',
+	selector: 'frontend-app-root', // This should match with your index.html root tag
 	templateUrl: './app.component.html',
-	styleUrl: './app.component.scss',
+	styleUrls: [],
 })
-export class AppComponent {
-	title = 'event-voting';
-}
+export class AppComponent {}
