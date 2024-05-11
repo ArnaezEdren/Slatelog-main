@@ -1,0 +1,69 @@
+{
+	"name": "event-voting",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"prefix": "frontend",
+	"sourceRoot": "apps/event-voting/src",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@angular-devkit/build-angular:application",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/apps/event-voting",
+				"index": "apps/event-voting/src/index.html",
+				"browser": "apps/event-voting/src/main.ts",
+				"polyfills": ["zone.js"],
+				"tsConfig": "apps/event-voting/tsconfig.app.json",
+				"inlineStyleLanguage": "scss",
+				"assets": [
+					"apps/event-voting/src/favicon.ico",
+					"apps/event-voting/src/assets"
+				],
+				"styles": ["apps/event-voting/src/styles.scss"],
+				"scripts": []
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "500kb",
+							"maximumError": "1mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "2kb",
+							"maximumError": "4kb"
+						}
+					],
+					"outputHashing": "all"
+				},
+				"development": {
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"serve": {
+			"executor": "@angular-devkit/build-angular:dev-server",
+			"configurations": {
+				"production": {
+					"buildTarget": "event-voting:build:production"
+				},
+				"development": {
+					"buildTarget": "event-voting:build:development"
+				}
+			},
+			"defaultConfiguration": "development"
+		},
+		"extract-i18n": {
+			"executor": "@angular-devkit/build-angular:extract-i18n",
+			"options": {
+				"buildTarget": "event-voting:build"
+			}
+		}
+	}
+}
