@@ -1,0 +1,49 @@
+<div>
+	<p>
+		<mat-toolbar>
+			<a routerLink="/timeline">
+				<img src="assets/slatelog-logo.png" alt="Slatelog Logo" class="logo" />
+			</a>
+
+			<span class="spacer"></span>
+
+			<button
+				mat-icon-button
+				class="notification-button"
+				aria-label="Open notifications"
+			>
+				<mat-icon>notifications_none</mat-icon>
+			</button>
+
+			<div class="profile-wrapper">
+				<button
+					mat-icon-button
+					[matMenuTriggerFor]="profileMenu"
+					aria-label="Open profile menu"
+					class="profile-button"
+				>
+					<img
+						ngSrc="assets/gon.png"
+						alt="Profile Picture"
+						class="profile-picture"
+						fill=""
+					/>
+				</button>
+				<mat-icon>keyboard_arrow_down</mat-icon>
+			</div>
+
+			<mat-menu #profileMenu="matMenu">
+				<button mat-menu-item [routerLink]="['/profile/account']">
+					Account
+				</button>
+				<button mat-menu-item [routerLink]="['/profile/settings']">
+					My Settings
+				</button>
+				<button mat-menu-item>
+					<mat-icon class="material-icons-outlined">logout</mat-icon>
+					<span>Logout</span>
+				</button>
+			</mat-menu>
+		</mat-toolbar>
+	</p>
+</div>

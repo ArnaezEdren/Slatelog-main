@@ -17,54 +17,58 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpHeaders, HttpRequest } from '@angular/common/http';
-import { User, UserHttpService, UserLoginCommand, UserRegistrationCommand } from '@frontend/data/user';
+import {
+	User,
+	UserHttpService,
+	UserLoginCommand,
+	UserRegistrationCommand,
+} from '@frontend/data/user';
 import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
 import { AuthToken } from '../model/auth.model';
 
 // Basic Auth
 @Injectable({ providedIn: 'root' })
 export class BasicAuthService {
+	#authToken: AuthToken | null = null;
 
-  #authToken: AuthToken | null = null;
+	private userHttpService = inject(UserHttpService);
 
-  private userHttpService = inject(UserHttpService);
+	get isAuthenticated() {
+		return this.#authToken != null;
+	}
 
-  get isAuthenticated(){
-    return this.#authToken !=null;
-  }
+	register(command: UserRegistrationCommand): Promise<User> {
+		console.log('BasicAuthService#register', command);
 
-  register(command: UserRegistrationCommand): Promise<User> {
-    console.log('BasicAuthService#register', command);
+		return this.userHttpService.register(command);
+	}
 
-return this.userHttpService.register(command);
-  }
+	async login(command: UserLoginCommand): Promise<User> {
+		console.log('BasicAuthService#login', command);
 
-  async login(command: UserLoginCommand): Promise<User> {
-    console.log('BasicAuthService#login', command);
+		// 1. Generate Auth Token
+		this.#authToken = generateAuthToken(command.email, command.password);
 
-    // 1. Generate Auth Token
-    this.#authToken = generateAuthToken(command.email, command.password);
+		// 2. Auth Header will be appended by the interceptor on the http login request
+		try {
+			return await this.userHttpService.login();
+		} catch (error) {
+			// 3. On Failure, null Auth Token
+			this.#authToken = null;
+			throw error;
+		}
+	}
 
-    // 2. Auth Header will be appended by the interceptor on the http login request
-    try {
-      return await this.userHttpService.login();
-    } catch (error) {
-      // 3. On Failure, null Auth Token
-      this.#authToken = null;
-      throw error;
-    }
-  }
+	logout() {
+		this.#authToken = null;
+		document.location.reload();
+	}
 
-  logout() {
-    this.#authToken = null;
-    document.location.reload();
-  }
+	appendAuthHeader(req: HttpRequest<any>): HttpRequest<any> {
+		if (this.#authToken == null) return req;
 
-  appendAuthHeader(req: HttpRequest<any>): HttpRequest<any> {
-    if (this.#authToken == null) return req;
-
-    return req.clone({
-      headers: appendAuthHeader(req.headers, this.#authToken),
-    });
-  }
+		return req.clone({
+			headers: appendAuthHeader(req.headers, this.#authToken),
+		});
+	}
 }

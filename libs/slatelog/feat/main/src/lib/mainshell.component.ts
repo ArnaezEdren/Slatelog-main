@@ -9,7 +9,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
-import { MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
@@ -29,12 +29,11 @@ import { NgOptimizedImage } from '@angular/common';
 		MatMenuItem,
 		MatFormField,
 		MatSuffix,
+		MatMenuTrigger,
 	],
 	templateUrl: 'mainshell.component.html',
 	styleUrl: 'mainshell.component.css',
 })
 export class MainShellComponent1 {
-	search: boolean = false;
-
 	protected readonly RouterLink = RouterLink;
 }

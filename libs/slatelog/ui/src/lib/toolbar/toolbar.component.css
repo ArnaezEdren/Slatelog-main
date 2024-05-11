@@ -1,0 +1,49 @@
+.example-container {
+  width: 500px;
+  height: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+}
+
+.spacer{
+  flex: auto;
+}
+
+.logo{
+  width: 120px;
+  height: auto;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.profile-wrapper{
+  display: flex;
+  align-items: center;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-button{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.notification-button{
+  margin-right: 30px;
+}

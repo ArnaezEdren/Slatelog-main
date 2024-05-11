@@ -40,3 +40,32 @@ main {
   width: 100%;
   margin-top: 10px;
 }
+
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+
+  .task {
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e2e6ea;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #888;
+    }
+  }
+}
+
