@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
-	selector: 'frontend-voting',
-	standalone: true,
-	imports: [CommonModule],
+	selector: 'frontend-voting', // Überprüfen Sie, dass der Selector 'app-voting' lautet
 	templateUrl: './voting.component.html',
-	styleUrl: './voting.component.css',
+	styleUrls: ['./voting.component.scss'],
+	standalone: true,
 })
 export class VotingComponent {}
