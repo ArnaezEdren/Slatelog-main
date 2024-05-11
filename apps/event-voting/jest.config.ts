@@ -1,11 +1,9 @@
-'use strict';
-Object.defineProperty(exports, '__esModule', { value: true });
 /* eslint-disable */
-exports.default = {
-	displayName: 'EventVoting',
+export default {
+	displayName: 'event-voting',
 	preset: '../../jest.preset.js',
 	setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-	coverageDirectory: '../../coverage/apps/EventVoting',
+	coverageDirectory: '../../coverage/apps/event-voting',
 	transform: {
 		'^.+\\.(ts|mjs|js|html)$': [
 			'jest-preset-angular',

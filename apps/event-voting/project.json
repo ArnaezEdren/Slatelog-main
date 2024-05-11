@@ -1,32 +1,27 @@
 {
-	"name": "EventVoting",
+	"name": "event-voting",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"projectType": "application",
-	"prefix": "app",
-	"sourceRoot": "apps/EventVoting/src",
+	"prefix": "frontend",
+	"sourceRoot": "apps/event-voting/src",
 	"tags": [],
 	"targets": {
 		"build": {
 			"executor": "@angular-devkit/build-angular:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/apps/EventVoting",
-				"index": "apps/EventVoting/src/index.html",
-				"browser": "apps/EventVoting/src/main.ts",
+				"outputPath": "dist/apps/event-voting",
+				"index": "apps/event-voting/src/index.html",
+				"browser": "apps/event-voting/src/main.ts",
 				"polyfills": ["zone.js"],
-				"tsConfig": "apps/EventVoting/tsconfig.app.json",
+				"tsConfig": "apps/event-voting/tsconfig.app.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
-					"apps/EventVoting/src/favicon.ico",
-					"apps/EventVoting/src/assets"
+					"apps/event-voting/src/favicon.ico",
+					"apps/event-voting/src/assets"
 				],
-				"styles": ["apps/EventVoting/src/styles.scss"],
-				"scripts": [],
-				"server": "apps/EventVoting/src/main.server.ts",
-				"prerender": true,
-				"ssr": {
-					"entry": "apps/EventVoting/server.ts"
-				}
+				"styles": ["apps/event-voting/src/styles.scss"],
+				"scripts": []
 			},
 			"configurations": {
 				"production": {
@@ -56,10 +51,10 @@
 			"executor": "@angular-devkit/build-angular:dev-server",
 			"configurations": {
 				"production": {
-					"buildTarget": "EventVoting:build:production"
+					"buildTarget": "event-voting:build:production"
 				},
 				"development": {
-					"buildTarget": "EventVoting:build:development"
+					"buildTarget": "event-voting:build:development"
 				}
 			},
 			"defaultConfiguration": "development"
@@ -67,17 +62,7 @@
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
 			"options": {
-				"buildTarget": "EventVoting:build"
-			}
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint"
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-			"options": {
-				"jestConfig": "apps/EventVoting/jest.config.ts"
+				"buildTarget": "event-voting:build"
 			}
 		}
 	}
