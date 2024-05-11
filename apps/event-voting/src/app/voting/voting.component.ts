@@ -25,23 +25,14 @@ export class VotingComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		// Listen to changes in route parameters
 		this.route.params.subscribe((params) => {
-			// Extract parameters from the route
-			const eventId = params['eventId'];
-			const emailToken = params['emailToken'];
-			console.log('Event ID:', eventId, 'Email Token:', emailToken);
-
-			// Check if both parameters are present
-			if (!eventId || !emailToken) {
+			this.eventId = params['eventId'];
+			this.emailToken = params['emailToken'];
+			if (this.eventId && this.emailToken) {
+				this.loadEvent(this.eventId, this.emailToken);
+			} else {
 				console.error('Required parameters are missing or invalid');
-				return;
 			}
-
-			// If validation passes, assign values and call the load event function
-			this.eventId = eventId;
-			this.emailToken = emailToken;
-			this.loadEvent(this.eventId, this.emailToken);
 		});
 	}
 
@@ -49,7 +40,7 @@ export class VotingComponent implements OnInit {
 		this.pollService.getPollEvent(eventId, emailToken).subscribe({
 			next: (data) => {
 				this.event = data;
-				console.log('Event loaded successfully:', data);
+				this.votes = new Array(data.pollOptions.length).fill(null); // Assuming pollOptions is an array
 			},
 			error: (error) => console.error('Failed to load event', error),
 		});

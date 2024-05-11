@@ -22,17 +22,15 @@ export class PollService {
 	 * @returns An Observable of the event data.
 	 */
 	getPollEvent(eventId: string, emailToken: string): Observable<any> {
-		// Construct the URL with proper query parameters
 		const params = new HttpParams()
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
-
-		// Use the constructed URL and params to make the HTTP GET request
-		return this.http.get(`${this.baseUrl}/poll`, { params }).pipe(
+		return this.http.get<any>(`${this.baseUrl}/poll`, { params }).pipe(
 			catchError((error: HttpErrorResponse) => {
 				console.error('Error fetching event:', error.message);
+				const errorMsg = error.error?.message || 'Unknown error occurred';
 				return throwError(
-					() => new Error('Error fetching the event. Please try again later.')
+					() => new Error(`Error fetching the event: ${errorMsg}`)
 				);
 			})
 		);
@@ -54,7 +52,7 @@ export class PollService {
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
 		return this.http
-			.put(`${this.baseUrl}/poll`, votes, { params })
+			.put<any>(`${this.baseUrl}/poll`, votes, { params })
 			.pipe(catchError(this.handleError));
 	}
 

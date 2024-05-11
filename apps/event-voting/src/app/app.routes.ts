@@ -4,9 +4,9 @@ import { VotingComponent } from './voting/voting.component';
 
 const routes: Routes = [
 	{ path: 'voting/:eventId/:emailToken', component: VotingComponent },
-	// { path: 'voting', component: VotingComponent, pathMatch: 'full' },
-	// { path: '', redirectTo: '/voting', pathMatch: 'full' },
-	// { path: '**', redirectTo: '/voting' }
+	{ path: 'voting', component: VotingComponent, pathMatch: 'full' },
+	{ path: '', redirectTo: '/voting', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/voting' },
 ];
 
 @NgModule({
