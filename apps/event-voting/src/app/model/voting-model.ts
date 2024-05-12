@@ -5,19 +5,36 @@ export interface EventData {
 	locationCity: string;
 	locationZipCode: string;
 	locationState: string;
-	pollOptions: PollOption[]; // Verwendung des neuen Interface
+	poll: Poll; // Verwendung des neuen Interface
 	invitationEmails: string[];
 	deadlineDate: string;
 	deadlineTime: string;
 }
 
-export interface PollOption {
-	time: string; //
-	voting: AnswerOption;
+interface Poll {
+	pollOptions: PollOption[];
+}
+
+interface PollOption {
+	voterEmail: string;
+	votedAt: string;
+	voteOption: string;
 }
 
 export enum AnswerOption {
-	YES,
-	NO,
-	MAYBE,
+	Yes,
+	No,
+	Maybe,
+}
+
+export interface PollOptionResult {
+	key: string;
+	counts: VoteCount;
+	selectedVote?: string;
+}
+
+export interface VoteCount {
+	yes: number;
+	no: number;
+	maybe: number;
 }
