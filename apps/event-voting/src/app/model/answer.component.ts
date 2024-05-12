@@ -5,11 +5,11 @@ import { AnswerOption } from '../model/voting-model';
 export class TranslateAnswerPipe implements PipeTransform {
 	transform(value: AnswerOption): string {
 		switch (value) {
-			case AnswerOption.YES:
+			case AnswerOption.Yes:
 				return 'Yes';
-			case AnswerOption.NO:
+			case AnswerOption.No:
 				return 'No';
-			case AnswerOption.MAYBE:
+			case AnswerOption.Maybe:
 				return 'Maybe';
 			default:
 				return '';
