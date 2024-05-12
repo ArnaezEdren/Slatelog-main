@@ -28,6 +28,7 @@ export class VotingComponent implements OnInit {
 		this.route.params.subscribe((params) => {
 			this.eventId = params['eventId'];
 			this.emailToken = params['emailToken'];
+			console.log(this.eventId, this.emailToken);
 			if (this.eventId && this.emailToken) {
 				this.loadEvent(this.eventId, this.emailToken);
 			} else {
@@ -36,13 +37,11 @@ export class VotingComponent implements OnInit {
 		});
 	}
 
-	loadEvent(eventId: string, emailToken: string) {
+	private loadEvent(eventId: string, emailToken: string): void {
+		console.log(eventId, emailToken);
 		this.pollService.getPollEvent(eventId, emailToken).subscribe({
-			next: (data) => {
-				this.event = data;
-				this.votes = new Array(data.pollOptions.length).fill(null); // Assuming pollOptions is an array
-			},
-			error: (error) => console.error('Failed to load event', error),
+			next: (event) => (this.event = event),
+			error: (err) => console.error('Failed to load event:', err),
 		});
 	}
 

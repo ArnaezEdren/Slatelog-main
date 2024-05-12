@@ -25,13 +25,11 @@ export class PollService {
 		const params = new HttpParams()
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
+		console.log(eventId, emailToken);
 		return this.http.get<any>(`${this.baseUrl}/poll`, { params }).pipe(
-			catchError((error: HttpErrorResponse) => {
-				console.error('Error fetching event:', error.message);
-				const errorMsg = error.error?.message || 'Unknown error occurred';
-				return throwError(
-					() => new Error(`Error fetching the event: ${errorMsg}`)
-				);
+			catchError((error) => {
+				console.error('Error fetching event:', error);
+				throw error;
 			})
 		);
 	}

@@ -18,16 +18,22 @@ export class ErrorHandlingInterceptor implements HttpInterceptor {
 		return next.handle(req).pipe(
 			catchError((error: HttpErrorResponse) => {
 				let errorMsg = '';
-				if (error.error instanceof ErrorEvent) {
+				if (!navigator.onLine) {
+					// Handle browser being offline
+					errorMsg = 'Keine Internetverbindung verfügbar.';
+				} else if (error.error instanceof ErrorEvent) {
 					// Client-side errors
-					errorMsg = `Error: ${error.error.message}`;
+					errorMsg = `Clientseitiger Fehler: ${error.error.message}`;
 				} else {
-					// Server-side errors
-					errorMsg = `Error Code: ${error.status}, Message: ${error.message}`;
+					// Server-side errors or no response received
+					errorMsg =
+						error.status === 0
+							? 'Keine Antwort vom Server erhalten. Bitte überprüfen Sie Ihre Netzwerkverbindung.'
+							: `Serverseitiger Fehler: Code ${error.status}, Nachricht: ${error.message}`;
 				}
-				console.error(errorMsg);
-				// Here you can add more error handling logic, like redirecting to an error page
-				return throwError(errorMsg);
+				console.error('Netzwerk- oder Serverfehler:', errorMsg);
+				// Hier kannst du weitere Fehlerbehandlungslogik hinzufügen, z. B. Weiterleiten auf eine Fehlerseite
+				return throwError(() => new Error(errorMsg));
 			})
 		);
 	}
