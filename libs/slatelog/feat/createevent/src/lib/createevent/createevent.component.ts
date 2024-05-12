@@ -12,6 +12,7 @@ import {
 	FormBuilder,
 	FormArray,
 	FormGroup,
+	FormsModule,
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
@@ -22,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
 	selector: 'frontend-createevent',
@@ -40,6 +42,8 @@ import { Router } from '@angular/router';
 		MatIconModule,
 		ReactiveFormsModule,
 		MatButtonModule,
+		CalendarModule,
+		FormsModule,
 	],
 	templateUrl: './createevent.component.html',
 	styleUrls: ['./createevent.component.css'],

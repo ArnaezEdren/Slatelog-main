@@ -18,8 +18,13 @@
 			</div>
 
 			<div id="in-progress">
-				<h2>In Progress</h2>
-				<!-- Hier könnten die Events in Bearbeitung angezeigt werden -->
+				<h2>Pending Events</h2>
+				<!-- Noch zu Votende Events später hier anzeigen -->
+				<ul>
+					<li *ngFor="let event of inProgressEvents">
+						{{ event.title }} {{ event.description }}
+					</li>
+				</ul>
 			</div>
 
 			<div id="create-event">
@@ -30,6 +35,7 @@
 						type="submit"
 						value="Create a new Event"
 						routerLink="/createevent"
+						class="event-input-button"
 					/>
 				</form>
 			</div>
