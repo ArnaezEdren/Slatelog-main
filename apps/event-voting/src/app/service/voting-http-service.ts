@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import {
 	HttpClient,
 	HttpErrorResponse,
+	HttpHeaders,
 	HttpParams,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { Commands } from '../model/commands';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -44,14 +46,25 @@ export class PollService {
 	updateEventVoting(
 		eventId: string,
 		emailToken: string,
-		votes: any
+		command: Commands.UpdateEventVoting
 	): Observable<any> {
-		const params = new HttpParams()
-			.set('eventId', eventId)
-			.set('emailToken', emailToken);
-		return this.http
-			.put<any>('http://localhost:8080/api/event/poll', votes, { params })
-			.pipe(catchError(this.handleError));
+		// Base URL for the PUT request
+		const url = 'http://localhost:8080/api/event/poll';
+
+		// Setting up HTTP parameters
+		let params = new HttpParams();
+		params = params.append('eventId', eventId);
+		params = params.append('emailToken', emailToken);
+
+		// Options object including the parameters
+		const options = {
+			params: params,
+		};
+
+		// Make the HTTP PUT request
+		return this.http.put(url, command, options).pipe(
+			catchError(this.handleError) // Use the handleError method
+		);
 	}
 
 	/**
