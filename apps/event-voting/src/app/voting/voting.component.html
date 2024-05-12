@@ -1,31 +1,27 @@
 <div *ngIf="event; else loading">
 	<h1>{{ event.title }}</h1>
 	<p>{{ event.description }}</p>
-	<div *ngIf="event?.pollOptions; else noPollData">
-		<form (ngSubmit)="submitVotes()">
-			<div *ngFor="let option of event.pollOptions; index as i">
-				<div class="poll-option">
-					<input
-						type="radio"
-						[name]="pollGroupName"
-						[id]="option.id"
-						[(ngModel)]="votes[i]"
-					/>
-					<label [for]="option.id">{{ option.time | date : 'medium' }}</label>
-					<p>{{ option.optionText }}</p>
-				</div>
-			</div>
-			<button type="submit" class="btn btn-primary">Submit Votes</button>
-		</form>
+
+	<div class="event-location">
+		<p>
+			Location: {{ event.location.street }}, {{ event.location.city }},
+			{{ event.location.state }}, {{ event.location.zipCode }}
+		</p>
 	</div>
-	<div class="event-info">
-		<p>Event ID: {{ event?.id }}</p>
-		<p>Email Token: {{ event?.emailToken }}</p>
+
+	<div class="event-deadline" *ngIf="event.poll.pollCloseDate">
+		<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
 	</div>
+
+	<ng-template #noPollData>
+		<p>No poll data available.</p>
+	</ng-template>
 </div>
+
 <ng-template #loading>
-	<p>Loading event data...</p>
+	<p>Event already over or not in Database</p>
 </ng-template>
+
 <ng-template #noPollData>
 	<p>No poll data available.</p>
 </ng-template>

@@ -11,8 +11,6 @@ import { catchError } from 'rxjs/operators';
 	providedIn: 'root',
 })
 export class PollService {
-	private baseUrl = '/api/event'; // Base URL for your API
-
 	constructor(private http: HttpClient) {}
 
 	/**
@@ -26,12 +24,14 @@ export class PollService {
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
 		console.log(eventId, emailToken);
-		return this.http.get<any>(`${this.baseUrl}/poll`, { params }).pipe(
-			catchError((error) => {
-				console.error('Error fetching event:', error);
-				throw error;
-			})
-		);
+		return this.http
+			.get<any>('http://localhost:8080/api/event/poll', { params })
+			.pipe(
+				catchError((error) => {
+					console.error('Error fetching event:', error);
+					throw error;
+				})
+			);
 	}
 
 	/**
@@ -50,7 +50,7 @@ export class PollService {
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
 		return this.http
-			.put<any>(`${this.baseUrl}/poll`, votes, { params })
+			.put<any>('http://localhost:8080/api/event/poll', votes, { params })
 			.pipe(catchError(this.handleError));
 	}
 

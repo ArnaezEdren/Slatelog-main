@@ -16,7 +16,7 @@ export interface PollOption {
 	voting: AnswerOption;
 }
 
-enum AnswerOption {
+export enum AnswerOption {
 	YES,
 	NO,
 	MAYBE,
