@@ -2,20 +2,56 @@
 	<h1>{{ event.title }}</h1>
 	<p>{{ event.description }}</p>
 
-	<div class="event-location">
-		<p>
-			Location: {{ event.location.street }}, {{ event.location.city }},
-			{{ event.location.state }}, {{ event.location.zipCode }}
-		</p>
-	</div>
+	<p>
+		Location: {{ event.location.street }}, {{ event.location.city }},
+		{{ event.location.state }}, {{ event.location.zipCode }}
+	</p>
 
 	<div class="event-deadline" *ngIf="event.poll.pollCloseDate">
 		<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
 	</div>
 
-	<ng-template #noPollData>
-		<p>No poll data available.</p>
-	</ng-template>
+	<div *ngIf="pollResults.length > 0; else noPollData">
+		<h2>Poll Results:</h2>
+		<form #voteForm="ngForm" (ngSubmit)="submitVotes()">
+			<ul>
+				<li *ngFor="let result of pollResults; let i = index">
+					Key: {{ result.key }}<br />
+					<label>
+						<input
+							type="radio"
+							name="voteOption{{ i }}"
+							[(ngModel)]="result.selectedVote"
+							value="Yes"
+							required
+						/>
+						Yes ({{ result.counts.yes }})
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="voteOption{{ i }}"
+							[(ngModel)]="result.selectedVote"
+							value="No"
+							required
+						/>
+						No ({{ result.counts.no }})
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="voteOption{{ i }}"
+							[(ngModel)]="result.selectedVote"
+							value="Maybe"
+							required
+						/>
+						Maybe ({{ result.counts.maybe }})
+					</label>
+				</li>
+			</ul>
+			<button type="submit" [disabled]="!voteForm.valid">Submit Votes</button>
+		</form>
+	</div>
 </div>
 
 <ng-template #loading>
