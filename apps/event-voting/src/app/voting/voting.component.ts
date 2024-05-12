@@ -13,9 +13,11 @@ import { HttpClientModule } from '@angular/common/http';
 	imports: [CommonModule, FormsModule, HttpClientModule],
 })
 export class VotingComponent implements OnInit {
-	event: any; // Assuming 'any' type, adjust based on your actual data model
-	votes: any[] = []; // Placeholder for votes binding
+	event: any;
+	votes: any[] = [];
 	pollGroupName = 'pollGroup';
+	eventId!: string;
+	emailToken!: string;
 
 	constructor(
 		private pollService: PollService,
@@ -23,52 +25,40 @@ export class VotingComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.route.queryParams.subscribe((params) => {
-			const eventId = params['eventId'];
-			const emailToken = params['emailToken'];
-
-			// Überprüfen Sie, ob beide Parameter vorhanden sind
-			if (!eventId || !emailToken) {
-				console.error(
-					'Required parameters are missing: eventId and emailToken are required.'
-				);
-				// Hier können Sie weitere Maßnahmen ergreifen, z. B. eine Fehlermeldung anzeigen oder zur Startseite umleiten
+		this.route.params.subscribe((params) => {
+			this.eventId = params['eventId'];
+			this.emailToken = params['emailToken'];
+			console.log(this.eventId, this.emailToken);
+			if (this.eventId && this.emailToken) {
+				this.loadEvent(this.eventId, this.emailToken);
 			} else {
-				this.loadEvent(eventId, emailToken);
+				console.error('Required parameters are missing or invalid');
 			}
 		});
 	}
 
-	loadEvent(eventId: string, emailToken: string) {
+	private loadEvent(eventId: string, emailToken: string): void {
+		console.log(eventId, emailToken);
 		this.pollService.getPollEvent(eventId, emailToken).subscribe({
-			next: (data) => {
-				this.event = data;
-				this.votes = new Array(data.pollOptions.length).fill(null);
-			},
-			error: (error) => {
-				console.error('Failed to load event', error);
-				this.event = undefined; // Make sure to handle this case in your template
-			},
+			next: (event) => (this.event = event),
+			error: (err) => console.error('Failed to load event:', err),
 		});
 	}
 
 	updateVotes() {
-		const eventId = this.event.id; // Ensure you have event ID
-		const emailToken = this.event.emailToken; // Assuming token is part of the event data
-
-		this.pollService
-			.updateEventVoting(eventId, emailToken, this.votes)
-			.subscribe({
-				next: () => console.log('Votes updated successfully!'),
-				error: (error) => console.error('Failed to update votes', error),
-			});
-	}
-
-	submitVotes() {
 		if (this.votes.some((vote) => vote != null)) {
-			this.updateVotes();
+			this.pollService
+				.updateEventVoting(this.event.id, this.event.emailToken, this.votes)
+				.subscribe({
+					next: () => console.log('Votes updated successfully!'),
+					error: (error) => console.error('Failed to update votes', error),
+				});
 		} else {
 			console.log('No option selected.');
 		}
+	}
+
+	submitVotes() {
+		this.updateVotes();
 	}
 }

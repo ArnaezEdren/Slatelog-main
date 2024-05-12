@@ -1,10 +1,9 @@
-<div class="voting-container">
-	<!-- Safe navigation operator used to guard against null and undefined values in the template -->
-	<h1>{{ event?.title }}</h1>
-	<p>{{ event?.description }}</p>
+<div *ngIf="event; else loading">
+	<h1>{{ event.title }}</h1>
+	<p>{{ event.description }}</p>
 	<div *ngIf="event?.pollOptions; else noPollData">
 		<form (ngSubmit)="submitVotes()">
-			<div *ngFor="let option of event.pollOptions; let i = index">
+			<div *ngFor="let option of event.pollOptions; index as i">
 				<div class="poll-option">
 					<input
 						type="radio"
@@ -13,18 +12,20 @@
 						[(ngModel)]="votes[i]"
 					/>
 					<label [for]="option.id">{{ option.time | date : 'medium' }}</label>
+					<p>{{ option.optionText }}</p>
 				</div>
 			</div>
 			<button type="submit" class="btn btn-primary">Submit Votes</button>
 		</form>
 	</div>
-	<ng-template #noPollData>
-		<p>No poll data available.</p>
-	</ng-template>
-
-	<!-- Optionally display eventId and emailToken for debugging or information -->
 	<div class="event-info">
 		<p>Event ID: {{ event?.id }}</p>
 		<p>Email Token: {{ event?.emailToken }}</p>
 	</div>
 </div>
+<ng-template #loading>
+	<p>Loading event data...</p>
+</ng-template>
+<ng-template #noPollData>
+	<p>No poll data available.</p>
+</ng-template>

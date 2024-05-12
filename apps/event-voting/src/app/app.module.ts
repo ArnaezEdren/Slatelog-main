@@ -1,13 +1,14 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app.routes';
-import { VotingComponent } from './voting/voting.component'; // Ensure this is imported
+import { VotingComponent } from './voting/voting.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
+
 		// other components
 	],
 	imports: [
