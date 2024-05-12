@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
 	FormBuilder,
 	FormArray,
@@ -63,7 +63,7 @@ export class CreateEventComponent {
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 		], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
 		country: ['country', [Validators.required]],
-		deadlineDate: ['2024-05-08', [Validators.required]],
+		deadlineDate: ['2024-05-26', [Validators.required]],
 		deadlineTime: ['14:00', [Validators.required]],
 		timePoints: this.fb.array([]),
 		invitations: this.fb.array([]),
@@ -71,7 +71,7 @@ export class CreateEventComponent {
 
 	addTimePoint(): void {
 		const timePointForm = this.fb.group({
-			date: ['2020-05-18', Validators.required],
+			date: ['2024-05-30', Validators.required],
 			time: ['18:00', Validators.required],
 			vote: [''], // optional, initial leer
 		});
@@ -96,7 +96,7 @@ export class CreateEventComponent {
 
 	addInvitation(): void {
 		const group = this.fb.group({
-			email: ['edren@home.at', [Validators.required, Validators.email]],
+			email: ['lukas@home.at', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
