@@ -18,15 +18,13 @@ import { Commands } from '../model/commands';
 })
 export class VotingComponent implements OnInit {
 	event: any = {};
-	votes: any[] = [];
 	eventId!: string;
 	emailToken!: string;
 	pollResults: PollOptionResult[] = [];
 
 	constructor(
 		private pollService: PollService,
-		private route: ActivatedRoute,
-		private cdr: ChangeDetectorRef
+		private route: ActivatedRoute
 	) {}
 
 	ngOnInit() {
