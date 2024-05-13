@@ -41,28 +41,21 @@ export class PollService {
 	 * @param votes Data structure containing the votes to be updated.
 	 * @returns An Observable of the update response.
 	 */
+	// In your PollService
+
 	updateEventVoting(
 		eventId: string,
 		emailToken: string,
 		command: Commands.UpdateEventVoting
 	): Observable<any> {
-		// Base URL for the PUT request
-		const url = 'http://localhost:8080/api/event/poll';
-
-		// Setting up HTTP parameters
-		let params = new HttpParams();
-		params = params.append('eventId', eventId);
-		params = params.append('emailToken', emailToken);
-
-		// Options object including the parameters
-		const options = {
-			params: params,
-		};
-
-		// Make the HTTP PUT request
-		return this.http.put(url, command, options).pipe(
-			catchError(this.handleError) // Use the handleError method
-		);
+		const url = 'http://localhost:8080/api/event/poll'; // or the correct endpoint
+		return this.http
+			.put(url, command, {
+				params: new HttpParams()
+					.set('eventId', eventId)
+					.set('emailToken', emailToken),
+			})
+			.pipe(catchError(this.handleError));
 	}
 
 	/**

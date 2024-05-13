@@ -12,7 +12,9 @@ export interface EventData {
 }
 
 interface Poll {
-	pollOptions: PollOption[];
+	pollOptions: { [key: string]: PollOption[] }; // Map of timestamp to array of PollOption
+	pollCloseDate: string;
+	pollOpen: boolean;
 }
 
 interface PollOption {

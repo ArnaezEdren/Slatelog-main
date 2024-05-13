@@ -54,7 +54,7 @@ export class VotingComponent implements OnInit {
 
 	private processPollOptions(pollOptions: any): void {
 		Object.keys(pollOptions).forEach((originalKey) => {
-			const key = originalKey.replace('T', ' ').replace('Z', '');
+			const key = originalKey; //.replace('T', ' ').replace('Z', '');
 			const votes = pollOptions[originalKey];
 			const voteCounts: VoteCount = { yes: 0, no: 0, maybe: 0 };
 
@@ -68,32 +68,35 @@ export class VotingComponent implements OnInit {
 		});
 	}
 
-	submitVotes() {
+	submitVotes(): void {
 		if (!this.emailToken || !this.eventId) {
 			console.error('Authorization token or event ID missing');
 			return;
 		}
 
-		// Function to remove milliseconds if they are zero
-		const formatInstant = (date: Date) => {
-			const isoString = date.toISOString();
-			return isoString.replace(/\.\d{3}/, ''); // Removes milliseconds if they are .000
-		};
+		// Ensure poll results are available
+		if (!this.pollResults.length) {
+			console.error('No poll results to submit');
+			return;
+		}
 
-		// Create a structure that matches the backend's expected format
-		const votes: { [key: string]: string }[] = this.pollResults
+		// Correctly construct the votes in a format expected by the backend
+		const votes: Array<{ [key: string]: string }> = this.pollResults
 			.filter((result) => result.selectedVote !== undefined)
 			.map((result) => {
-				const vote: { [key: string]: string } = {}; // Properly typed now
-				vote[formatInstant(new Date(result.key))] =
-					result.selectedVote as string;
-				return vote;
+				return { [result.key]: result.selectedVote as string }; // Ensure the value is a string
 			});
 
-		const command: Commands.UpdateEventVoting = {
-			votes: votes,
-		};
+		console.log(votes);
 
+		if (!votes.length) {
+			console.error('No votes selected');
+			return;
+		}
+
+		const command: Commands.UpdateEventVoting = { votes };
+
+		// Make the API call to submit votes
 		this.pollService
 			.updateEventVoting(this.event.id, this.emailToken, command)
 			.subscribe({
@@ -101,6 +104,4 @@ export class VotingComponent implements OnInit {
 				error: (err) => console.error('Error updating vote:', err),
 			});
 	}
-
-	protected readonly location = location;
 }
