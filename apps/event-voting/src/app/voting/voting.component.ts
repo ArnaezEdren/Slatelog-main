@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PollService } from '../service/voting-http-service';
 import { CommonModule } from '@angular/common';
@@ -101,4 +101,6 @@ export class VotingComponent implements OnInit {
 				error: (err) => console.error('Error updating vote:', err),
 			});
 	}
+
+	protected readonly location = location;
 }

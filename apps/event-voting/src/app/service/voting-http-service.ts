@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
 	HttpClient,
 	HttpErrorResponse,
-	HttpHeaders,
 	HttpParams,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -25,7 +24,6 @@ export class PollService {
 		const params = new HttpParams()
 			.set('eventId', eventId)
 			.set('emailToken', emailToken);
-		console.log(eventId, emailToken);
 		return this.http
 			.get<any>('http://localhost:8080/api/event/poll', { params })
 			.pipe(

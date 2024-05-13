@@ -2,12 +2,20 @@
 	<h1>{{ event.title }}</h1>
 	<p>{{ event.description }}</p>
 
-	<p>
-		Location: {{ event.location.street }}, {{ event.location.city }},
-		{{ event.location.state }}, {{ event.location.zipCode }}
-	</p>
+	<div>
+		Street: {{ event?.location?.street }}
+		<br />
+		<br />
+		City: {{ event?.location?.city }}
+		<br />
+		<br />
+		Zip Code: {{ event?.location?.zipCode }}
+		<br />
+		<br />
+		Country: {{ event?.location?.state }}
+	</div>
 
-	<div class="event-deadline" *ngIf="event.poll.pollCloseDate">
+	<div class="event-deadline" *ngIf="event?.poll?.pollCloseDate">
 		<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
 	</div>
 
