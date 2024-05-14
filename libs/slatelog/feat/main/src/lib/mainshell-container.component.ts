@@ -34,4 +34,4 @@ import { TimelineOverviewComponent } from '../../../timeline/src/lib/timeline-ov
   }
   `,
 })
-export class MainshellContainerComponent {}
+export class MainShellContainerComponent {}

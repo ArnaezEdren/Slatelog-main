@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { BasicAuthService } from '../../../../../data/auth/src';
 
 @Component({
 	selector: 'frontend-timeline-overview',
@@ -13,7 +14,10 @@ import { HttpClient } from '@angular/common/http';
 export class TimelineOverviewComponent implements OnInit {
 	inProgressEvents: any[] = [];
 
-	constructor(private http: HttpClient) {}
+	constructor(
+		private http: HttpClient,
+		private authService: BasicAuthService
+	) {}
 
 	ngOnInit() {
 		this.getEventsInProgress();

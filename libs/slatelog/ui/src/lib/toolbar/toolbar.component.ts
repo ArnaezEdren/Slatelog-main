@@ -5,6 +5,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
 	selector: 'frontend-toolbar',
@@ -19,6 +20,7 @@ import { RouterLink } from '@angular/router';
 		NgOptimizedImage,
 		RouterLink,
 		MatMenuTrigger,
+		AvatarModule,
 	],
 	templateUrl: './toolbar.component.html',
 	styleUrl: './toolbar.component.css',

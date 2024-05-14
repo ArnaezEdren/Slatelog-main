@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MainShellComponent } from './main-shell.component';
 import { RouterModule } from '@angular/router';
 import { featureMainRoutes } from './lib.routes';
-import { MainshellContainerComponent } from './mainshell-container.component';
+import { MainShellContainerComponent } from './mainshell-container.component';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		RouterModule.forChild(featureMainRoutes),
-		MainshellContainerComponent,
+		MainShellContainerComponent,
 	],
 
 	declarations: [MainShellComponent],

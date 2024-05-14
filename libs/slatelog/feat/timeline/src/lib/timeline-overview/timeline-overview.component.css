@@ -14,58 +14,59 @@ main {
   justify-content: space-between;
   padding: 20px;
 }
-#calendar {
-  flex: 1;
+
+#pending-events {
+  position: absolute;
+  flex: 0 1 auto;
+  bottom: 50px;
+  right: 25px;
+  width: 70%;
+  height: 25%;
   background-color: #f2f2f2;
   padding: 20px;
-  margin-right: 10px;
-}
-#in-progress {
-  flex: 1;
-  background-color: #f2f2f2;
-  padding: 20px;
-  margin-left: 10px;
+  border-radius: 25px;
 }
 #create-event {
+  position: absolute;
+  flex: 0 1 auto;
+  bottom: 50px;
+  left: 125px;
+  width: 16%;
+  height: 25%;
   background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 25px;
   padding: 20px;
-  width: 200px;
 }
+
 #create-event input[type="submit"] {
-  background-color: #333;
+  background-color: #0b57a2;
   color: #fff;
   border: none;
+  border-radius: 5px;
   padding: 10px;
   cursor: pointer;
   width: 100%;
-  margin-top: 10px;
+  margin-top: auto;
 }
 
-
-.task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 16px;
-
-  .task {
-    padding: 8px 12px;
-    border-radius: 4px;
-    background-color: #f7f7f7;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #e2e6ea;
-    }
-
-    .status {
-      font-size: 12px;
-      color: #888;
-    }
-  }
+.event-input-button{
+  display: block;
+  margin-top: auto;
 }
 
+.view-all-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 15px;
+  margin-right: 20px;
+  color: #888;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.view-all-link:hover {
+  color: #555;
+}

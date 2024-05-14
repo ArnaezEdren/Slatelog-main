@@ -9,7 +9,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormsModule,
+	ReactiveFormsModule,
+	Validators,
+} from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { EventHttpService } from '../service/createevent-http.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,10 +22,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 let CreateEventComponent = class CreateEventComponent {
 	addTimePoint() {
 		const timePointForm = this.fb.group({
-			date: ['2020-05-18', Validators.required],
+			date: ['2024-05-30', Validators.required],
 			time: ['18:00', Validators.required],
 			vote: [''], // optional, initial leer
 		});
@@ -43,7 +49,7 @@ let CreateEventComponent = class CreateEventComponent {
 				[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 			], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
 			country: ['country', [Validators.required]],
-			deadlineDate: ['2024-05-08', [Validators.required]],
+			deadlineDate: ['2024-05-26', [Validators.required]],
 			deadlineTime: ['14:00', [Validators.required]],
 			timePoints: this.fb.array([]),
 			invitations: this.fb.array([]),
@@ -57,7 +63,7 @@ let CreateEventComponent = class CreateEventComponent {
 	}
 	addInvitation() {
 		const group = this.fb.group({
-			email: ['edren@home.at', [Validators.required, Validators.email]],
+			email: ['lukas@home.at', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
@@ -150,6 +156,8 @@ CreateEventComponent = __decorate(
 				MatIconModule,
 				ReactiveFormsModule,
 				MatButtonModule,
+				CalendarModule,
+				FormsModule,
 			],
 			templateUrl: './createevent.component.html',
 			styleUrls: ['./createevent.component.css'],

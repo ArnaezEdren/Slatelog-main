@@ -1,35 +1,30 @@
-<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Timeline Overview</title>
 	</head>
-
 	<body>
-		<header>
-			<h1>Timeline Overview</h1>
-		</header>
-
+		<header>Timeline Overview</header>
 		<main>
-			<div id="calendar">
-				<h2>Calendar</h2>
-				<!-- Hier könnten die eingetragenen Events angezeigt werden -->
-			</div>
-
-			<div id="in-progress">
+			<!--div id="calendar">
+    <h2>Calendar</h2>
+    < Hier könnten die eingetragenen Events angezeigt werden >
+  </div-->
+			<div id="pending-events">
 				<h2>Pending Events</h2>
-				<!-- Noch zu Votende Events später hier anzeigen -->
 				<ul>
 					<li *ngFor="let event of inProgressEvents">
 						{{ event.title }} {{ event.description }}
 					</li>
+					<div class="view-all-link">
+						<span routerLink="/allevents">View all</span>
+					</div>
 				</ul>
 			</div>
-
 			<div id="create-event">
 				<h2>Create Event</h2>
-				<form action="create_event.html" method="get">
+				<form method="get">
 					<label>To create a new Event press the button below</label>
 					<input
 						type="submit"

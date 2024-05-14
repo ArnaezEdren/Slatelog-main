@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MainShellComponent } from './main-shell.component';
 import { RouterModule } from '@angular/router';
 import { featureMainRoutes } from './lib.routes';
-import { MainshellContainterComponent } from './mainshell-containter.component';
+import { MainshellContainerComponent } from './mainshell-container.component';
 let FeatMainModule = class FeatMainModule {};
 FeatMainModule = __decorate(
 	[
@@ -12,7 +12,7 @@ FeatMainModule = __decorate(
 			imports: [
 				CommonModule,
 				RouterModule.forChild(featureMainRoutes),
-				MainshellContainterComponent,
+				MainshellContainerComponent,
 			],
 			declarations: [MainShellComponent],
 			exports: [MainShellComponent],

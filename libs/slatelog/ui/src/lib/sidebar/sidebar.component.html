@@ -1,44 +1,39 @@
 <div class="sidebar">
 	<ul class="sidebar-list">
-		<li class="sidebar-item">
-			<a routerLink="/calendar">
+		<li class="sidebar-item" [class.active]="activeRoute === '/timeline'">
+			<div routerLink="/timeline">
 				<span class="sidebar-icon">
 					<mat-icon>calendar_today</mat-icon>
 				</span>
-				<span class="sidebar-text">Kalender</span>
-			</a>
+			</div>
 		</li>
 		<li class="sidebar-item">
-			<a href="#">
+			<div>
 				<span class="sidebar-icon">
 					<mat-icon>list</mat-icon>
 				</span>
-				<span class="sidebar-text">Aufgaben</span>
-			</a>
+			</div>
 		</li>
 		<li class="sidebar-item">
-			<a href="#">
+			<div>
 				<span class="sidebar-icon">
 					<mat-icon>person</mat-icon>
 				</span>
-				<span class="sidebar-text">Kontakte</span>
-			</a>
+			</div>
 		</li>
 		<li class="sidebar-item">
-			<a href="#">
+			<div>
 				<span class="sidebar-icon">
 					<mat-icon>note</mat-icon>
 				</span>
-				<span class="sidebar-text">Notizen</span>
-			</a>
+			</div>
 		</li>
 		<li class="sidebar-item">
-			<a href="#">
+			<div>
 				<span class="sidebar-icon">
 					<mat-icon>settings</mat-icon>
 				</span>
-				<span class="sidebar-text">Einstellungen</span>
-			</a>
+			</div>
 		</li>
 	</ul>
 </div>

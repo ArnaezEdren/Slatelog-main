@@ -21,7 +21,7 @@ import { appRoutes } from './app.routes';
 		BrowserAnimationsModule,
 		RegisterContainerComponent,
 		LoginContainerComponent,
-		RouterModule.forRoot(appRoutes, { useHash: true }),
+		RouterModule.forRoot(appRoutes, { useHash: false }), //Was set to true
 	],
 	providers: [
 		{

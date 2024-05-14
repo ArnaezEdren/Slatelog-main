@@ -6,7 +6,7 @@ MainShellComponent = __decorate(
 		Component({
 			selector: 'frontend-main-shell',
 			template: `
-		<main-shell-containter></main-shell-containter>
+		<main-shell-container></main-shell-container>
 		<router-outlet></router-outlet>
 	`,
 			styles: [],
