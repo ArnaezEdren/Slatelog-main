@@ -1,44 +1,146 @@
-import { __decorate } from 'tslib';
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoginComponent } from '../../../auth/src/lib/login/login.component';
-import { MainShellComponent1 } from './mainshell.component';
-import { SidebarComponent } from '@frontend/ui/sidebar';
-import { ToolbarComponent } from '@frontend/ui/toolbar';
-import { RouterOutlet } from '@angular/router';
-import { TimelineOverviewComponent } from '../../../timeline/src/lib/timeline-overview/timeline-overview.component';
-let MainshellContainerComponent = class MainshellContainerComponent {};
-MainshellContainerComponent = __decorate(
-	[
-		Component({
+'use strict';
+var __esDecorate =
+	(this && this.__esDecorate) ||
+	function (
+		ctor,
+		descriptorIn,
+		decorators,
+		contextIn,
+		initializers,
+		extraInitializers
+	) {
+		function accept(f) {
+			if (f !== void 0 && typeof f !== 'function')
+				throw new TypeError('Function expected');
+			return f;
+		}
+		var kind = contextIn.kind,
+			key = kind === 'getter' ? 'get' : kind === 'setter' ? 'set' : 'value';
+		var target =
+			!descriptorIn && ctor
+				? contextIn['static']
+					? ctor
+					: ctor.prototype
+				: null;
+		var descriptor =
+			descriptorIn ||
+			(target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+		var _,
+			done = false;
+		for (var i = decorators.length - 1; i >= 0; i--) {
+			var context = {};
+			for (var p in contextIn) context[p] = p === 'access' ? {} : contextIn[p];
+			for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+			context.addInitializer = function (f) {
+				if (done)
+					throw new TypeError(
+						'Cannot add initializers after decoration has completed'
+					);
+				extraInitializers.push(accept(f || null));
+			};
+			var result = (0, decorators[i])(
+				kind === 'accessor'
+					? { get: descriptor.get, set: descriptor.set }
+					: descriptor[key],
+				context
+			);
+			if (kind === 'accessor') {
+				if (result === void 0) continue;
+				if (result === null || typeof result !== 'object')
+					throw new TypeError('Object expected');
+				if ((_ = accept(result.get))) descriptor.get = _;
+				if ((_ = accept(result.set))) descriptor.set = _;
+				if ((_ = accept(result.init))) initializers.unshift(_);
+			} else if ((_ = accept(result))) {
+				if (kind === 'field') initializers.unshift(_);
+				else descriptor[key] = _;
+			}
+		}
+		if (target) Object.defineProperty(target, contextIn.name, descriptor);
+		done = true;
+	};
+var __runInitializers =
+	(this && this.__runInitializers) ||
+	function (thisArg, initializers, value) {
+		var useValue = arguments.length > 2;
+		for (var i = 0; i < initializers.length; i++) {
+			value = useValue
+				? initializers[i].call(thisArg, value)
+				: initializers[i].call(thisArg);
+		}
+		return useValue ? value : void 0;
+	};
+var __setFunctionName =
+	(this && this.__setFunctionName) ||
+	function (f, name, prefix) {
+		if (typeof name === 'symbol')
+			name = name.description ? '['.concat(name.description, ']') : '';
+		return Object.defineProperty(f, 'name', {
+			configurable: true,
+			value: prefix ? ''.concat(prefix, ' ', name) : name,
+		});
+	};
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.MainShellContainerComponent = void 0;
+var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
+var login_component_1 = require('../../../auth/src/lib/login/login.component');
+var mainshell_component_1 = require('./mainshell.component');
+var sidebar_1 = require('@frontend/ui/sidebar');
+var toolbar_1 = require('@frontend/ui/toolbar');
+var router_1 = require('@angular/router');
+var timeline_overview_component_1 = require('../../../timeline/src/lib/timeline-overview/timeline-overview.component');
+var MainShellContainerComponent = (function () {
+	var _classDecorators = [
+		(0, core_1.Component)({
 			selector: 'main-shell-container',
 			standalone: true,
 			imports: [
-				CommonModule,
-				MainShellComponent1,
-				LoginComponent,
-				RouterOutlet,
-				SidebarComponent,
-				ToolbarComponent,
-				TimelineOverviewComponent,
+				common_1.CommonModule,
+				mainshell_component_1.MainShellComponent1,
+				login_component_1.LoginComponent,
+				router_1.RouterOutlet,
+				sidebar_1.SidebarComponent,
+				toolbar_1.ToolbarComponent,
+				timeline_overview_component_1.TimelineOverviewComponent,
 			],
-			template: `
-		<main-shell></main-shell>
-		<frontend-toolbar></frontend-toolbar>
-		<frontend-sidebar></frontend-sidebar>
-	`,
-			styles: `
-    .container {
-    width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  `,
+			template:
+				'\n\t\t<main-shell></main-shell>\n\t\t<frontend-toolbar></frontend-toolbar>\n\t\t<frontend-sidebar></frontend-sidebar>\n\t',
+			styles:
+				'\n    .container {\n    width: 800px;\n    margin: 0 auto;\n    padding: 20px;\n    border: 1px solid #ccc;\n    border-radius: 5px;\n  }\n  ',
 		}),
-	],
-	MainshellContainerComponent
-);
-export { MainshellContainerComponent };
-//# sourceMappingURL=mainshell-container.component.js.map
+	];
+	var _classDescriptor;
+	var _classExtraInitializers = [];
+	var _classThis;
+	var MainShellContainerComponent = (_classThis = /** @class */ (function () {
+		function MainShellContainerComponent_1() {}
+		return MainShellContainerComponent_1;
+	})());
+	__setFunctionName(_classThis, 'MainShellContainerComponent');
+	(function () {
+		var _metadata =
+			typeof Symbol === 'function' && Symbol.metadata
+				? Object.create(null)
+				: void 0;
+		__esDecorate(
+			null,
+			(_classDescriptor = { value: _classThis }),
+			_classDecorators,
+			{ kind: 'class', name: _classThis.name, metadata: _metadata },
+			null,
+			_classExtraInitializers
+		);
+		MainShellContainerComponent = _classThis = _classDescriptor.value;
+		if (_metadata)
+			Object.defineProperty(_classThis, Symbol.metadata, {
+				enumerable: true,
+				configurable: true,
+				writable: true,
+				value: _metadata,
+			});
+		__runInitializers(_classThis, _classExtraInitializers);
+	})();
+	return (MainShellContainerComponent = _classThis);
+})();
+exports.MainShellContainerComponent = MainShellContainerComponent;

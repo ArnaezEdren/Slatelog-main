@@ -20,18 +20,19 @@ main {
   flex: 0 1 auto;
   bottom: 50px;
   right: 25px;
-  width: 70%;
+  width: 67%;
   height: 25%;
   background-color: #f2f2f2;
   padding: 20px;
   border-radius: 25px;
 }
+
 #create-event {
   position: absolute;
   flex: 0 1 auto;
   bottom: 50px;
-  left: 125px;
-  width: 16%;
+  left: 140px;
+  width: 18%;
   height: 25%;
   background-color: #f2f2f2;
   border: 1px solid #ccc;
@@ -40,7 +41,7 @@ main {
 }
 
 #create-event input[type="submit"] {
-  background-color: #0b57a2;
+  background-color: #373ab4;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -69,4 +70,25 @@ main {
 
 .view-all-link:hover {
   color: #555;
+}
+
+.timeline-header {
+  position: absolute;
+  top: 110px;
+  left: 140px;
+  font-family: "Inter", sans-serif;
+}
+
+.details-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.details-button:hover {
+  background-color: #0056b3;
 }

@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BasicAuthService } from '../../../../../data/auth/src';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
 	selector: 'frontend-timeline-overview',
 	standalone: true,
-	imports: [CommonModule, RouterLink],
+	imports: [CommonModule, RouterLink, ButtonModule],
 	templateUrl: './timeline-overview.component.html',
 	styleUrl: './timeline-overview.component.css',
 })
 export class TimelineOverviewComponent implements OnInit {
 	inProgressEvents: any[] = [];
 
-	constructor(
-		private http: HttpClient,
-		private authService: BasicAuthService
-	) {}
+	constructor(private http: HttpClient, private router: Router) {}
 
 	ngOnInit() {
 		this.getEventsInProgress();
@@ -27,5 +24,11 @@ export class TimelineOverviewComponent implements OnInit {
 		this.http.get<any[]>('api/timeline').subscribe((events) => {
 			this.inProgressEvents = events;
 		});
+	}
+
+	goToEventDetails(eventId: number) {
+		this.router.navigate(['/event-details', eventId]);
+
+		console.log('Navigating to event details for event ID:', eventId);
 	}
 }

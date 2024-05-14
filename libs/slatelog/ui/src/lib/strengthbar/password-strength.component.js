@@ -1,40 +1,183 @@
-import { __decorate, __metadata } from 'tslib';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+'use strict';
+var __esDecorate =
+	(this && this.__esDecorate) ||
+	function (
+		ctor,
+		descriptorIn,
+		decorators,
+		contextIn,
+		initializers,
+		extraInitializers
+	) {
+		function accept(f) {
+			if (f !== void 0 && typeof f !== 'function')
+				throw new TypeError('Function expected');
+			return f;
+		}
+		var kind = contextIn.kind,
+			key = kind === 'getter' ? 'get' : kind === 'setter' ? 'set' : 'value';
+		var target =
+			!descriptorIn && ctor
+				? contextIn['static']
+					? ctor
+					: ctor.prototype
+				: null;
+		var descriptor =
+			descriptorIn ||
+			(target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+		var _,
+			done = false;
+		for (var i = decorators.length - 1; i >= 0; i--) {
+			var context = {};
+			for (var p in contextIn) context[p] = p === 'access' ? {} : contextIn[p];
+			for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+			context.addInitializer = function (f) {
+				if (done)
+					throw new TypeError(
+						'Cannot add initializers after decoration has completed'
+					);
+				extraInitializers.push(accept(f || null));
+			};
+			var result = (0, decorators[i])(
+				kind === 'accessor'
+					? { get: descriptor.get, set: descriptor.set }
+					: descriptor[key],
+				context
+			);
+			if (kind === 'accessor') {
+				if (result === void 0) continue;
+				if (result === null || typeof result !== 'object')
+					throw new TypeError('Object expected');
+				if ((_ = accept(result.get))) descriptor.get = _;
+				if ((_ = accept(result.set))) descriptor.set = _;
+				if ((_ = accept(result.init))) initializers.unshift(_);
+			} else if ((_ = accept(result))) {
+				if (kind === 'field') initializers.unshift(_);
+				else descriptor[key] = _;
+			}
+		}
+		if (target) Object.defineProperty(target, contextIn.name, descriptor);
+		done = true;
+	};
+var __runInitializers =
+	(this && this.__runInitializers) ||
+	function (thisArg, initializers, value) {
+		var useValue = arguments.length > 2;
+		for (var i = 0; i < initializers.length; i++) {
+			value = useValue
+				? initializers[i].call(thisArg, value)
+				: initializers[i].call(thisArg);
+		}
+		return useValue ? value : void 0;
+	};
+var __setFunctionName =
+	(this && this.__setFunctionName) ||
+	function (f, name, prefix) {
+		if (typeof name === 'symbol')
+			name = name.description ? '['.concat(name.description, ']') : '';
+		return Object.defineProperty(f, 'name', {
+			configurable: true,
+			value: prefix ? ''.concat(prefix, ' ', name) : name,
+		});
+	};
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.PasswordStrengthComponent = void 0;
+var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
 //  The import * as syntax is used for importing the default export
 // The import { ... } syntax is used for importing named exports
-import zxcvbn from 'zxcvbn';
-let PasswordStrengthComponent = class PasswordStrengthComponent {
-	constructor() {
-		// Whenever the input changes the `barLevelClass` getter is executed
-		this.password = '';
-	}
-	// This is a TypeScript get property
-	get barLevelClass() {
-		const result = zxcvbn(this.password);
-		const score = result.score;
-		// returns `bar level-x` as a string for the [ngClass]
-		return `bar level-${score}`;
-	}
-};
-__decorate(
-	[Input(), __metadata('design:type', Object)],
-	PasswordStrengthComponent.prototype,
-	'password',
-	void 0
-);
-PasswordStrengthComponent = __decorate(
-	[
-		Component({
+var zxcvbn_1 = require('zxcvbn');
+var PasswordStrengthComponent = (function () {
+	var _classDecorators = [
+		(0, core_1.Component)({
 			selector: 'frontend-ui',
 			standalone: true,
-			imports: [CommonModule],
+			imports: [common_1.CommonModule],
 			templateUrl: './password-strength.component.html',
 			styleUrl: './password-strength.component.css',
-			changeDetection: ChangeDetectionStrategy.OnPush,
+			changeDetection: core_1.ChangeDetectionStrategy.OnPush,
 		}),
-	],
-	PasswordStrengthComponent
-);
-export { PasswordStrengthComponent };
-//# sourceMappingURL=password-strength.component.js.map
+	];
+	var _classDescriptor;
+	var _classExtraInitializers = [];
+	var _classThis;
+	var _instanceExtraInitializers = [];
+	var _password_decorators;
+	var _password_initializers = [];
+	var PasswordStrengthComponent = (_classThis = /** @class */ (function () {
+		function PasswordStrengthComponent_1() {
+			// Whenever the input changes the `barLevelClass` getter is executed
+			this.password =
+				(__runInitializers(this, _instanceExtraInitializers),
+				__runInitializers(this, _password_initializers, ''));
+		}
+		Object.defineProperty(
+			PasswordStrengthComponent_1.prototype,
+			'barLevelClass',
+			{
+				// This is a TypeScript get property
+				get: function () {
+					var result = (0, zxcvbn_1.default)(this.password);
+					var score = result.score;
+					// returns `bar level-x` as a string for the [ngClass]
+					return 'bar level-'.concat(score);
+				},
+				enumerable: false,
+				configurable: true,
+			}
+		);
+		return PasswordStrengthComponent_1;
+	})());
+	__setFunctionName(_classThis, 'PasswordStrengthComponent');
+	(function () {
+		var _metadata =
+			typeof Symbol === 'function' && Symbol.metadata
+				? Object.create(null)
+				: void 0;
+		_password_decorators = [(0, core_1.Input)()];
+		__esDecorate(
+			null,
+			null,
+			_password_decorators,
+			{
+				kind: 'field',
+				name: 'password',
+				static: false,
+				private: false,
+				access: {
+					has: function (obj) {
+						return 'password' in obj;
+					},
+					get: function (obj) {
+						return obj.password;
+					},
+					set: function (obj, value) {
+						obj.password = value;
+					},
+				},
+				metadata: _metadata,
+			},
+			_password_initializers,
+			_instanceExtraInitializers
+		);
+		__esDecorate(
+			null,
+			(_classDescriptor = { value: _classThis }),
+			_classDecorators,
+			{ kind: 'class', name: _classThis.name, metadata: _metadata },
+			null,
+			_classExtraInitializers
+		);
+		PasswordStrengthComponent = _classThis = _classDescriptor.value;
+		if (_metadata)
+			Object.defineProperty(_classThis, Symbol.metadata, {
+				enumerable: true,
+				configurable: true,
+				writable: true,
+				value: _metadata,
+			});
+		__runInitializers(_classThis, _classExtraInitializers);
+	})();
+	return (PasswordStrengthComponent = _classThis);
+})();
+exports.PasswordStrengthComponent = PasswordStrengthComponent;

@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { MainShellComponent } from './main-shell.component';
 import { TimelineContainerComponent } from '../../../timeline/src';
 import { CreateEventContainerComponent } from '../../../createevent/src';
+import { EventDetailsContainerComponent } from '../../../timeline/src';
 
 export const featureMainRoutes: Route[] = [
 	{
@@ -9,9 +10,9 @@ export const featureMainRoutes: Route[] = [
 		component: MainShellComponent,
 		children: [
 			{ path: '', redirectTo: 'timeline', pathMatch: 'full' }, // Default-Routing zur 'timeline'
-
 			{ path: 'timeline', component: TimelineContainerComponent },
 			{ path: 'createevent', component: CreateEventContainerComponent },
+			{ path: 'event-details/:id', component: EventDetailsContainerComponent },
 			{ path: '**', redirectTo: 'timeline' },
 		],
 	},

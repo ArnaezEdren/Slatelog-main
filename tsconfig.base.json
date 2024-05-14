@@ -26,7 +26,10 @@
 			],
 			"@frontend/ui/sidebar": ["libs/slatelog/ui/src/index.ts"],
 			"@frontend/ui/strengthbar": ["libs/slatelog/ui/src/index.ts"],
-			"@frontend/ui/toolbar": ["libs/slatelog/ui/src/index.ts"]
+			"@frontend/ui/toolbar": ["libs/slatelog/ui/src/index.ts"],
+			"@frontend/timeline/event-details": [
+				"libs/slatelog/feat/timeline/index.ts"
+			]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

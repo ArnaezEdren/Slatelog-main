@@ -7,7 +7,7 @@
   padding-bottom: 20px;
   position: absolute;
   left: 35px;
-  top: 90px;
+  top: 95px;
   z-index: 999;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .sidebar-item.active {
-  background-color: #077bff;
+  background-color: #373ab4;
   color: #fff;
 }
 

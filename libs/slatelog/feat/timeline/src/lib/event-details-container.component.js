@@ -81,39 +81,32 @@ var __setFunctionName =
 		});
 	};
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.SidebarComponent = void 0;
+exports.EventDetailsContainerComponent = void 0;
 var core_1 = require('@angular/core');
 var common_1 = require('@angular/common');
-var icon_1 = require('@angular/material/icon');
-var router_1 = require('@angular/router');
-var SidebarComponent = (function () {
+var event_details_component_1 = require('./event-details/event-details.component');
+var EventDetailsContainerComponent = (function () {
 	var _classDecorators = [
 		(0, core_1.Component)({
-			selector: 'frontend-sidebar',
+			selector: 'frontend-event-details-container',
 			standalone: true,
-			imports: [common_1.CommonModule, icon_1.MatIcon, router_1.RouterLink],
-			templateUrl: './sidebar.component.html',
-			styleUrl: './sidebar.component.css',
+			imports: [
+				common_1.CommonModule,
+				event_details_component_1.EventDetailsComponent,
+			],
+			template: '',
+			styles: [],
 		}),
 	];
 	var _classDescriptor;
 	var _classExtraInitializers = [];
 	var _classThis;
-	var SidebarComponent = (_classThis = /** @class */ (function () {
-		function SidebarComponent_1(router) {
-			var _this = this;
-			this.router = router;
-			this.activeRoute = '';
-			this.RouterLink = router_1.RouterLink;
-			this.router.events.subscribe(function (event) {
-				if (event instanceof router_1.NavigationEnd) {
-					_this.activeRoute = event.url;
-				}
-			});
-		}
-		return SidebarComponent_1;
-	})());
-	__setFunctionName(_classThis, 'SidebarComponent');
+	var EventDetailsContainerComponent = (_classThis =
+		/** @class */ (function () {
+			function EventDetailsContainerComponent_1() {}
+			return EventDetailsContainerComponent_1;
+		})());
+	__setFunctionName(_classThis, 'EventDetailsContainerComponent');
 	(function () {
 		var _metadata =
 			typeof Symbol === 'function' && Symbol.metadata
@@ -127,7 +120,7 @@ var SidebarComponent = (function () {
 			null,
 			_classExtraInitializers
 		);
-		SidebarComponent = _classThis = _classDescriptor.value;
+		EventDetailsContainerComponent = _classThis = _classDescriptor.value;
 		if (_metadata)
 			Object.defineProperty(_classThis, Symbol.metadata, {
 				enumerable: true,
@@ -137,6 +130,6 @@ var SidebarComponent = (function () {
 			});
 		__runInitializers(_classThis, _classExtraInitializers);
 	})();
-	return (SidebarComponent = _classThis);
+	return (EventDetailsContainerComponent = _classThis);
 })();
-exports.SidebarComponent = SidebarComponent;
+exports.EventDetailsContainerComponent = EventDetailsContainerComponent;
