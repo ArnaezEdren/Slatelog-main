@@ -1,0 +1,16 @@
+/* voting.component.css */
+div {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+div[ngIf="feedbackMessage"] {
+  color: #155724;  /* Green color for success messages */
+  background-color: #d4edda;
+}
+
+div[ngIf="isLoading"] {
+  color: #856404;  /* Yellow color for loading messages */
+  background-color: #fff3cd;
+}

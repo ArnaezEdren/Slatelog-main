@@ -1,3 +1,5 @@
+<div *ngIf="isLoading">Updating votes...</div>
+<div *ngIf="feedbackMessage">{{ feedbackMessage }}</div>
 <div *ngIf="event; else loading">
 	<h1>{{ event.title }}</h1>
 	<p>{{ event.description }}</p>
@@ -23,7 +25,7 @@
 		<h2>Poll Results:</h2>
 		<form #voteForm="ngForm" (ngSubmit)="submitVotes()">
 			<ul>
-				<li *ngFor="let result of pollResults; let i = index">
+				<div *ngFor="let result of pollResults; let i = index">
 					Key: {{ result.key }}<br />
 					<label>
 						<input
@@ -55,10 +57,13 @@
 						/>
 						Maybe ({{ result.counts.maybe }})
 					</label>
-				</li>
+				</div>
 			</ul>
 			<button type="submit" [disabled]="!voteForm.valid">Submit Votes</button>
 		</form>
+	</div>
+	<div *ngFor="let vote of votesDetail">
+		<p>{{ vote.voteOption }}' on {{ vote.votedAt | date : 'medium' }}</p>
 	</div>
 </div>
 

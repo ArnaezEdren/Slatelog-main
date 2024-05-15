@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PollService } from '../service/voting-http-service';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
-import { PollOptionResult, VoteCount } from '../model/voting-model';
-import { TranslateAnswerPipe } from '../model/answer.component';
-import { Commands } from '../model/commands';
+import { TranslateAnswerPipe } from '../../data/model/answer.component';
+import {
+	PollOptionResult,
+	VoteCount,
+	VoteDetail,
+} from '../../data/model/voting-model';
+import { PollService } from '../../data/service/voting-http-service';
+import { Commands } from '../../data/model/commands';
 
 @Component({
 	selector: 'frontend-app-voting',
@@ -21,6 +25,9 @@ export class VotingComponent implements OnInit {
 	eventId!: string;
 	emailToken!: string;
 	pollResults: PollOptionResult[] = [];
+	isLoading = false;
+	feedbackMessage = '';
+	votesDetail: VoteDetail[] = [];
 
 	constructor(
 		private pollService: PollService,
@@ -46,9 +53,45 @@ export class VotingComponent implements OnInit {
 				this.event = event;
 				if (event.poll && event.poll.pollOptions) {
 					this.processPollOptions(event.poll.pollOptions);
+					this.loadVotesDetail(eventId, emailToken); // Load votes details
 				}
 			},
 			error: (err) => console.error('Failed to load event:', err),
+		});
+	}
+
+	private loadVotesDetail(eventId: string, emailToken: string): void {
+		this.pollService.getPollEvent(eventId, emailToken).subscribe({
+			next: (event) => {
+				console.log('Event received:', event);
+				if (event.poll && event.poll.pollOptions) {
+					const pollOptions = event.poll.pollOptions;
+					const transformedVotes: VoteDetail[] = [];
+
+					// Iterate over each key in pollOptions object
+					Object.keys(pollOptions).forEach((key) => {
+						// Each key is a date, and its value is an array of vote details
+						pollOptions[key].forEach(
+							(voteDetail: { voterEmail: any; voteOption: any }) => {
+								transformedVotes.push({
+									votedAt: key, // The key is the votedAt date
+									voterEmail: voteDetail.voterEmail,
+									voteOption: voteDetail.voteOption,
+								});
+							}
+						);
+					});
+
+					this.votesDetail = transformedVotes;
+					console.log('Transformed Votes:', this.votesDetail);
+				} else {
+					console.error(
+						'Poll options not found or invalid structure:',
+						event.poll.pollOptions
+					);
+				}
+			},
+			error: (err) => console.error('Failed to load event data:', err),
 		});
 	}
 
@@ -64,7 +107,7 @@ export class VotingComponent implements OnInit {
 				else if (vote.voteOption === 'Maybe') voteCounts.maybe++;
 			});
 
-			this.pollResults.push({ key: key, counts: voteCounts });
+			this.pollResults.push({ key: key, counts: voteCounts }); // Assign lastVote to selectedVote
 		});
 	}
 
@@ -74,34 +117,29 @@ export class VotingComponent implements OnInit {
 			return;
 		}
 
-		// Ensure poll results are available
-		if (!this.pollResults.length) {
-			console.error('No poll results to submit');
-			return;
-		}
-
-		// Correctly construct the votes in a format expected by the backend
 		const votes: Array<{ [key: string]: string }> = this.pollResults
 			.filter((result) => result.selectedVote !== undefined)
-			.map((result) => {
-				return { [result.key]: result.selectedVote as string }; // Ensure the value is a string
-			});
-
-		console.log(votes);
+			.map((result) => ({ [result.key]: result.selectedVote as string }));
 
 		if (!votes.length) {
 			console.error('No votes selected');
 			return;
 		}
 
-		const command: Commands.UpdateEventVoting = { votes };
-
-		// Make the API call to submit votes
+		this.isLoading = true; // Optionally show a loading indicator
 		this.pollService
-			.updateEventVoting(this.event.id, this.emailToken, command)
+			.updateEventVoting(this.event.id, this.emailToken, { votes })
 			.subscribe({
-				next: () => console.log('Vote updated successfully!'),
-				error: (err) => console.error('Error updating vote:', err),
+				next: () => {
+					console.log('Vote updated successfully!');
+					// Reload the page to reflect changes
+					window.location.reload();
+				},
+				error: (err) => {
+					console.error('Error updating vote:', err);
+					this.feedbackMessage = 'Failed to update vote. Please try again.';
+					this.isLoading = false;
+				},
 			});
 	}
 }

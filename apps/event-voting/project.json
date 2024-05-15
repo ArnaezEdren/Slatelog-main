@@ -3,7 +3,7 @@
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"projectType": "application",
 	"prefix": "frontend",
-	"sourceRoot": "apps/event-voting/src",
+	"sourceRoot": "libs/event-overviewing/src",
 	"tags": [],
 	"targets": {
 		"build": {

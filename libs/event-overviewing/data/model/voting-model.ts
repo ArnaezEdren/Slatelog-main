@@ -1,4 +1,4 @@
-export interface EventData {
+export interface Event {
 	title: string;
 	description: string;
 	locationStreet: string;
@@ -17,7 +17,7 @@ interface Poll {
 	pollOpen: boolean;
 }
 
-interface PollOption {
+export interface PollOption {
 	voterEmail: string;
 	votedAt: string;
 	voteOption: string;
@@ -33,10 +33,16 @@ export interface PollOptionResult {
 	key: string;
 	counts: VoteCount;
 	selectedVote?: string;
+	lastVote?: string;
 }
 
 export interface VoteCount {
 	yes: number;
 	no: number;
 	maybe: number;
+}
+export interface VoteDetail {
+	votedAt: string;
+	voterEmail: string;
+	voteOption: string;
 }

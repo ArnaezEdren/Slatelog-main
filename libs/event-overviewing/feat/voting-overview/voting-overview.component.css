@@ -1,0 +1,19 @@
+.events-container {
+  display: flex;
+  justify-content: space-between; /* Adjusts spacing between the two sections */
+}
+
+.event-section {
+  flex: 1; /* Each section takes equal space */
+  padding: 20px; /* Add padding for better spacing */
+  box-sizing: border-box; /* Includes padding in width calculation */
+}
+
+/* Additional styling for better presentation */
+.event-section h2 {
+  margin-top: 0;
+}
+
+.event-section div {
+  margin-bottom: 10px; /* Spacing between event entries */
+}

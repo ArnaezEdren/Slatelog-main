@@ -1,0 +1,32 @@
+<div class="events-container">
+	<!-- Fixed Events -->
+	<section class="event-section">
+		<h2>Fixed Events</h2>
+		<div *ngFor="let event of fixedEvents">
+			<h3>{{ event.title }}</h3>
+			<p>{{ event.description }}</p>
+			<button (click)="changeParticipation(event)">Change Vote</button>
+			<div *ngFor="let date of getDates()">
+				<strong>{{ date }}:</strong> Yes: {{ voteSummaryByDate[date].yes }}, No:
+				{{ voteSummaryByDate[date].no }}, Maybe:
+				{{ voteSummaryByDate[date].maybe }}
+			</div>
+		</div>
+	</section>
+
+	<!-- Pending Events -->
+	<section class="event-section">
+		<h2>Pending Events</h2>
+		<div *ngFor="let event of pendingEvents">
+			<h3>{{ event.title }}</h3>
+			<p>{{ event.description }}</p>
+
+			<button (click)="changeParticipation(event)">Change Vote</button>
+			<div *ngFor="let date of getDates()">
+				<strong>{{ date }}:</strong> Yes: {{ voteSummaryByDate[date].yes }}, No:
+				{{ voteSummaryByDate[date].no }}, Maybe:
+				{{ voteSummaryByDate[date].maybe }}
+			</div>
+		</div>
+	</section>
+</div>
