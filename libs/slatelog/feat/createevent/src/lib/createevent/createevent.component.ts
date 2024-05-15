@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -24,31 +24,32 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
 
 @Component({
 	selector: 'frontend-createevent',
 	standalone: true,
 	imports: [
-		MatSnackBarModule,
 		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
 		RouterLink,
+		MatSnackBarModule,
 		MatFormFieldModule,
 		MatSelectModule,
 		MatInputModule,
-		MatLabel,
 		MatCardModule,
 		MatDatepickerModule,
 		MatChipsModule,
 		MatIconModule,
-		ReactiveFormsModule,
 		MatButtonModule,
 		CalendarModule,
-		FormsModule,
 	],
 	templateUrl: './createevent.component.html',
 	styleUrls: ['./createevent.component.css'],
 	providers: [provideNativeDateAdapter(), DatePipe],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CreateEventComponent {
 	@Output() create = new EventEmitter<any>();
@@ -61,7 +62,7 @@ export class CreateEventComponent {
 		postalCode: [
 			'1120',
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
-		], // Beispiel für Postleitzahlen mit mindestens 4 Ziffern
+		],
 		country: ['country', [Validators.required]],
 		deadlineDate: ['2024-05-26', [Validators.required]],
 		deadlineTime: ['14:00', [Validators.required]],
@@ -73,7 +74,7 @@ export class CreateEventComponent {
 		const timePointForm = this.fb.group({
 			date: ['2024-05-30', Validators.required],
 			time: ['18:00', Validators.required],
-			vote: [''], // optional, initial leer
+			vote: [''],
 		});
 		this.timePoints.push(timePointForm);
 	}
@@ -83,7 +84,8 @@ export class CreateEventComponent {
 		private createService: EventHttpService,
 		private datePipe: DatePipe,
 		private snackBar: MatSnackBar,
-		private router: Router
+		private router: Router,
+		private dialog: MatDialog
 	) {}
 
 	get timePoints(): FormArray {
@@ -108,54 +110,17 @@ export class CreateEventComponent {
 	removeInvitation(index: number): void {
 		this.invitations.removeAt(index);
 	}
-	// onSubmit(): void {
-	// 	if (this.createForm.valid) {
-	// 		const formattedData = this.formatEventData(this.createForm.value);
-	// 		this.createService.createEvent(formattedData).subscribe(
-	// 			(response) => {
-	// 				console.log('Event successfully created:', response);
-	// 				this.create.emit(response); // Emit event creation success
-	// 				this.snackBar.open('Event created successfully!', 'Close', {
-	// 					duration: 3000,
-	// 					horizontalPosition: 'right',
-	// 					verticalPosition: 'top',
-	// 				});
-	// 				this.createForm.reset(); // Optional: Reset form
-	// 				this.router.navigate(['../timeline']); // Modify this route as needed
-	// 			},
-	// 			(error) => {
-	// 				console.error('Failed to create event:', error);
-	// 				this.snackBar.open('Failed to create event!', 'Close', {
-	// 					duration: 3000,
-	// 					horizontalPosition: 'right',
-	// 					verticalPosition: 'top',
-	// 				});
-	// 			}
-	// 		);
-	// 	} else {
-	// 		console.log('Form is not valid:', this.createForm.errors);
-	// 		this.snackBar.open(
-	// 			'Form is not valid, please review your entries!',
-	// 			'Close',
-	// 			{
-	// 				duration: 3000,
-	// 				horizontalPosition: 'right',
-	// 				verticalPosition: 'top',
-	// 			}
-	// 		);
-	// 	}
-	// }
-	// createevent.component.ts
+
 	onSubmit(): void {
 		if (this.createForm.valid) {
 			const eventData = this.formatEventData(this.createForm.value);
-			this.create.emit(eventData); // Assuming you are using EventEmitter to bubble up the event creation request
+			this.create.emit(eventData);
 			this.createService.createEvent(eventData).subscribe({
 				next: (response) => {
 					this.snackBar.open('Event created and emails sent!', 'Close', {
 						duration: 3000,
 					});
-					this.router.navigate(['/events']); // Redirect after creation
+					this.openConfirmDialog(); // Open the confirm dialog after event creation
 				},
 				error: (error) => {
 					console.error('Error creating event:', error);
@@ -184,7 +149,7 @@ export class CreateEventComponent {
 			pollOptions: formData.timePoints.map(
 				(tp: any) =>
 					`${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${tp.time}:00Z`
-			), // Assuming time is in HH:mm format and Z is added for UTC
+			),
 			invitationEmails: formData.invitations.map((inv: any) => inv.email),
 			deadlineDate: this.datePipe.transform(
 				formData.deadlineDate,
@@ -193,6 +158,20 @@ export class CreateEventComponent {
 			deadlineTime: formData.deadlineTime,
 		};
 	}
+
+	openConfirmDialog(): void {
+		const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+		dialogRef.afterClosed().subscribe((result) => {
+			if (result) {
+				this.downloadIcsFile(); // Download the ICS file
+				this.router.navigate(['/events']); // Redirect to overview page
+			} else {
+				this.router.navigate(['/']); // Navigate to home page or another appropriate page
+			}
+		});
+	}
+
 	downloadIcsFile(): void {
 		const eventData = this.formatEventData(this.createForm.value);
 		const icsFileContent = this.generateIcsFileContent(eventData);
@@ -222,7 +201,7 @@ LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${
 		}, ${eventData.locationState}
 END:VEVENT
 END:VCALENDAR
-        `;
+		`;
 		return icsContent.trim();
 	}
 }

@@ -1,5 +1,4 @@
 <div class="createevent">
-	<!--a routerLink="../timeline">Timeline</a!-->
 	<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
 		<mat-card>
 			<mat-card-title>Create New Event</mat-card-title>
@@ -58,11 +57,6 @@
 							<mat-label>Time</mat-label>
 							<input matInput formControlName="time" type="time" />
 						</mat-form-field>
-
-						<!--            <mat-form-field appearance="fill">-->
-						<!--              <mat-label>Vote</mat-label>-->
-						<!--              <input matInput formControlName="vote" />-->
-						<!--            </mat-form-field>-->
 
 						<button
 							mat-icon-button
@@ -133,15 +127,5 @@
 				</button>
 			</mat-card-actions>
 		</mat-card>
-		<mat-card-actions>
-			<button
-				mat-raised-button
-				color="accent"
-				type="button"
-				(click)="downloadIcsFile()"
-			>
-				Termine in Kalender blocken
-			</button>
-		</mat-card-actions>
 	</form>
 </div>
