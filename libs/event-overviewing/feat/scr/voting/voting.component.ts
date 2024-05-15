@@ -27,6 +27,7 @@ export class VotingComponent implements OnInit {
 	isLoading = false;
 	feedbackMessage = '';
 	votesDetail: VoteDetail[] = [];
+	missingParams = false; // New flag to indicate missing parameters
 
 	constructor(
 		private pollService: PollService,
@@ -34,14 +35,17 @@ export class VotingComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.route.params.subscribe((params) => {
+		this.route.queryParams.subscribe((params) => {
+			console.log('Query Params:', params);
 			this.eventId = params['eventId'];
-			this.emailToken = params['emailToken'];
-			console.log(this.eventId, this.emailToken);
+			this.emailToken = params['tokenId'];
+			console.log('Event ID:', this.eventId);
+			console.log('Email Token:', this.emailToken);
 			if (this.eventId && this.emailToken) {
 				this.loadEvent(this.eventId, this.emailToken);
 			} else {
 				console.error('Required parameters are missing or invalid');
+				this.missingParams = true; // Set the flag if parameters are missing
 			}
 		});
 	}

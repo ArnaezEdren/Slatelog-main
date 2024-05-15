@@ -1,69 +1,71 @@
 <div *ngIf="isLoading">Updating votes...</div>
 <div *ngIf="feedbackMessage">{{ feedbackMessage }}</div>
-<div *ngIf="event; else loading">
-	<h1>{{ event.title }}</h1>
-	<p>{{ event.description }}</p>
+<div *ngIf="!missingParams; else loading">
+	<div *ngIf="event; else loading">
+		<h1>{{ event.title }}</h1>
+		<p>{{ event.description }}</p>
 
-	<div>
-		Street: {{ event?.location?.street }}
-		<br />
-		<br />
-		City: {{ event?.location?.city }}
-		<br />
-		<br />
-		Zip Code: {{ event?.location?.zipCode }}
-		<br />
-		<br />
-		Country: {{ event?.location?.state }}
-	</div>
+		<div>
+			Street: {{ event?.location?.street }}
+			<br />
+			<br />
+			City: {{ event?.location?.city }}
+			<br />
+			<br />
+			Zip Code: {{ event?.location?.zipCode }}
+			<br />
+			<br />
+			Country: {{ event?.location?.state }}
+		</div>
 
-	<div class="event-deadline" *ngIf="event?.poll?.pollCloseDate">
-		<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
-	</div>
+		<div class="event-deadline" *ngIf="event?.poll?.pollCloseDate">
+			<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
+		</div>
 
-	<div *ngIf="pollResults.length > 0; else noPollData">
-		<h2>Poll Results:</h2>
-		<form #voteForm="ngForm" (ngSubmit)="submitVotes()">
-			<ul>
-				<div *ngFor="let result of pollResults; let i = index">
-					Key: {{ result.key }}<br />
-					<label>
-						<input
-							type="radio"
-							name="voteOption{{ i }}"
-							[(ngModel)]="result.selectedVote"
-							value="Yes"
-							required
-						/>
-						Yes ({{ result.counts.yes }})
-					</label>
-					<label>
-						<input
-							type="radio"
-							name="voteOption{{ i }}"
-							[(ngModel)]="result.selectedVote"
-							value="No"
-							required
-						/>
-						No ({{ result.counts.no }})
-					</label>
-					<label>
-						<input
-							type="radio"
-							name="voteOption{{ i }}"
-							[(ngModel)]="result.selectedVote"
-							value="Maybe"
-							required
-						/>
-						Maybe ({{ result.counts.maybe }})
-					</label>
-				</div>
-			</ul>
-			<button type="submit" [disabled]="!voteForm.valid">Submit Votes</button>
-		</form>
-	</div>
-	<div *ngFor="let vote of votesDetail">
-		<p>{{ vote.voteOption }}' on {{ vote.votedAt | date : 'medium' }}</p>
+		<div *ngIf="pollResults.length > 0; else noPollData">
+			<h2>Poll Results:</h2>
+			<form #voteForm="ngForm" (ngSubmit)="submitVotes()">
+				<ul>
+					<div *ngFor="let result of pollResults; let i = index">
+						Key: {{ result.key }}<br />
+						<label>
+							<input
+								type="radio"
+								name="voteOption{{ i }}"
+								[(ngModel)]="result.selectedVote"
+								value="Yes"
+								required
+							/>
+							Yes ({{ result.counts.yes }})
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="voteOption{{ i }}"
+								[(ngModel)]="result.selectedVote"
+								value="No"
+								required
+							/>
+							No ({{ result.counts.no }})
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="voteOption{{ i }}"
+								[(ngModel)]="result.selectedVote"
+								value="Maybe"
+								required
+							/>
+							Maybe ({{ result.counts.maybe }})
+						</label>
+					</div>
+				</ul>
+				<button type="submit" [disabled]="!voteForm.valid">Submit Votes</button>
+			</form>
+		</div>
+		<div *ngFor="let vote of votesDetail">
+			<p>{{ vote.voteOption }}' on {{ vote.votedAt | date : 'medium' }}</p>
+		</div>
 	</div>
 </div>
 

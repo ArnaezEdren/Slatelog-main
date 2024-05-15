@@ -193,4 +193,36 @@ export class CreateEventComponent {
 			deadlineTime: formData.deadlineTime,
 		};
 	}
+	downloadIcsFile(): void {
+		const eventData = this.formatEventData(this.createForm.value);
+		const icsFileContent = this.generateIcsFileContent(eventData);
+		const blob = new Blob([icsFileContent], { type: 'text/calendar' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `${eventData.title}.ics`;
+		a.click();
+		window.URL.revokeObjectURL(url);
+	}
+
+	private generateIcsFileContent(eventData: any): string {
+		const startDate = `${eventData.deadlineDate}T${eventData.deadlineTime}:00Z`;
+		const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Organization//Your Product//EN
+BEGIN:VEVENT
+UID:${eventData.title}
+DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, '')}
+DTSTART:${startDate.replace(/-|:|\.\d+/g, '')}
+SUMMARY:${eventData.title}
+DESCRIPTION:${eventData.description}
+LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${
+			eventData.locationZipCode
+		}, ${eventData.locationState}
+END:VEVENT
+END:VCALENDAR
+        `;
+		return icsContent.trim();
+	}
 }

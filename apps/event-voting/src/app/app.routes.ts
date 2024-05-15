@@ -5,10 +5,9 @@ import { VotingComponent } from '../../../../libs/event-overviewing/feat/scr/vot
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 const routes: Routes = [
-	{ path: 'voting/:eventId/:emailToken', component: VotingComponent },
-
-	{ path: '', redirectTo: '/voting', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/voting' },
+	{ path: 'voting/token', component: VotingComponent },
+	{ path: '', redirectTo: '/voting/token', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/voting/token' }, // Ensure this redirects to the correct route
 ];
 
 @NgModule({
