@@ -63,9 +63,6 @@
 				<button type="submit" [disabled]="!voteForm.valid">Submit Votes</button>
 			</form>
 		</div>
-		<div *ngFor="let vote of votesDetail">
-			<p>{{ vote.voteOption }}' on {{ vote.votedAt | date : 'medium' }}</p>
-		</div>
 	</div>
 </div>
 
