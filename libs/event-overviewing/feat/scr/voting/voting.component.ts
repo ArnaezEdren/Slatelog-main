@@ -4,14 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { TranslateAnswerPipe } from '../../data/model/answer.component';
+import { TranslateAnswerPipe } from '../../../data/model/answer.component';
 import {
 	PollOptionResult,
 	VoteCount,
 	VoteDetail,
-} from '../../data/model/voting-model';
-import { PollService } from '../../data/service/voting-http-service';
-import { Commands } from '../../data/model/commands';
+} from '../../../data/model/voting-model';
+import { PollService } from '../../../data/service/voting-http-service';
 
 @Component({
 	selector: 'frontend-app-voting',

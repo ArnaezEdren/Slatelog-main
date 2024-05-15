@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PollService } from '../../data/service/voting-http-service';
-import { PollOption } from '../../data/model/voting-model';
+
 import { AsyncPipe } from '@angular/common';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule } from '@angular/common';
+import { PollService } from '../../../data/service/voting-http-service';
+import { PollOption } from '../../../data/model/voting-model'; // Import CommonModule
 
 @Component({
 	selector: 'frontend-voting-overview',

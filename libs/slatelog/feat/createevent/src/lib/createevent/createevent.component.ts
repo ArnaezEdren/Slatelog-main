@@ -108,40 +108,67 @@ export class CreateEventComponent {
 	removeInvitation(index: number): void {
 		this.invitations.removeAt(index);
 	}
+	// onSubmit(): void {
+	// 	if (this.createForm.valid) {
+	// 		const formattedData = this.formatEventData(this.createForm.value);
+	// 		this.createService.createEvent(formattedData).subscribe(
+	// 			(response) => {
+	// 				console.log('Event successfully created:', response);
+	// 				this.create.emit(response); // Emit event creation success
+	// 				this.snackBar.open('Event created successfully!', 'Close', {
+	// 					duration: 3000,
+	// 					horizontalPosition: 'right',
+	// 					verticalPosition: 'top',
+	// 				});
+	// 				this.createForm.reset(); // Optional: Reset form
+	// 				this.router.navigate(['../timeline']); // Modify this route as needed
+	// 			},
+	// 			(error) => {
+	// 				console.error('Failed to create event:', error);
+	// 				this.snackBar.open('Failed to create event!', 'Close', {
+	// 					duration: 3000,
+	// 					horizontalPosition: 'right',
+	// 					verticalPosition: 'top',
+	// 				});
+	// 			}
+	// 		);
+	// 	} else {
+	// 		console.log('Form is not valid:', this.createForm.errors);
+	// 		this.snackBar.open(
+	// 			'Form is not valid, please review your entries!',
+	// 			'Close',
+	// 			{
+	// 				duration: 3000,
+	// 				horizontalPosition: 'right',
+	// 				verticalPosition: 'top',
+	// 			}
+	// 		);
+	// 	}
+	// }
+	// createevent.component.ts
 	onSubmit(): void {
 		if (this.createForm.valid) {
-			const formattedData = this.formatEventData(this.createForm.value);
-			this.createService.createEvent(formattedData).subscribe(
-				(response) => {
-					console.log('Event successfully created:', response);
-					this.create.emit(response); // Emit event creation success
-					this.snackBar.open('Event created successfully!', 'Close', {
+			const eventData = this.formatEventData(this.createForm.value);
+			this.create.emit(eventData); // Assuming you are using EventEmitter to bubble up the event creation request
+			this.createService.createEvent(eventData).subscribe({
+				next: (response) => {
+					this.snackBar.open('Event created and emails sent!', 'Close', {
 						duration: 3000,
-						horizontalPosition: 'right',
-						verticalPosition: 'top',
 					});
-					this.createForm.reset(); // Optional: Reset form
-					this.router.navigate(['../timeline']); // Modify this route as needed
+					this.router.navigate(['/events']); // Redirect after creation
 				},
-				(error) => {
-					console.error('Failed to create event:', error);
+				error: (error) => {
+					console.error('Error creating event:', error);
 					this.snackBar.open('Failed to create event!', 'Close', {
 						duration: 3000,
-						horizontalPosition: 'right',
-						verticalPosition: 'top',
 					});
-				}
-			);
+				},
+			});
 		} else {
-			console.log('Form is not valid:', this.createForm.errors);
 			this.snackBar.open(
-				'Form is not valid, please review your entries!',
+				'Form is not valid, please check your entries.',
 				'Close',
-				{
-					duration: 3000,
-					horizontalPosition: 'right',
-					verticalPosition: 'top',
-				}
+				{ duration: 3000 }
 			);
 		}
 	}
