@@ -10,26 +10,18 @@ import { AppComponent } from './app.component';
 import { BasicAuthInterceptor, ErrorInterceptor } from '@frontend/data/auth';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { ConfirmDialogComponent } from '../../../../libs/slatelog/feat/dialogconfirm/dialogconfirm.component';
-import { CreateEventComponent } from '@frontend/createevent';
 
+// A module is a container for components, directives, pipes, and services
+// All of our components, directives, pipes, and services must be declared in a module
 @NgModule({
-	declarations: [AppComponent, ConfirmDialogComponent],
+	declarations: [AppComponent],
 	imports: [
 		HttpClientModule,
 		BrowserModule,
 		BrowserAnimationsModule,
 		RegisterContainerComponent,
 		LoginContainerComponent,
-		MatDialogModule,
-		MatButtonModule,
-		RouterModule.forRoot(appRoutes, { useHash: false }),
-		CreateEventComponent,
-
-		//Was set to true
+		RouterModule.forRoot(appRoutes, { useHash: false }), //Was set to true
 	],
 	providers: [
 		{
