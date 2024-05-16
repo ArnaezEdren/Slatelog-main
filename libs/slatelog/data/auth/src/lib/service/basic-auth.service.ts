@@ -17,18 +17,20 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpHeaders, HttpRequest } from '@angular/common/http';
+
+import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
+import { AuthToken } from '../model/auth.model';
 import {
 	User,
 	UserHttpService,
 	UserLoginCommand,
 	UserRegistrationCommand,
-} from '@frontend/data/user';
-import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
-import { AuthToken } from '../model/auth.model';
+} from '../../../../user/src';
 
 // Basic Auth
 @Injectable({ providedIn: 'root' })
 export class BasicAuthService {
+	// @ts-ignore
 	#authToken: AuthToken | null = null;
 
 	private userHttpService = inject(UserHttpService);

@@ -23,6 +23,7 @@ export class TimelineOverviewComponent implements OnInit {
 	getEventsInProgress() {
 		this.http.get<any[]>('api/timeline').subscribe((events) => {
 			this.inProgressEvents = events;
+			console.log(events);
 		});
 	}
 
