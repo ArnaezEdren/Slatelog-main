@@ -4,15 +4,14 @@
 			<h2>{{ event.title }}</h2>
 			<p>Description: {{ event.description }}</p>
 			<p>
-				Location: {{ event.location.street }}, {{ event.location.city }},
-				{{ event.location.state }},
-				{{ event.location.zipCode }}
+				Location:
+				{{ event.location?.street }}, {{ event.location?.city }},
+				{{ event.location?.state }},
+				{{ event.location?.zipCode }}
 			</p>
 			<div class="button-container">
 				<button class="edit-button" (click)="updateEvent(event)">Change</button>
-				<button class="delete-button" (click)="deleteEvent(event)">
-					Delete
-				</button>
+				<button class="delete-button" (click)="deleteEvent()">Delete</button>
 			</div>
 		</div>
 	</main>

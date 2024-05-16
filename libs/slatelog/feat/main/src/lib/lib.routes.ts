@@ -12,7 +12,7 @@ export const featureMainRoutes: Route[] = [
 			{ path: '', redirectTo: 'timeline', pathMatch: 'full' }, // Default-Routing zur 'timeline'
 			{ path: 'timeline', component: TimelineContainerComponent },
 			{ path: 'createevent', component: CreateEventContainerComponent },
-			{ path: 'event-details/:id', component: EventDetailsContainerComponent },
+			{ path: 'event/:eventId', component: EventDetailsContainerComponent },
 			{ path: '**', redirectTo: 'timeline' },
 		],
 	},

@@ -38,7 +38,6 @@ export class EventHttpService {
 			.pipe(catchError(this.handleError));
 	}
 
-	//TODO FIX ERROR 400 BAD REQUEST
 	deleteEvent(eventId: string): Observable<any> {
 		console.log('Delete event with ID:', eventId);
 		return this.http

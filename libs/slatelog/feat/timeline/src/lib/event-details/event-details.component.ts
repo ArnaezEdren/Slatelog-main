@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { EventHttpService } from '../../../../createevent/src';
 import { error } from '@angular/compiler-cli/src/transformers/util';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
 	selector: 'frontend-event-details',
@@ -16,17 +17,19 @@ export class EventDetailsComponent implements OnInit {
 	eventId!: string;
 	events: any[] = [];
 	filteredEvents: any[] = [];
+	eventData: any;
 
 	constructor(
 		private route: ActivatedRoute,
 		private http: HttpClient,
-		private eventHttpService: EventHttpService
+		private eventHttpService: EventHttpService,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
 		this.route.params.subscribe((params) => {
-			this.eventId = params['id'];
-			console.log(this.eventId);
+			this.eventId = params['eventId'];
+			//console.log(this.eventId);
 		});
 		this.getEvents();
 	}
@@ -37,11 +40,16 @@ export class EventDetailsComponent implements OnInit {
 			this.filteredEvents = this.events.filter((event) =>
 				this.isEventId(event.id)
 			);
+			//console.log('Filtered Events:', this.filteredEvents);
 		});
 	}
 
 	isEventId(id: string): boolean {
-		return this.eventId === id;
+		//console.log('Comparing IDs:', this.eventId, id);
+		const actualId = this.eventId.replace('eventId=', '');
+		//console.log('Actual ID:', actualId, 'eventId:', this.eventId)
+		//console.log('Übergebener ID wert', id);
+		return actualId === id;
 	}
 
 	//TODO  UPDATE THE EVENT
@@ -50,20 +58,25 @@ export class EventDetailsComponent implements OnInit {
 		console.log('Edit Event:', eventId);
 	}
 
-	//TODO  FIX THE ERROR 400 BAD REQUEST
-	deleteEvent(eventId: string): void {
-		if (confirm('Are you sure you want to delete this Event?')) {
-			this.eventHttpService.deleteEvent(eventId).subscribe({
-				next: () => {
-					console.log('Successfully deleted Event');
-					this.filteredEvents = this.filteredEvents.filter(
-						(e) => e.id !== eventId
-					);
-				},
-				error: (error) => {
-					console.error('Error occurred:', error);
-				},
-			});
+	deleteEvent(): void {
+		const actualId = this.eventId.replace('eventId=', '');
+		if (confirm('Do you really want to delete this Event?')) {
+			if (this.isEventId(actualId)) {
+				this.eventHttpService
+					.deleteEvent(actualId)
+					.pipe(
+						catchError((error) => {
+							console.error('Error deleting Event:', error);
+							return throwError(error);
+						})
+					)
+					.subscribe({
+						next: () => {
+							console.log('Successfully deleted Event');
+							this.router.navigate(['/timeline']);
+						},
+					});
+			}
 		}
 	}
 }

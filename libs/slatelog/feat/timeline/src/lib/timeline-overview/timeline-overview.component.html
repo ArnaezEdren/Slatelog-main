@@ -12,15 +12,18 @@
 		<div id="pending-events">
 			<h2>Pending Events</h2>
 			<div *ngFor="let event of inProgressEvents" class="event-item">
-				<button (click)="goToEventDetails(event.id)" class="details-button">
+				<button
+					[routerLink]="'/event/eventId=' + event.id"
+					class="details-button"
+				>
 					Details
 				</button>
 				{{ event.title }}
 				{{ event.description }}
 			</div>
-			<div class="view-all-link">
+			<!--div class="view-all-link">
 				<span routerLink="/allevents">View all</span>
-			</div>
+			</div-->
 		</div>
 		<div id="create-event">
 			<h2>Create Event</h2>
