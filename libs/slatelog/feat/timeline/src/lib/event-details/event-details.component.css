@@ -37,14 +37,16 @@
   line-height: 1.5;
 }
 
-
 .button-container {
   display: flex;
   justify-content: flex-end;
+  margin-top: 10px;
 }
 
 .edit-button,
-.delete-button {
+.delete-button,
+.save-button,
+.cancel-button {
   margin-left: 10px;
   padding: 5px 10px;
   border: none;
@@ -55,7 +57,20 @@
   transition: background-color 0.3s;
 }
 
-.edit-button:hover,
-.delete-button:hover {
+edit-button:hover,
+.delete-button:hover,
+.save-button:hover,
+.cancel-button:hover {
   background-color: #0056b3;
+}
+
+.update-form label,
+.update-form input,
+.update-form textarea {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.update-form .button-container {
+  margin-top: 20px;
 }

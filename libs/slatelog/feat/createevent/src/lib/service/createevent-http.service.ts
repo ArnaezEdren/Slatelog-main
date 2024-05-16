@@ -33,9 +33,12 @@ export class EventHttpService {
 	//TODO IMPLEMENT UPDATE EVENT
 	updateEvent(eventId: string, eventData: any): Observable<any> {
 		console.log('Editing event with ID:', eventId);
-		return this.http
-			.put(`${this.eventApiUrl}/${eventId}`, eventData)
-			.pipe(catchError(this.handleError));
+		return (
+			this.http
+				//.put(`${this.eventApiUrl}/${eventId}`, eventData)
+				.put(`${this.eventApiUrl}/`, eventId, eventData)
+				.pipe(catchError(this.handleError))
+		);
 	}
 
 	deleteEvent(eventId: string): Observable<any> {

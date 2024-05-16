@@ -1,18 +1,66 @@
-<body>
-	<main>
-		<div *ngFor="let event of filteredEvents" class="event-details">
-			<h2>{{ event.title }}</h2>
-			<p>Description: {{ event.description }}</p>
-			<p>
-				Location:
-				{{ event.location?.street }}, {{ event.location?.city }},
-				{{ event.location?.state }},
-				{{ event.location?.zipCode }}
-			</p>
-			<div class="button-container">
-				<button class="edit-button" (click)="updateEvent(event)">Change</button>
-				<button class="delete-button" (click)="deleteEvent()">Delete</button>
-			</div>
+<div *ngFor="let event of filteredEvents" class="event-details">
+	<div *ngIf="!updateMode">
+		<h2>{{ event.title }}</h2>
+		<p>Description: {{ event.description }}</p>
+		<p>
+			Location:
+			{{ event.location?.street }},
+			{{ event.location?.zipCode }}
+			{{ event.location?.city }},
+			{{ event.location?.state }}
+		</p>
+		<div class="button-container">
+			<button (click)="toggleUpdateMode()" class="edit-button">Change</button>
+			<button (click)="deleteEvent()" class="delete-button">Delete</button>
 		</div>
-	</main>
-</body>
+	</div>
+
+	<div *ngIf="updateMode" class="update-form">
+		<label for="title">Title:</label>
+		<input type="text" id="title" [(ngModel)]="event.title" name="title" />
+
+		<label for="description">Description:</label>
+		<textarea
+			id="description"
+			[(ngModel)]="event.description"
+			name="description"
+		></textarea>
+
+		<label for="street">Street:</label>
+		<input
+			type="text"
+			id="street"
+			[(ngModel)]="event.location.street"
+			name="street"
+		/>
+
+		<label for="city">City:</label>
+		<input
+			type="text"
+			id="city"
+			[(ngModel)]="event.location.city"
+			name="city"
+		/>
+
+		<label for="state">State:</label>
+		<input
+			type="text"
+			id="state"
+			[(ngModel)]="event.location.state"
+			name="state"
+		/>
+
+		<label for="zipCode">Zip Code:</label>
+		<input
+			type="text"
+			id="zipCode"
+			[(ngModel)]="event.location.zipCode"
+			name="zipCode"
+		/>
+
+		<div *ngIf="updateMode" class="button-container">
+			<button (click)="updateEvent()" class="save-button">Save</button>
+			<button (click)="toggleUpdateMode()" class="cancel-button">Cancel</button>
+		</div>
+	</div>
+</div>
