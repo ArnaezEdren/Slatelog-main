@@ -1,4 +1,6 @@
 .event-details {
+  display: flex;
+  flex-direction: column;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -33,4 +35,27 @@
 .event-info p {
   font-size: 16px;
   line-height: 1.5;
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-button,
+.delete-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  background-color: #0056b3;
 }

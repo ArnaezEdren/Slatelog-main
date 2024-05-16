@@ -1,10 +1,18 @@
 <body>
 	<main>
-		<div *ngFor="let event of events" class="event-details">
-			<div *ngIf="isEventId(event.id)">
-				<h2>{{ event.title }}</h2>
-				<p>{{ event.description }}</p>
-				<p>{{ event.location }}</p>
+		<div *ngFor="let event of filteredEvents" class="event-details">
+			<h2>{{ event.title }}</h2>
+			<p>Description: {{ event.description }}</p>
+			<p>
+				Location: {{ event.location.street }}, {{ event.location.city }},
+				{{ event.location.state }},
+				{{ event.location.zipCode }}
+			</p>
+			<div class="button-container">
+				<button class="edit-button" (click)="updateEvent(event)">Change</button>
+				<button class="delete-button" (click)="deleteEvent(event)">
+					Delete
+				</button>
 			</div>
 		</div>
 	</main>

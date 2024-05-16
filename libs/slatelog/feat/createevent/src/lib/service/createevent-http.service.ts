@@ -8,7 +8,7 @@ import { User } from '../../../../../data/user/src';
 })
 export class EventHttpService {
 	private http = inject(HttpClient);
-	private eventApiUrl = '/api/event/eventId=eventId'; // URL des Backend-Endpoints für Events
+	private eventApiUrl = '/api/event'; // URL des Backend-Endpoints für Events
 	//changed to this from: '/api/event'
 
 	login(): Promise<User> {
@@ -30,6 +30,22 @@ export class EventHttpService {
 			.pipe(catchError(this.handleError));
 	}
 
+	//TODO IMPLEMENT UPDATE EVENT
+	updateEvent(eventId: string, eventData: any): Observable<any> {
+		console.log('Editing event with ID:', eventId);
+		return this.http
+			.put(`${this.eventApiUrl}/${eventId}`, eventData)
+			.pipe(catchError(this.handleError));
+	}
+
+	//TODO FIX ERROR 400 BAD REQUEST
+	deleteEvent(eventId: string): Observable<any> {
+		console.log('Delete event with ID:', eventId);
+		return this.http
+			.delete(`${this.eventApiUrl}/${eventId}`)
+			.pipe(catchError(this.handleError));
+	}
+
 	private handleError(error: HttpErrorResponse) {
 		if (error.error instanceof ErrorEvent) {
 			console.error(
@@ -47,6 +63,7 @@ export class EventHttpService {
 		);
 	}
 }
+
 export class DataService {
 	constructor(private http: HttpClient) {}
 
