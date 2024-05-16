@@ -185,21 +185,25 @@ export class CreateEventComponent {
 	}
 
 	private generateIcsFileContent(eventData: any): string {
-		const startDate = `${eventData.deadlineDate}T${eventData.deadlineTime}:00Z`;
+		const formattedPollOptions = eventData.pollOptions
+			.map(
+				(option: string) =>
+					`BEGIN:VEVENT
+UID:${eventData.title}-${option}
+DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, '')}
+DTSTART:${option.replace(/-|:|\.\d+/g, '')}
+SUMMARY:${eventData.title}
+DESCRIPTION:${eventData.description}
+END:VEVENT`
+			)
+			.join('\n');
+
 		const icsContent = `
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Your Organization//Your Product//EN
-BEGIN:VEVENT
-UID:${eventData.title}
-DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, '')}
-DTSTART:${startDate.replace(/-|:|\.\d+/g, '')}
-SUMMARY:${eventData.title}
-DESCRIPTION:${eventData.description}
-LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${
-			eventData.locationZipCode
-		}, ${eventData.locationState}
-END:VEVENT
+${formattedPollOptions}
+LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${eventData.locationZipCode}, ${eventData.locationState}
 END:VCALENDAR
 		`;
 		return icsContent.trim();
