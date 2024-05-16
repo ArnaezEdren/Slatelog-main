@@ -1,0 +1,36 @@
+.event-details {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.event-header {
+  text-align: center;
+}
+
+.event-header h1 {
+  margin-bottom: 10px;
+}
+
+.event-date {
+  font-size: 14px;
+  color: #888;
+}
+
+.event-info {
+  margin-top: 20px;
+}
+
+.event-info h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.event-info p {
+  font-size: 16px;
+  line-height: 1.5;
+}

@@ -8,7 +8,8 @@ import { User } from '../../../../../data/user/src';
 })
 export class EventHttpService {
 	private http = inject(HttpClient);
-	private eventApiUrl = '/api/event'; // URL des Backend-Endpoints für Events
+	private eventApiUrl = '/api/event/eventId=eventId'; // URL des Backend-Endpoints für Events
+	//changed to this from: '/api/event'
 
 	login(): Promise<User> {
 		// `firstValueFrom` turns an `Observable` into a `Promise`

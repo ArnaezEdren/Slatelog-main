@@ -94,8 +94,7 @@ var EventDetailsContainerComponent = (function () {
 				common_1.CommonModule,
 				event_details_component_1.EventDetailsComponent,
 			],
-			template: '',
-			styles: [],
+			template: '<frontend-event-details></frontend-event-details>',
 		}),
 	];
 	var _classDescriptor;

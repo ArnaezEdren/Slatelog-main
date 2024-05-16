@@ -26,9 +26,8 @@ export class TimelineOverviewComponent implements OnInit {
 		});
 	}
 
-	goToEventDetails(eventId: number) {
+	goToEventDetails(eventId: string) {
 		this.router.navigate(['/event-details', eventId]);
-
-		console.log('Navigating to event details for event ID:', eventId);
+		//console.log('Navigating to event details for event ID:', eventId);
 	}
 }

@@ -90,8 +90,8 @@ var EventDetailsComponent = (function () {
 			selector: 'frontend-event-details',
 			standalone: true,
 			imports: [common_1.CommonModule],
-			template: '<frontend-event-details></frontend-event-details>',
-			styles: [],
+			templateUrl: './event-details.component.html',
+			styleUrls: ['./event-details.component.css'],
 		}),
 	];
 	var _classDescriptor;
