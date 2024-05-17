@@ -25,6 +25,13 @@
 		<div class="button-container">
 			<button (click)="toggleUpdateMode()" class="edit-button">Change</button>
 			<button (click)="deleteEvent()" class="delete-button">Delete</button>
+			<button (click)="goBack()" class="back-button">Zurück</button>
+			<button
+				(click)="downloadIcsFile(event.icsFileData)"
+				class="calendar-button"
+			>
+				In den Kalender eintragen
+			</button>
 		</div>
 	</div>
 

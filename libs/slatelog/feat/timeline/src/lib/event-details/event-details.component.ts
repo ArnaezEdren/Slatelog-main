@@ -250,4 +250,21 @@ export class EventDetailsComponent implements OnInit {
 			}
 		}
 	}
+
+	goBack(): void {
+		this.router.navigate(['/timeline']);
+	}
+
+	downloadIcsFile(base64Data: string): void {
+		const binaryString = window.atob(base64Data);
+		const bytes = new Uint8Array(binaryString.length);
+		for (let i = 0; i < binaryString.length; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		const blob = new Blob([bytes.buffer], { type: 'text/calendar' });
+		const link = document.createElement('a');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = 'event.ics';
+		link.click();
+	}
 }
