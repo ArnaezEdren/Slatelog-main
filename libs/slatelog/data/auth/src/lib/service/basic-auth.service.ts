@@ -16,7 +16,7 @@
 // -> Remove Basic Auth Header
 
 import { inject, Injectable } from '@angular/core';
-import { HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpRequest } from '@angular/common/http';
 
 import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
 import { AuthToken } from '../model/auth.model';
