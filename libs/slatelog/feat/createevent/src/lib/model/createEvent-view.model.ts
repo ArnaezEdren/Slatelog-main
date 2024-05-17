@@ -1,7 +1,7 @@
 // This is a model for the view e.g. `login.component.ts`.
 // It is not the model for our data e.g. `data/user/model`.
 
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 export interface TimePoint {
 	dateTime: DateTime[];
@@ -46,6 +46,7 @@ export interface CreateFormData {
 }
 
 export interface Event {
+	id: string;
 	title: string;
 	description: string;
 	street: string;
@@ -56,6 +57,7 @@ export interface Event {
 	deadlineTime: string;
 	timePoints: TimePoint[];
 	invitations: Invitation[];
+	userId: string; // Ensure this property is included
 }
 
 // type FormKeyType = 'email' | 'password' | 'passwordConfirm';

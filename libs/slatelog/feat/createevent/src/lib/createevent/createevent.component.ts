@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
+import { Event } from '../model/createEvent-view.model'; // Ensure the correct Event model is imported
 
 @Component({
 	selector: 'frontend-createevent',
@@ -70,15 +71,6 @@ export class CreateEventComponent {
 		invitations: this.fb.array([]),
 	});
 
-	addTimePoint(): void {
-		const timePointForm = this.fb.group({
-			date: ['2024-05-30', Validators.required],
-			time: ['18:00', Validators.required],
-			vote: [''],
-		});
-		this.timePoints.push(timePointForm);
-	}
-
 	constructor(
 		private fb: FormBuilder,
 		private createService: EventHttpService,
@@ -94,6 +86,15 @@ export class CreateEventComponent {
 
 	get invitations(): FormArray {
 		return this.createForm.get('invitations') as FormArray;
+	}
+
+	addTimePoint(): void {
+		const timePointForm = this.fb.group({
+			date: ['2024-05-30', Validators.required],
+			time: ['18:00', Validators.required],
+			vote: [''],
+		});
+		this.timePoints.push(timePointForm);
 	}
 
 	addInvitation(): void {
@@ -121,6 +122,7 @@ export class CreateEventComponent {
 						duration: 3000,
 					});
 					this.openConfirmDialog(); // Open the confirm dialog after event creation
+					this.loadAllEvents(); // Load all events after creation
 				},
 				error: (error) => {
 					console.error('Error creating event:', error);
@@ -164,7 +166,6 @@ export class CreateEventComponent {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
-				this.downloadIcsFile(); // Download the ICS file
 				this.router.navigate(['/events']); // Redirect to overview page
 			} else {
 				this.router.navigate(['/']); // Navigate to home page or another appropriate page
@@ -172,40 +173,21 @@ export class CreateEventComponent {
 		});
 	}
 
-	downloadIcsFile(): void {
-		const eventData = this.formatEventData(this.createForm.value);
-		const icsFileContent = this.generateIcsFileContent(eventData);
-		const blob = new Blob([icsFileContent], { type: 'text/calendar' });
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `${eventData.title}.ics`;
-		a.click();
-		window.URL.revokeObjectURL(url);
+	loadAllEvents(): void {
+		this.createService.getAllEvents().subscribe(
+			(events: Event[]) => {
+				events.forEach((event) => {
+					this.ReadUserId(event.userId); // Pass the userId to ReadUserId method
+				});
+			},
+			(error) => {
+				console.error('Error loading events:', error);
+			}
+		);
 	}
 
-	private generateIcsFileContent(eventData: any): string {
-		const formattedPollOptions = eventData.pollOptions
-			.map(
-				(option: string) =>
-					`BEGIN:VEVENT
-UID:${eventData.title}-${option}
-DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, '')}
-DTSTART:${option.replace(/-|:|\.\d+/g, '')}
-SUMMARY:${eventData.title}
-DESCRIPTION:${eventData.description}
-END:VEVENT`
-			)
-			.join('\n');
-
-		const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Your Organization//Your Product//EN
-${formattedPollOptions}
-LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${eventData.locationZipCode}, ${eventData.locationState}
-END:VCALENDAR
-		`;
-		return icsContent.trim();
+	ReadUserId(userId: string): void {
+		console.log('User ID:', userId);
+		// Further processing with userId can be done here if needed
 	}
 }

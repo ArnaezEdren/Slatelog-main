@@ -64,24 +64,7 @@ export class EventHttpService {
 			() => new Error('Something bad happened; please try again later.')
 		);
 	}
-}
-
-export class DataService {
-	constructor(private http: HttpClient) {}
-
-	login(): Promise<User> {
-		// `firstValueFrom` turns an `Observable` into a `Promise`
-		// return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
-		// return lastValueFrom(this.http.get<User>('/api/user/login'));
-		return lastValueFrom(this.http.get<User>('/api/user'));
-	}
-
-	public getData(url: '/api/event'): Observable<any> {
-		return this.http.get(url).pipe(
-			catchError((error) => {
-				console.error('Error fetching data', error);
-				return throwError(() => new Error('Error fetching data'));
-			})
-		);
+	getAllEvents(): Observable<Event[]> {
+		return this.http.get<Event[]>('/api/timeline');
 	}
 }
