@@ -36,7 +36,7 @@ export class EventHttpService {
 		return (
 			this.http
 				//.put(`${this.eventApiUrl}/${eventId}`, eventData)
-				.put(`${this.eventApiUrl}/`, eventId, eventData)
+				.put(`${this.eventApiUrl}/${eventId}`, eventData)
 				.pipe(catchError(this.handleError))
 		);
 	}
