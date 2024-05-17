@@ -83,6 +83,10 @@ export class EventDetailsComponent implements OnInit {
 					};
 				});
 			});
+			// Optionally, reset the form with the updated event data
+			if (this.filteredEvents.length > 0) {
+				this.setFormData(this.filteredEvents[0]);
+			}
 		});
 	}
 
@@ -151,10 +155,19 @@ export class EventDetailsComponent implements OnInit {
 		if (pollOptions) {
 			Object.keys(pollOptions).forEach((key) => {
 				const [date, time] = key.split('T');
+				let formattedTime = time.split('Z')[0];
+
+				// Ensure formattedTime is in hh:mm:ss format
+				if (!formattedTime.includes(':')) {
+					formattedTime += ':00'; // Append seconds if missing
+				} else if (formattedTime.split(':').length === 2) {
+					formattedTime += ':00'; // Append seconds if only hours and minutes are provided
+				}
+
 				timePointsArray.push(
 					this.fb.group({
 						date: [date, Validators.required],
-						time: [time.split('Z')[0], Validators.required],
+						time: [formattedTime, Validators.required],
 					})
 				);
 			});
@@ -191,6 +204,19 @@ export class EventDetailsComponent implements OnInit {
 		this.invitationsControls.removeAt(index);
 	}
 
+	addTimePoint(): void {
+		this.timePointsControls.push(
+			this.fb.group({
+				date: ['', Validators.required],
+				time: ['', Validators.required],
+			})
+		);
+	}
+
+	removeTimePoint(index: number): void {
+		this.timePointsControls.removeAt(index);
+	}
+
 	updateEvent(): void {
 		const actualId = this.eventId.replace('eventId=', '');
 		this.eventData = this.formatEventData(this.createForm2.value);
@@ -199,16 +225,38 @@ export class EventDetailsComponent implements OnInit {
 			.pipe(
 				catchError((error) => {
 					console.error('Error updating event:', error);
-					throw error;
+					return throwError(error);
 				})
 			)
 			.subscribe(() => {
 				console.log('Event updated successfully');
 				this.updateMode = false;
+				// Reload the events to refresh the data
+				this.getEvents();
 			});
 	}
 
+	confirmPollOption(eventId: string, dateTime: string): void {
+		// Your logic to handle poll option confirmation
+		console.log(`Confirming poll option for event ${eventId} at ${dateTime}`);
+		// Update event data or call a service to handle confirmation
+		// Example: this.eventHttpService.confirmPollOption(eventId, dateTime)...
+	}
+
 	private formatEventData(formData: any): any {
+		const formattedTimePoints = formData.timePoints.map((tp: any) => {
+			// Ensure tp.time is in hh:mm:ss format
+			let time = tp.time;
+			if (!time.includes(':')) {
+				time += ':00'; // Append seconds if missing
+			} else if (time.split(':').length === 2) {
+				time += ':00'; // Append seconds if only hours and minutes are provided
+			}
+
+			// Return the formatted datetime string
+			return `${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${time}Z`;
+		});
+
 		return {
 			title: formData.title,
 			description: formData.description,
@@ -216,10 +264,7 @@ export class EventDetailsComponent implements OnInit {
 			locationCity: formData.city,
 			locationZipCode: formData.zipCode,
 			locationState: formData.state,
-			pollOptions: formData.timePoints.map(
-				(tp: any) =>
-					`${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${tp.time}Z`
-			),
+			pollOptions: formattedTimePoints,
 			invitationEmails: formData.invitations.map((inv: any) => inv.email),
 			deadlineDate: this.datePipe.transform(
 				formData.deadlineDate,

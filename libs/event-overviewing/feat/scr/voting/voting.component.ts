@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -28,6 +27,7 @@ export class VotingComponent implements OnInit {
 	feedbackMessage = '';
 	votesDetail: VoteDetail[] = [];
 	missingParams = false; // New flag to indicate missing parameters
+	radioSelected = false; // New flag to indicate if a radio button is selected
 
 	constructor(
 		private pollService: PollService,
@@ -144,5 +144,28 @@ export class VotingComponent implements OnInit {
 					this.isLoading = false;
 				},
 			});
+	}
+
+	downloadIcsFile(): void {
+		if (!this.event || !this.event.icsFileData) {
+			console.error('ICS file data not available');
+			return;
+		}
+
+		const base64Data = this.event.icsFileData;
+		const decodedData = atob(base64Data); // Decode the base64 string
+		const blob = new Blob([decodedData], { type: 'text/calendar' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'event.ics';
+		a.style.display = 'none';
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+
+	onRadioChange(): void {
+		this.radioSelected = true; // Set the flag when a radio button is selected
 	}
 }

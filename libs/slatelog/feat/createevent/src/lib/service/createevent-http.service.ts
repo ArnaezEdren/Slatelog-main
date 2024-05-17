@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
 import { User } from '../../../../../data/user/src';
+import { Event } from '../model/createEvent-view.model'; // Ensure this is the correct import
 
 @Injectable({
 	providedIn: 'root',

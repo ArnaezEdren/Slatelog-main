@@ -57,7 +57,8 @@ export interface Event {
 	deadlineTime: string;
 	timePoints: TimePoint[];
 	invitations: Invitation[];
-	userId: string; // Ensure this property is included
+	createdAt: string;
+	icsFileData: string; // Ensure this field is included
 }
 
 // type FormKeyType = 'email' | 'password' | 'passwordConfirm';

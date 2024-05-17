@@ -2,6 +2,17 @@
 	<div *ngIf="!updateMode">
 		<h2>{{ event.title }}</h2>
 		<p>Description: {{ event.description }}</p>
+		<p>
+			Location: {{ event.location.street }}, {{ event.location.zipCode }},
+			{{ event.location.city }}, {{ event.location.state }}
+		</p>
+		<p>Invitations:</p>
+		<ul>
+			<li *ngFor="let invitation of event.invitations">
+				{{ invitation.email }}
+			</li>
+		</ul>
+
 		<p>Poll Close Date: {{ event.pollCloseDate | date : 'medium' }}</p>
 		<p>Votes:</p>
 		<div *ngFor="let result of event.pollResults">
@@ -11,17 +22,14 @@
 				<li>No: {{ result.noCount }}</li>
 				<li>Maybe: {{ result.maybeCount }}</li>
 			</ul>
+			<button
+				(click)="confirmPollOption(event.id, result.dateTime)"
+				class="confirm-button"
+			>
+				Termin bestätigen
+			</button>
 		</div>
-		<p>
-			Location: {{ event.location.street }}, {{ event.location.zipCode }}
-			{{ event.location.city }}, {{ event.location.state }}
-		</p>
-		<p>Invitations:</p>
-		<ul>
-			<li *ngFor="let invitation of event.invitations">
-				{{ invitation.email }}
-			</li>
-		</ul>
+
 		<div class="button-container">
 			<button (click)="toggleUpdateMode()" class="edit-button">Change</button>
 			<button (click)="deleteEvent()" class="delete-button">Delete</button>
@@ -68,7 +76,9 @@
 					<input type="date" formControlName="date" />
 					<label for="time">Poll Option Time:</label>
 					<input type="time" formControlName="time" />
+					<button type="button" (click)="removeTimePoint(i)">Remove</button>
 				</div>
+				<button type="button" (click)="addTimePoint()">Add Time Point</button>
 			</div>
 
 			<div formArrayName="invitations">

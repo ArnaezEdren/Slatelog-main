@@ -56,20 +56,22 @@ export class CreateEventComponent {
 	@Output() create = new EventEmitter<any>();
 
 	createForm: FormGroup = this.fb.group({
-		title: ['title', [Validators.required, Validators.minLength(3)]],
-		description: ['description', [Validators.maxLength(500)]],
-		street: ['street', [Validators.required]],
-		city: ['city', [Validators.required]],
+		title: ['PartyParty', [Validators.required, Validators.minLength(3)]],
+		description: ['PartyinIbiza', [Validators.maxLength(500)]],
+		street: ['Ibizastreet 17', [Validators.required]],
+		city: ['Ibiza', [Validators.required]],
 		postalCode: [
-			'1120',
+			'12345',
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 		],
-		country: ['country', [Validators.required]],
-		deadlineDate: ['2024-05-26', [Validators.required]],
+		country: ['Spain', [Validators.required]],
+		deadlineDate: ['2024-05-24', [Validators.required]],
 		deadlineTime: ['14:00', [Validators.required]],
 		timePoints: this.fb.array([]),
 		invitations: this.fb.array([]),
 	});
+
+	private latestIcsFileData: string | null = null;
 
 	constructor(
 		private fb: FormBuilder,
@@ -90,16 +92,15 @@ export class CreateEventComponent {
 
 	addTimePoint(): void {
 		const timePointForm = this.fb.group({
-			date: ['2024-05-30', Validators.required],
-			time: ['18:00', Validators.required],
-			vote: [''],
+			date: ['2024-05-29', Validators.required],
+			time: ['14:00', Validators.required],
 		});
 		this.timePoints.push(timePointForm);
 	}
 
 	addInvitation(): void {
 		const group = this.fb.group({
-			email: ['lukas@home.at', [Validators.required, Validators.email]],
+			email: ['', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
@@ -121,7 +122,6 @@ export class CreateEventComponent {
 					this.snackBar.open('Event created and emails sent!', 'Close', {
 						duration: 3000,
 					});
-					this.openConfirmDialog(); // Open the confirm dialog after event creation
 					this.loadAllEvents(); // Load all events after creation
 				},
 				error: (error) => {
@@ -162,13 +162,16 @@ export class CreateEventComponent {
 	}
 
 	openConfirmDialog(): void {
-		const dialogRef = this.dialog.open(ConfirmDialogComponent);
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				message: 'Termine in Kalender eintragen?',
+			},
+		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
-				this.router.navigate(['/events']); // Redirect to overview page
-			} else {
-				this.router.navigate(['/']); // Navigate to home page or another appropriate page
+			if (result && this.latestIcsFileData) {
+				this.downloadIcsFile(this.latestIcsFileData); // Trigger the download of the .ics file
+				this.router.navigate(['/timeline']); // Navigate to the timeline route
 			}
 		});
 	}
@@ -176,9 +179,18 @@ export class CreateEventComponent {
 	loadAllEvents(): void {
 		this.createService.getAllEvents().subscribe(
 			(events: Event[]) => {
-				events.forEach((event) => {
-					this.ReadUserId(event.userId); // Pass the userId to ReadUserId method
-				});
+				if (events.length > 0) {
+					const sortedEvents = events.sort(
+						(a, b) =>
+							new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
+					const latestEvent = sortedEvents[0];
+					console.log('ICS File Data:', latestEvent.icsFileData);
+					this.latestIcsFileData = latestEvent.icsFileData; // Store the latest ICS file data
+					this.openConfirmDialog(); // Open the confirm dialog after loading events
+				} else {
+					console.log('No events found.');
+				}
 			},
 			(error) => {
 				console.error('Error loading events:', error);
@@ -186,8 +198,16 @@ export class CreateEventComponent {
 		);
 	}
 
-	ReadUserId(userId: string): void {
-		console.log('User ID:', userId);
-		// Further processing with userId can be done here if needed
+	downloadIcsFile(base64Data: string): void {
+		const binaryString = window.atob(base64Data);
+		const bytes = new Uint8Array(binaryString.length);
+		for (let i = 0; i < binaryString.length; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		const blob = new Blob([bytes.buffer], { type: 'text/calendar' });
+		const link = document.createElement('a');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = 'event.ics';
+		link.click();
 	}
 }
