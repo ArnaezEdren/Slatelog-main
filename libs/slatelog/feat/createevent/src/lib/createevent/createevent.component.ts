@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -22,7 +22,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
@@ -72,6 +71,7 @@ export class CreateEventComponent {
 	});
 
 	private latestIcsFileData: string | null = null;
+	private latestEventId!: string;
 
 	constructor(
 		private fb: FormBuilder,
@@ -100,7 +100,7 @@ export class CreateEventComponent {
 
 	addInvitation(): void {
 		const group = this.fb.group({
-			email: ['', [Validators.required, Validators.email]],
+			email: ['test1234@home.at', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
@@ -171,8 +171,8 @@ export class CreateEventComponent {
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result && this.latestIcsFileData) {
 				this.downloadIcsFile(this.latestIcsFileData); // Trigger the download of the .ics file
-				this.router.navigate(['/timeline']); // Navigate to the timeline route
 			}
+			this.router.navigate(['/event', this.latestEventId]); // Navigate to the event details page
 		});
 	}
 
@@ -185,8 +185,9 @@ export class CreateEventComponent {
 							new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 					);
 					const latestEvent = sortedEvents[0];
-					console.log('ICS File Data:', latestEvent.icsFileData);
+
 					this.latestIcsFileData = latestEvent.icsFileData; // Store the latest ICS file data
+					this.latestEventId = latestEvent.id; // Store the latest event ID
 					this.openConfirmDialog(); // Open the confirm dialog after loading events
 				} else {
 					console.log('No events found.');

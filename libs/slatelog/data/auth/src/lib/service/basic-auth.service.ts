@@ -46,8 +46,6 @@ export class BasicAuthService {
 	}
 
 	async login(command: UserLoginCommand): Promise<User> {
-		console.log('BasicAuthService#login', command);
-
 		// 1. Generate Auth Token
 		this.#authToken = generateAuthToken(command.email, command.password);
 
