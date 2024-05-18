@@ -25,7 +25,7 @@ export class EventHttpService {
 	// }
 
 	createEvent(eventData: any): Observable<any> {
-		console.log('Sending data:', eventData);
+		//	console.log('Sending data:', eventData);
 		return this.http
 			.post(this.eventApiUrl, eventData)
 			.pipe(catchError(this.handleError));
