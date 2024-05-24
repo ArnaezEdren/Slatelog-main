@@ -1,41 +1,81 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+	AbstractControl,
+	ValidationErrors,
+	ValidatorFn,
+	FormGroup,
+	FormArray,
+} from '@angular/forms';
+
+export function atLeastOneEmailValidator(
+	formArray: AbstractControl
+): ValidationErrors | null {
+	const emails = formArray.value;
+	if (emails.length === 0) {
+		return { atLeastOneEmail: true };
+	}
+	return null;
+}
 
 export function futureDateValidator(): ValidatorFn {
 	return (control: AbstractControl): ValidationErrors | null => {
-		const today = new Date();
-		const inputDate = new Date(control.value);
-		return inputDate >= today ? null : { pastDate: true };
+		const today = new Date().setHours(0, 0, 0, 0);
+		const selectedDate = new Date(control.value).setHours(0, 0, 0, 0);
+		return selectedDate >= today ? null : { pastDate: true };
 	};
 }
 
 export function noOverlapValidator(
-	control: AbstractControl
+	formArray: AbstractControl
 ): ValidationErrors | null {
-	const timePoints = control.value;
-	if (!timePoints || timePoints.length === 0) {
-		return { noTimePoints: true };
+	const timePoints = formArray.value;
+	const timeSet = new Set();
+	for (const tp of timePoints) {
+		const key = `${tp.date}T${tp.time}`;
+		if (timeSet.has(key)) {
+			return { overlapping: true };
+		}
+		timeSet.add(key);
 	}
+	return null;
+}
 
-	for (let i = 0; i < timePoints.length - 1; i++) {
-		for (let j = i + 1; j < timePoints.length; j++) {
-			const start1 = new Date(`${timePoints[i].date}T${timePoints[i].time}`);
-			const start2 = new Date(`${timePoints[j].date}T${timePoints[j].time}`);
+export const futureDateTimeArrayValidator: ValidatorFn = (
+	formArray: AbstractControl
+): ValidationErrors | null => {
+	const now = new Date();
+	now.setHours(0, 0, 0, 0); // Set the current date to start of the day
+	const controls = (formArray as FormArray).controls;
+	console.log('Validator called');
 
-			if (start1.getTime() === start2.getTime()) {
-				return { overlapping: true };
+	for (let i = 0; i < controls.length; i++) {
+		const dateControl = controls[i].get('date');
+
+		if (dateControl) {
+			const date = dateControl.value;
+			console.log(`Raw date: ${date}`);
+
+			if (!date) {
+				continue; // Skip this iteration if date is not defined
+			}
+
+			// Parse date and compare with the current date
+			const selectedDate = new Date(date);
+			selectedDate.setHours(0, 0, 0, 0); // Set selected date to start of the day
+			console.log(
+				`Parsed date: ${selectedDate.toISOString()}, Now: ${now.toISOString()}`
+			);
+
+			// Validate date
+			if (selectedDate < now) {
+				console.log('Date is in the past');
+				dateControl.setErrors({ pastDateTime: true });
+				return { pastDateTime: true };
+			} else {
+				console.log('Date is in the future');
+				// Clear the error if the date is valid
+				dateControl.setErrors(null);
 			}
 		}
 	}
-
 	return null;
-}
-
-export function atLeastOneEmailValidator(
-	control: AbstractControl
-): ValidationErrors | null {
-	const invitations = control.value;
-	if (!invitations || invitations.length === 0) {
-		return { noEmails: true };
-	}
-	return null;
-}
+};

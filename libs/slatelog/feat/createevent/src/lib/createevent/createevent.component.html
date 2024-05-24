@@ -69,7 +69,6 @@
 					</mat-form-field>
 				</div>
 
-				<!-- Time Points -->
 				<div formArrayName="timePoints">
 					<div
 						*ngFor="let timePoint of timePoints.controls; let i = index"
@@ -86,6 +85,16 @@
 							<mat-datepicker #picker></mat-datepicker>
 							<mat-error *ngIf="timePoint.get('date')?.hasError('required')">
 								Date is required.
+							</mat-error>
+							<mat-error
+								*ngIf="timePoint.get('date')?.hasError('pastDateTime')"
+							>
+								Date must be in the future.
+							</mat-error>
+							<mat-error
+								*ngIf="createForm.get('timePoints')?.hasError('overlapping')"
+							>
+								Time points must not overlap.
 							</mat-error>
 						</mat-form-field>
 
@@ -116,6 +125,11 @@
 						*ngIf="createForm.get('timePoints')?.hasError('overlapping')"
 					>
 						Time points must not overlap.
+					</mat-error>
+					<mat-error
+						*ngIf="createForm.get('timePoints')?.hasError('pastDateTime')"
+					>
+						All time points must be in the future.
 					</mat-error>
 
 					<button

@@ -16,6 +16,9 @@ import {
 	FormsModule,
 	ReactiveFormsModule,
 	Validators,
+	AbstractControl,
+	ValidationErrors,
+	ValidatorFn,
 } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { EventHttpService } from '../service/createevent-http.service';
@@ -30,6 +33,7 @@ import { ConflictDialogComponent } from './conflict-dialog.component';
 import { Event } from '../model/createEvent-view.model'; // Ensure the correct Event model is imported
 import {
 	atLeastOneEmailValidator,
+	futureDateTimeArrayValidator,
 	futureDateValidator,
 	noOverlapValidator,
 } from './validators'; // Import custom validators
@@ -73,9 +77,14 @@ export class CreateEventComponent {
 		country: ['Spain', [Validators.required]],
 		deadlineDate: ['2024-05-24', [Validators.required, futureDateValidator()]],
 		deadlineTime: ['14:00', [Validators.required]],
-		timePoints: this.fb.array([], noOverlapValidator),
+		timePoints: this.fb.array(
+			[],
+			[noOverlapValidator, futureDateTimeArrayValidator]
+		),
 		invitations: this.fb.array([], atLeastOneEmailValidator),
 	});
+
+	formInvalid: boolean = false;
 
 	private latestIcsFileData: string | null = null;
 	private latestEventId!: string;
@@ -103,7 +112,7 @@ export class CreateEventComponent {
 
 	addTimePoint(): void {
 		const timePointForm = this.fb.group({
-			date: ['2024-05-29', Validators.required],
+			date: ['2024-05-29', [Validators.required, futureDateValidator]],
 			time: ['14:00', Validators.required],
 		});
 		this.timePoints.push(timePointForm);
@@ -177,6 +186,7 @@ export class CreateEventComponent {
 			if (this.invitations.length === 0) {
 				this.createForm.get('invitations')?.setErrors({ noEmails: true });
 			}
+			this.formInvalid = true;
 			this.validateAllFormFields(this.createForm);
 		}
 	}
@@ -332,5 +342,10 @@ export class CreateEventComponent {
 		}
 
 		return conflicts;
+	}
+
+	cancel(): void {
+		// Define the cancel functionality or routing as needed
+		this.router.navigate(['/timeline']);
 	}
 }
