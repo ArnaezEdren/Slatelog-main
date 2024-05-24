@@ -26,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CalendarModule } from 'primeng/calendar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
+import { ConflictDialogComponent } from './conflict-dialog.component';
 import { Event } from '../model/createEvent-view.model'; // Ensure the correct Event model is imported
 import {
 	atLeastOneEmailValidator,
@@ -129,22 +130,41 @@ export class CreateEventComponent {
 			this.timePoints.length > 0 &&
 			this.invitations.length > 0
 		) {
-			const eventData = this.formatEventData(this.createForm.value);
-			this.create.emit(eventData);
-			this.createService.createEvent(eventData).subscribe({
-				next: (response) => {
-					this.snackBar.open('Event created and emails sent!', 'Close', {
-						duration: 3000,
-					});
-					this.loadAllEvents(); // Load all events after creation
-				},
-				error: (error) => {
-					console.error('Error creating event:', error);
-					this.snackBar.open('Failed to create event!', 'Close', {
-						duration: 3000,
-					});
-				},
-			});
+			const eventData = this.formatCreateEventData(this.createForm.value);
+			const eventDataConflict = this.formatEventDataConflict(
+				this.createForm.value
+			);
+			this.checkForConflicts(eventDataConflict.poll.pollOptions).then(
+				(conflicts) => {
+					if (conflicts.length > 0) {
+						const conflictMessages = conflicts.map((conflict) => {
+							const formattedTimePoint = conflict.timePoint
+								.replace('T', ' ')
+								.replace('Z', '');
+							return `Conflict with event: ${conflict.title} at ${formattedTimePoint}`;
+						});
+						this.dialog.open(ConflictDialogComponent, {
+							data: { conflicts: conflictMessages },
+						});
+					} else {
+						this.create.emit(eventData);
+						this.createService.createEvent(eventData).subscribe({
+							next: (response) => {
+								this.snackBar.open('Event created and emails sent!', 'Close', {
+									duration: 3000,
+								});
+								this.loadAllEvents(); // Load all events after creation
+							},
+							error: (error) => {
+								console.error('Error creating event:', error);
+								this.snackBar.open('Failed to create event!', 'Close', {
+									duration: 3000,
+								});
+							},
+						});
+					}
+				}
+			);
 		} else {
 			this.snackBar.open(
 				'Form is not valid, please check your entries.',
@@ -161,7 +181,41 @@ export class CreateEventComponent {
 		}
 	}
 
-	private formatEventData(formData: any): any {
+	private formatEventDataConflict(formData: any): any {
+		return {
+			title: formData.title,
+			description: formData.description,
+			locationStreet: formData.street,
+			locationCity: formData.city,
+			locationZipCode: formData.postalCode,
+			locationState: formData.country,
+			poll: {
+				pollOptions: formData.timePoints.reduce(
+					(options: { [key: string]: any[] }, tp: any) => {
+						const key = `${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${
+							tp.time
+						}:00Z`;
+						options[key] = [];
+						return options;
+					},
+					{}
+				),
+				pollCloseDate:
+					this.datePipe.transform(formData.deadlineDate, 'yyyy-MM-dd') +
+					'T' +
+					formData.deadlineTime,
+				pollOpen: true,
+			},
+			invitationEmails: formData.invitations.map((inv: any) => inv.email),
+			deadlineDate: this.datePipe.transform(
+				formData.deadlineDate,
+				'yyyy-MM-dd'
+			),
+			deadlineTime: formData.deadlineTime,
+		};
+	}
+
+	private formatCreateEventData(formData: any): any {
 		return {
 			title: formData.title,
 			description: formData.description,
@@ -246,5 +300,37 @@ export class CreateEventComponent {
 				});
 			}
 		});
+	}
+
+	private async checkForConflicts(pollOptions: {
+		[key: string]: any[];
+	}): Promise<any[]> {
+		const events = await this.createService.getAllEvents().toPromise();
+		const conflicts: any[] = [];
+
+		if (!events) {
+			return conflicts; // Return empty conflicts array if events are undefined
+		}
+
+		for (const event of events) {
+			// Ensure pollOptions exists and is an object
+			if (
+				event.poll &&
+				event.poll.pollOptions &&
+				typeof event.poll.pollOptions === 'object'
+			) {
+				for (const tp in event.poll.pollOptions) {
+					if (event.poll.pollOptions.hasOwnProperty(tp)) {
+						if (pollOptions.hasOwnProperty(tp)) {
+							conflicts.push({ title: event.title, timePoint: tp });
+						}
+					}
+				}
+			} else {
+				console.error('pollOptions is not an object for event:', event);
+			}
+		}
+
+		return conflicts;
 	}
 }
