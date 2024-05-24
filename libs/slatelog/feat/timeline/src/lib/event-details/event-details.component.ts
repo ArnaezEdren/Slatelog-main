@@ -11,7 +11,13 @@ import {
 	Validators,
 	FormArray,
 	ReactiveFormsModule,
+	FormControl,
 } from '@angular/forms';
+import {
+	atLeastOneEmailValidator,
+	futureDateValidator,
+	noOverlapValidator,
+} from '../../../../createevent/src/lib/createevent/validators';
 
 @Component({
 	selector: 'frontend-event-details',
@@ -29,6 +35,7 @@ export class EventDetailsComponent implements OnInit {
 	updateMode: boolean = false;
 	originalEventData: any;
 	createForm2: FormGroup;
+	formInvalid: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
@@ -45,10 +52,10 @@ export class EventDetailsComponent implements OnInit {
 			city: ['', [Validators.required]],
 			zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{4,}$/)]],
 			state: ['', [Validators.required]],
-			deadlineDate: ['', [Validators.required]],
+			deadlineDate: ['', [Validators.required, futureDateValidator()]],
 			deadlineTime: ['', [Validators.required]],
-			timePoints: this.fb.array([]),
-			invitations: this.fb.array([]),
+			timePoints: this.fb.array([], noOverlapValidator),
+			invitations: this.fb.array([], atLeastOneEmailValidator),
 		});
 	}
 
@@ -218,22 +225,28 @@ export class EventDetailsComponent implements OnInit {
 	}
 
 	updateEvent(): void {
-		const actualId = this.eventId.replace('eventId=', '');
-		this.eventData = this.formatEventData(this.createForm2.value);
-		this.eventHttpService
-			.updateEvent(actualId, this.eventData)
-			.pipe(
-				catchError((error) => {
-					console.error('Error updating event:', error);
-					return throwError(error);
-				})
-			)
-			.subscribe(() => {
-				console.log('Event updated successfully');
-				this.updateMode = false;
-				// Reload the events to refresh the data
-				this.getEvents();
-			});
+		if (this.createForm2.valid) {
+			const actualId = this.eventId.replace('eventId=', '');
+			this.eventData = this.formatEventData(this.createForm2.value);
+			this.eventHttpService
+				.updateEvent(actualId, this.eventData)
+				.pipe(
+					catchError((error) => {
+						console.error('Error updating event:', error);
+						return throwError(error);
+					})
+				)
+				.subscribe(() => {
+					console.log('Event updated successfully');
+					this.updateMode = false;
+					// Reload the events to refresh the data
+					this.getEvents();
+				});
+		} else {
+			this.validateAllFormFields(this.createForm2);
+			this.formInvalid = true;
+			console.log('Form is not valid');
+		}
 	}
 
 	confirmPollOption(eventId: string, dateTime: string): void {
@@ -311,5 +324,20 @@ export class EventDetailsComponent implements OnInit {
 		link.href = window.URL.createObjectURL(blob);
 		link.download = 'event.ics';
 		link.click();
+	}
+
+	private validateAllFormFields(formGroup: FormGroup): void {
+		Object.keys(formGroup.controls).forEach((field) => {
+			const control = formGroup.get(field);
+			if (control instanceof FormControl) {
+				control.markAsTouched({ onlySelf: true });
+			} else if (control instanceof FormGroup) {
+				this.validateAllFormFields(control);
+			} else if (control instanceof FormArray) {
+				control.controls.forEach((group) => {
+					this.validateAllFormFields(group as FormGroup);
+				});
+			}
+		});
 	}
 }
