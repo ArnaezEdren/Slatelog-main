@@ -15,9 +15,8 @@ import { ConflictDialogComponent } from '../../../../libs/slatelog/feat/createev
 // A module is a container for components, directives, pipes, and services
 // All of our components, directives, pipes, and services must be declared in a module
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent, ConflictDialogComponent],
 	imports: [
-		ConflictDialogComponent,
 		HttpClientModule,
 		BrowserModule,
 		BrowserAnimationsModule,
