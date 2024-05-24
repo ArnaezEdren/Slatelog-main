@@ -12,6 +12,7 @@ import {
 	FormBuilder,
 	FormArray,
 	FormGroup,
+	FormControl,
 	FormsModule,
 	ReactiveFormsModule,
 	Validators,
@@ -26,6 +27,11 @@ import { CalendarModule } from 'primeng/calendar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
 import { Event } from '../model/createEvent-view.model'; // Ensure the correct Event model is imported
+import {
+	atLeastOneEmailValidator,
+	futureDateValidator,
+	noOverlapValidator,
+} from './validators'; // Import custom validators
 
 @Component({
 	selector: 'frontend-createevent',
@@ -64,10 +70,10 @@ export class CreateEventComponent {
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 		],
 		country: ['Spain', [Validators.required]],
-		deadlineDate: ['2024-05-24', [Validators.required]],
+		deadlineDate: ['2024-05-24', [Validators.required, futureDateValidator()]],
 		deadlineTime: ['14:00', [Validators.required]],
-		timePoints: this.fb.array([]),
-		invitations: this.fb.array([]),
+		timePoints: this.fb.array([], noOverlapValidator),
+		invitations: this.fb.array([], atLeastOneEmailValidator),
 	});
 
 	private latestIcsFileData: string | null = null;
@@ -88,6 +94,10 @@ export class CreateEventComponent {
 
 	get invitations(): FormArray {
 		return this.createForm.get('invitations') as FormArray;
+	}
+
+	getInvitationEmailControl(index: number): FormControl {
+		return this.invitations.at(index).get('email') as FormControl;
 	}
 
 	addTimePoint(): void {
@@ -114,7 +124,11 @@ export class CreateEventComponent {
 	}
 
 	onSubmit(): void {
-		if (this.createForm.valid) {
+		if (
+			this.createForm.valid &&
+			this.timePoints.length > 0 &&
+			this.invitations.length > 0
+		) {
 			const eventData = this.formatEventData(this.createForm.value);
 			this.create.emit(eventData);
 			this.createService.createEvent(eventData).subscribe({
@@ -137,6 +151,13 @@ export class CreateEventComponent {
 				'Close',
 				{ duration: 3000 }
 			);
+			if (this.timePoints.length === 0) {
+				this.createForm.get('timePoints')?.setErrors({ noTimePoints: true });
+			}
+			if (this.invitations.length === 0) {
+				this.createForm.get('invitations')?.setErrors({ noEmails: true });
+			}
+			this.validateAllFormFields(this.createForm);
 		}
 	}
 
@@ -210,5 +231,20 @@ export class CreateEventComponent {
 		link.href = window.URL.createObjectURL(blob);
 		link.download = 'event.ics';
 		link.click();
+	}
+
+	private validateAllFormFields(formGroup: FormGroup): void {
+		Object.keys(formGroup.controls).forEach((field) => {
+			const control = formGroup.get(field);
+			if (control instanceof FormControl) {
+				control.markAsTouched({ onlySelf: true });
+			} else if (control instanceof FormGroup) {
+				this.validateAllFormFields(control);
+			} else if (control instanceof FormArray) {
+				control.controls.forEach((group) => {
+					this.validateAllFormFields(group as FormGroup);
+				});
+			}
+		});
 	}
 }
