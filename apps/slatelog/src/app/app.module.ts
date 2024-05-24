@@ -10,12 +10,14 @@ import { AppComponent } from './app.component';
 import { BasicAuthInterceptor, ErrorInterceptor } from '@frontend/data/auth';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
+import { ConflictDialogComponent } from '../../../../libs/slatelog/feat/createevent/src/lib/createevent/conflict-dialog.component';
 
 // A module is a container for components, directives, pipes, and services
 // All of our components, directives, pipes, and services must be declared in a module
 @NgModule({
 	declarations: [AppComponent],
 	imports: [
+		ConflictDialogComponent,
 		HttpClientModule,
 		BrowserModule,
 		BrowserAnimationsModule,
