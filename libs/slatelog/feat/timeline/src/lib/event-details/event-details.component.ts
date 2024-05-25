@@ -18,6 +18,8 @@ import {
 	futureDateValidator,
 	noOverlapValidator,
 } from '../../../../createevent/src/lib/createevent/validators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteConfirmSnackbarComponent } from './delete-confirm-snackbar.component'; // Import MatSnackBar
 
 @Component({
 	selector: 'frontend-event-details',
@@ -43,7 +45,8 @@ export class EventDetailsComponent implements OnInit {
 		private http: HttpClient,
 		private eventHttpService: EventHttpService,
 		private router: Router,
-		private datePipe: DatePipe
+		private datePipe: DatePipe,
+		private snackBar: MatSnackBar // Inject MatSnackBar
 	) {
 		this.createForm2 = this.fb.group({
 			title: ['', [Validators.required, Validators.minLength(3)]],
@@ -289,24 +292,41 @@ export class EventDetailsComponent implements OnInit {
 
 	deleteEvent(): void {
 		const actualId = this.eventId.replace('eventId=', '');
-		if (confirm('Do you really want to delete this Event?')) {
-			if (this.isEventId(actualId)) {
-				this.eventHttpService
-					.deleteEvent(actualId)
-					.pipe(
-						catchError((error) => {
-							console.error('Error deleting Event:', error);
-							return throwError(error);
-						})
-					)
-					.subscribe({
-						next: () => {
-							console.log('Successfully deleted Event');
-							this.router.navigate(['/timeline']);
-						},
-					});
+
+		const snackBarRef = this.snackBar.openFromComponent(
+			DeleteConfirmSnackbarComponent,
+			{
+				data: {
+					message: 'Do you really want to delete this Event?',
+					onConfirm: () => {
+						snackBarRef.dismiss();
+						this.eventHttpService
+							.deleteEvent(actualId)
+							.pipe(
+								catchError((error) => {
+									console.error('Error deleting Event:', error);
+									this.snackBar.open('Error deleting Event', 'Close', {
+										duration: 3000,
+									});
+									return throwError(error);
+								})
+							)
+							.subscribe({
+								next: () => {
+									console.log('Successfully deleted Event');
+									this.snackBar.open('Successfully deleted Event', 'Close', {
+										duration: 3000,
+									});
+									this.router.navigate(['/timeline']);
+								},
+							});
+					},
+					onCancel: () => {
+						snackBarRef.dismiss();
+					},
+				},
 			}
-		}
+		);
 	}
 
 	goBack(): void {
