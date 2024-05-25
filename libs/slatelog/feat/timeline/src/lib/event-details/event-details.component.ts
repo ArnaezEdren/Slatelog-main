@@ -253,10 +253,34 @@ export class EventDetailsComponent implements OnInit {
 	}
 
 	confirmPollOption(eventId: string, dateTime: string): void {
-		// Your logic to handle poll option confirmation
-		console.log(`Confirming poll option for event ${eventId} at ${dateTime}`);
-		// Update event data or call a service to handle confirmation
-		// Example: this.eventHttpService.confirmPollOption(eventId, dateTime)...
+		// Extract the date and time from the selected dateTime string
+		const [date, timeWithZ] = dateTime.split('T');
+		const time = timeWithZ.split('Z')[0];
+
+		// Remove all other time points except the selected one
+		this.createForm2.setControl(
+			'timePoints',
+			this.fb.array(
+				[
+					this.fb.group({
+						date: [date, Validators.required],
+						time: [time, Validators.required],
+					}),
+				],
+				noOverlapValidator
+			)
+		);
+
+		// Update the deadline date to the current date and the deadline time to one hour ago
+		const currentDate = new Date();
+		const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
+		this.createForm2.patchValue({
+			deadlineDate: this.datePipe.transform(currentDate, 'yyyy-MM-dd'),
+			deadlineTime: this.datePipe.transform(oneHourAgo, 'HH:mm'),
+		});
+
+		// Format the event data and update the event
+		this.updateEvent();
 	}
 
 	private formatEventData(formData: any): any {
@@ -359,5 +383,11 @@ export class EventDetailsComponent implements OnInit {
 				});
 			}
 		});
+	}
+
+	isFutureDate(pollCloseDate: string): boolean {
+		const now = new Date();
+		const pollClose = new Date(pollCloseDate);
+		return pollClose > now;
 	}
 }

@@ -45,14 +45,12 @@ export const futureDateTimeArrayValidator: ValidatorFn = (
 	const now = new Date();
 	now.setHours(0, 0, 0, 0); // Set the current date to start of the day
 	const controls = (formArray as FormArray).controls;
-	console.log('Validator called');
 
 	for (let i = 0; i < controls.length; i++) {
 		const dateControl = controls[i].get('date');
 
 		if (dateControl) {
 			const date = dateControl.value;
-			console.log(`Raw date: ${date}`);
 
 			if (!date) {
 				continue; // Skip this iteration if date is not defined
@@ -61,9 +59,6 @@ export const futureDateTimeArrayValidator: ValidatorFn = (
 			// Parse date and compare with the current date
 			const selectedDate = new Date(date);
 			selectedDate.setHours(0, 0, 0, 0); // Set selected date to start of the day
-			console.log(
-				`Parsed date: ${selectedDate.toISOString()}, Now: ${now.toISOString()}`
-			);
 
 			// Validate date
 			if (selectedDate < now) {

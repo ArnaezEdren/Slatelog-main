@@ -27,6 +27,7 @@
 					<li>Maybe: {{ result.maybeCount }}</li>
 				</ul>
 				<button
+					*ngIf="isFutureDate(event.pollCloseDate)"
 					(click)="confirmPollOption(event.id, result.dateTime)"
 					class="confirm-button"
 				>
@@ -188,7 +189,10 @@
 					</div>
 					<button type="button" (click)="addTimePoint()">Add Time Point</button>
 					<div
-						*ngIf="createForm2.get('timePoints')?.errors?.['noOverlap'] && createForm2.get('timePoints')?.touched"
+						*ngIf="
+							createForm2.get('timePoints')?.errors?.['noOverlap'] &&
+							createForm2.get('timePoints')?.touched
+						"
 						class="error-message"
 					>
 						Time points must not overlap.
@@ -217,7 +221,10 @@
 						Add Invitation
 					</button>
 					<div
-						*ngIf="createForm2.get('invitations')?.errors?.['atLeastOneEmail'] && createForm2.get('invitations')?.touched"
+						*ngIf="
+							createForm2.get('invitations')?.errors?.['atLeastOneEmail'] &&
+							createForm2.get('invitations')?.touched
+						"
 						class="error-message"
 					>
 						At least one email is required.
