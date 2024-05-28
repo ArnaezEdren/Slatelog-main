@@ -40,13 +40,13 @@ export class BasicAuthService {
 	}
 
 	register(command: UserRegistrationCommand): Promise<User> {
-		console.log('BasicAuthService#register', command);
+		//	console.log('BasicAuthService#register', command);
 
 		return this.userHttpService.register(command);
 	}
 
 	async login(command: UserLoginCommand): Promise<User> {
-		console.log('BasicAuthService#login', command);
+		//	console.log('BasicAuthService#login', command);
 
 		// 1. Generate Auth Token
 		this.#authToken = generateAuthToken(command.email, command.password);

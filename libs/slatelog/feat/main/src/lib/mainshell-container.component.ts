@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from '../../../auth/src/lib/login/login.component';
-import { MainShellComponent1 } from './mainshell.component';
-import { SidebarComponent } from '@frontend/ui/sidebar';
-import { ToolbarComponent } from '@frontend/ui/toolbar';
+
 import { RouterOutlet } from '@angular/router';
 import { TimelineOverviewComponent } from '../../../timeline/src/lib/timeline-overview/timeline-overview.component';
+import { MainShellComponent1 } from './mainshell.component';
+import { SidebarComponent, ToolbarComponent } from '../../../../ui/src';
 
 @Component({
 	selector: 'main-shell-container',

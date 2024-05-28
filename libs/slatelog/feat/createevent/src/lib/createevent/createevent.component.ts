@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -12,9 +12,13 @@ import {
 	FormBuilder,
 	FormArray,
 	FormGroup,
+	FormControl,
 	FormsModule,
 	ReactiveFormsModule,
 	Validators,
+	AbstractControl,
+	ValidationErrors,
+	ValidatorFn,
 } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { EventHttpService } from '../service/createevent-http.service';
@@ -22,10 +26,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../dialogconfirm/dialogconfirm.component';
+import { ConflictDialogComponent } from './conflict-dialog.component';
+import { Event } from '../model/createEvent-view.model'; // Ensure the correct Event model is imported
+import {
+	atLeastOneEmailValidator,
+	futureDateTimeArrayValidator,
+	futureDateValidator,
+	noOverlapValidator,
+} from './validators'; // Import custom validators
 
 @Component({
 	selector: 'frontend-createevent',
@@ -55,29 +66,28 @@ export class CreateEventComponent {
 	@Output() create = new EventEmitter<any>();
 
 	createForm: FormGroup = this.fb.group({
-		title: ['title', [Validators.required, Validators.minLength(3)]],
-		description: ['description', [Validators.maxLength(500)]],
-		street: ['street', [Validators.required]],
-		city: ['city', [Validators.required]],
+		title: ['PartyParty', [Validators.required, Validators.minLength(3)]],
+		description: ['PartyinIbiza', [Validators.maxLength(500)]],
+		street: ['Ibizastreet 17', [Validators.required]],
+		city: ['Ibiza', [Validators.required]],
 		postalCode: [
-			'1120',
+			'12345',
 			[Validators.required, Validators.pattern(/^[0-9]{4,}$/)],
 		],
-		country: ['country', [Validators.required]],
-		deadlineDate: ['2024-05-26', [Validators.required]],
+		country: ['Spain', [Validators.required]],
+		deadlineDate: ['2024-05-24', [Validators.required, futureDateValidator()]],
 		deadlineTime: ['14:00', [Validators.required]],
-		timePoints: this.fb.array([]),
-		invitations: this.fb.array([]),
+		timePoints: this.fb.array(
+			[],
+			[noOverlapValidator, futureDateTimeArrayValidator]
+		),
+		invitations: this.fb.array([], atLeastOneEmailValidator),
 	});
 
-	addTimePoint(): void {
-		const timePointForm = this.fb.group({
-			date: ['2024-05-30', Validators.required],
-			time: ['18:00', Validators.required],
-			vote: [''],
-		});
-		this.timePoints.push(timePointForm);
-	}
+	formInvalid: boolean = false;
+
+	private latestIcsFileData: string | null = null;
+	private latestEventId!: string;
 
 	constructor(
 		private fb: FormBuilder,
@@ -96,9 +106,21 @@ export class CreateEventComponent {
 		return this.createForm.get('invitations') as FormArray;
 	}
 
+	getInvitationEmailControl(index: number): FormControl {
+		return this.invitations.at(index).get('email') as FormControl;
+	}
+
+	addTimePoint(): void {
+		const timePointForm = this.fb.group({
+			date: ['2024-05-29', [Validators.required, futureDateValidator]],
+			time: ['14:00', Validators.required],
+		});
+		this.timePoints.push(timePointForm);
+	}
+
 	addInvitation(): void {
 		const group = this.fb.group({
-			email: ['lukas@home.at', [Validators.required, Validators.email]],
+			email: ['test1234@home.at', [Validators.required, Validators.email]],
 		});
 		this.invitations.push(group);
 	}
@@ -112,33 +134,98 @@ export class CreateEventComponent {
 	}
 
 	onSubmit(): void {
-		if (this.createForm.valid) {
-			const eventData = this.formatEventData(this.createForm.value);
-			this.create.emit(eventData);
-			this.createService.createEvent(eventData).subscribe({
-				next: (response) => {
-					this.snackBar.open('Event created and emails sent!', 'Close', {
-						duration: 3000,
-					});
-					this.openConfirmDialog(); // Open the confirm dialog after event creation
-				},
-				error: (error) => {
-					console.error('Error creating event:', error);
-					this.snackBar.open('Failed to create event!', 'Close', {
-						duration: 3000,
-					});
-				},
-			});
+		if (
+			this.createForm.valid &&
+			this.timePoints.length > 0 &&
+			this.invitations.length > 0
+		) {
+			const eventData = this.formatCreateEventData(this.createForm.value);
+			const eventDataConflict = this.formatEventDataConflict(
+				this.createForm.value
+			);
+			this.checkForConflicts(eventDataConflict.poll.pollOptions).then(
+				(conflicts) => {
+					if (conflicts.length > 0) {
+						const conflictMessages = conflicts.map((conflict) => {
+							const formattedTimePoint = conflict.timePoint
+								.replace('T', ' ')
+								.replace('Z', '');
+							return `Conflict with event: ${conflict.title} at ${formattedTimePoint}`;
+						});
+						this.dialog.open(ConflictDialogComponent, {
+							data: { conflicts: conflictMessages },
+						});
+					} else {
+						this.create.emit(eventData);
+						this.createService.createEvent(eventData).subscribe({
+							next: (response) => {
+								this.snackBar.open('Event created and emails sent!', 'Close', {
+									duration: 3000,
+								});
+								this.loadAllEvents(); // Load all events after creation
+							},
+							error: (error) => {
+								console.error('Error creating event:', error);
+								this.snackBar.open('Failed to create event!', 'Close', {
+									duration: 3000,
+								});
+							},
+						});
+					}
+				}
+			);
 		} else {
 			this.snackBar.open(
 				'Form is not valid, please check your entries.',
 				'Close',
 				{ duration: 3000 }
 			);
+			if (this.timePoints.length === 0) {
+				this.createForm.get('timePoints')?.setErrors({ noTimePoints: true });
+			}
+			if (this.invitations.length === 0) {
+				this.createForm.get('invitations')?.setErrors({ noEmails: true });
+			}
+			this.formInvalid = true;
+			this.validateAllFormFields(this.createForm);
 		}
 	}
 
-	private formatEventData(formData: any): any {
+	private formatEventDataConflict(formData: any): any {
+		return {
+			title: formData.title,
+			description: formData.description,
+			locationStreet: formData.street,
+			locationCity: formData.city,
+			locationZipCode: formData.postalCode,
+			locationState: formData.country,
+			poll: {
+				pollOptions: formData.timePoints.reduce(
+					(options: { [key: string]: any[] }, tp: any) => {
+						const key = `${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${
+							tp.time
+						}:00Z`;
+						options[key] = [];
+						return options;
+					},
+					{}
+				),
+				pollCloseDate:
+					this.datePipe.transform(formData.deadlineDate, 'yyyy-MM-dd') +
+					'T' +
+					formData.deadlineTime,
+				pollOpen: true,
+			},
+			invitationEmails: formData.invitations.map((inv: any) => inv.email),
+			deadlineDate: this.datePipe.transform(
+				formData.deadlineDate,
+				'yyyy-MM-dd'
+			),
+			deadlineTime: formData.deadlineTime,
+		};
+	}
+
+	private formatCreateEventData(formData: any): any {
 		return {
 			title: formData.title,
 			description: formData.description,
@@ -160,52 +247,105 @@ export class CreateEventComponent {
 	}
 
 	openConfirmDialog(): void {
-		const dialogRef = this.dialog.open(ConfirmDialogComponent);
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				message: 'Termine in Kalender eintragen?',
+			},
+		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
-				this.downloadIcsFile(); // Download the ICS file
-				this.router.navigate(['/events']); // Redirect to overview page
-			} else {
-				this.router.navigate(['/']); // Navigate to home page or another appropriate page
+			if (result && this.latestIcsFileData) {
+				this.downloadIcsFile(this.latestIcsFileData); // Trigger the download of the .ics file
+			}
+			this.router.navigate(['/event', this.latestEventId]); // Navigate to the event details page
+		});
+	}
+
+	loadAllEvents(): void {
+		this.createService.getAllEvents().subscribe(
+			(events: Event[]) => {
+				if (events.length > 0) {
+					const sortedEvents = events.sort(
+						(a, b) =>
+							new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
+					const latestEvent = sortedEvents[0];
+
+					this.latestIcsFileData = latestEvent.icsFileData; // Store the latest ICS file data
+					this.latestEventId = latestEvent.id; // Store the latest event ID
+					this.openConfirmDialog(); // Open the confirm dialog after loading events
+				} else {
+					console.log('No events found.');
+				}
+			},
+			(error) => {
+				console.error('Error loading events:', error);
+			}
+		);
+	}
+
+	downloadIcsFile(base64Data: string): void {
+		const binaryString = window.atob(base64Data);
+		const bytes = new Uint8Array(binaryString.length);
+		for (let i = 0; i < binaryString.length; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		const blob = new Blob([bytes.buffer], { type: 'text/calendar' });
+		const link = document.createElement('a');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = 'event.ics';
+		link.click();
+	}
+
+	private validateAllFormFields(formGroup: FormGroup): void {
+		Object.keys(formGroup.controls).forEach((field) => {
+			const control = formGroup.get(field);
+			if (control instanceof FormControl) {
+				control.markAsTouched({ onlySelf: true });
+			} else if (control instanceof FormGroup) {
+				this.validateAllFormFields(control);
+			} else if (control instanceof FormArray) {
+				control.controls.forEach((group) => {
+					this.validateAllFormFields(group as FormGroup);
+				});
 			}
 		});
 	}
 
-	downloadIcsFile(): void {
-		const eventData = this.formatEventData(this.createForm.value);
-		const icsFileContent = this.generateIcsFileContent(eventData);
-		const blob = new Blob([icsFileContent], { type: 'text/calendar' });
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `${eventData.title}.ics`;
-		a.click();
-		window.URL.revokeObjectURL(url);
+	private async checkForConflicts(pollOptions: {
+		[key: string]: any[];
+	}): Promise<any[]> {
+		const events = await this.createService.getAllEvents().toPromise();
+		const conflicts: any[] = [];
+
+		if (!events) {
+			return conflicts; // Return empty conflicts array if events are undefined
+		}
+
+		for (const event of events) {
+			// Ensure pollOptions exists and is an object
+			if (
+				event.poll &&
+				event.poll.pollOptions &&
+				typeof event.poll.pollOptions === 'object'
+			) {
+				for (const tp in event.poll.pollOptions) {
+					if (event.poll.pollOptions.hasOwnProperty(tp)) {
+						if (pollOptions.hasOwnProperty(tp)) {
+							conflicts.push({ title: event.title, timePoint: tp });
+						}
+					}
+				}
+			} else {
+				console.error('pollOptions is not an object for event:', event);
+			}
+		}
+
+		return conflicts;
 	}
 
-	private generateIcsFileContent(eventData: any): string {
-		const formattedPollOptions = eventData.pollOptions
-			.map(
-				(option: string) =>
-					`BEGIN:VEVENT
-UID:${eventData.title}-${option}
-DTSTAMP:${new Date().toISOString().replace(/-|:|\.\d+/g, '')}
-DTSTART:${option.replace(/-|:|\.\d+/g, '')}
-SUMMARY:${eventData.title}
-DESCRIPTION:${eventData.description}
-END:VEVENT`
-			)
-			.join('\n');
-
-		const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Your Organization//Your Product//EN
-${formattedPollOptions}
-LOCATION:${eventData.locationStreet}, ${eventData.locationCity}, ${eventData.locationZipCode}, ${eventData.locationState}
-END:VCALENDAR
-		`;
-		return icsContent.trim();
+	cancel(): void {
+		// Define the cancel functionality or routing as needed
+		this.router.navigate(['/timeline']);
 	}
 }

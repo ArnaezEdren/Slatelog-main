@@ -2,38 +2,70 @@
 	<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
 		<mat-card>
 			<mat-card-title>Create New Event</mat-card-title>
-			<br />
 			<mat-card-content>
+				<!-- Title Field -->
 				<mat-form-field appearance="fill">
 					<mat-label>Title</mat-label>
 					<input matInput formControlName="title" />
+					<mat-error *ngIf="createForm.get('title')?.hasError('required')">
+						Title is required.
+					</mat-error>
+					<mat-error *ngIf="createForm.get('title')?.hasError('minlength')">
+						Title must be at least 3 characters long.
+					</mat-error>
 				</mat-form-field>
-				<br />
+
+				<!-- Description Field -->
 				<mat-form-field appearance="fill">
 					<mat-label>Description</mat-label>
 					<textarea matInput formControlName="description"></textarea>
+					<mat-error
+						*ngIf="createForm.get('description')?.hasError('maxlength')"
+					>
+						Description cannot exceed 500 characters.
+					</mat-error>
 				</mat-form-field>
 
+				<!-- Address Fields -->
 				<h3 class="adresse-title">Adresse</h3>
 				<div class="location-grid">
 					<mat-form-field appearance="fill">
 						<mat-label>Street</mat-label>
 						<input matInput formControlName="street" />
+						<mat-error *ngIf="createForm.get('street')?.hasError('required')">
+							Street is required.
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="fill">
 						<mat-label>City</mat-label>
 						<input matInput formControlName="city" />
+						<mat-error *ngIf="createForm.get('city')?.hasError('required')">
+							City is required.
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="fill">
 						<mat-label>Postal Code</mat-label>
 						<input matInput formControlName="postalCode" />
+						<mat-error
+							*ngIf="createForm.get('postalCode')?.hasError('required')"
+						>
+							Postal Code is required.
+						</mat-error>
+						<mat-error
+							*ngIf="createForm.get('postalCode')?.hasError('pattern')"
+						>
+							Invalid Postal Code.
+						</mat-error>
 					</mat-form-field>
 
 					<mat-form-field appearance="fill">
 						<mat-label>Country</mat-label>
 						<input matInput formControlName="country" />
+						<mat-error *ngIf="createForm.get('country')?.hasError('required')">
+							Country is required.
+						</mat-error>
 					</mat-form-field>
 				</div>
 
@@ -51,11 +83,27 @@
 								[for]="picker"
 							></mat-datepicker-toggle>
 							<mat-datepicker #picker></mat-datepicker>
+							<mat-error *ngIf="timePoint.get('date')?.hasError('required')">
+								Date is required.
+							</mat-error>
+							<mat-error
+								*ngIf="timePoint.get('date')?.hasError('pastDateTime')"
+							>
+								Date must be in the future.
+							</mat-error>
+							<mat-error
+								*ngIf="createForm.get('timePoints')?.hasError('overlapping')"
+							>
+								Time points must not overlap.
+							</mat-error>
 						</mat-form-field>
 
 						<mat-form-field appearance="fill">
 							<mat-label>Time</mat-label>
 							<input matInput formControlName="time" type="time" />
+							<mat-error *ngIf="timePoint.get('time')?.hasError('required')">
+								Time is required.
+							</mat-error>
 						</mat-form-field>
 
 						<button
@@ -68,6 +116,22 @@
 						</button>
 					</div>
 
+					<mat-error
+						*ngIf="createForm.get('timePoints')?.hasError('noTimePoints')"
+					>
+						At least one time point must be added.
+					</mat-error>
+					<mat-error
+						*ngIf="createForm.get('timePoints')?.hasError('overlapping')"
+					>
+						Time points must not overlap.
+					</mat-error>
+					<mat-error
+						*ngIf="createForm.get('timePoints')?.hasError('pastDateTime')"
+					>
+						All time points must be in the future.
+					</mat-error>
+
 					<button
 						mat-button
 						(click)="addTimePoint()"
@@ -78,8 +142,7 @@
 					</button>
 				</div>
 
-				<br />
-
+				<!-- Voting Deadline Fields -->
 				<mat-form-field>
 					<mat-label>Voting Deadline Date</mat-label>
 					<input
@@ -92,13 +155,29 @@
 						[for]="votingDatePicker"
 					></mat-datepicker-toggle>
 					<mat-datepicker #votingDatePicker></mat-datepicker>
+					<mat-error
+						*ngIf="createForm.get('deadlineDate')?.hasError('required')"
+					>
+						Voting Deadline Date is required.
+					</mat-error>
+					<mat-error
+						*ngIf="createForm.get('deadlineDate')?.hasError('pastDate')"
+					>
+						Voting Deadline Date cannot be in the past.
+					</mat-error>
 				</mat-form-field>
 
 				<mat-form-field>
 					<mat-label>Voting Deadline Time</mat-label>
 					<input matInput type="time" formControlName="deadlineTime" />
+					<mat-error
+						*ngIf="createForm.get('deadlineTime')?.hasError('required')"
+					>
+						Voting Deadline Time is required.
+					</mat-error>
 				</mat-form-field>
 
+				<!-- Invitations -->
 				<div formArrayName="invitations">
 					<div
 						*ngFor="let invitation of invitations.controls; let i = index"
@@ -106,6 +185,16 @@
 					>
 						<mat-form-field appearance="fill" class="invitation-input">
 							<input matInput formControlName="email" placeholder="Email" />
+							<mat-error
+								*ngIf="getInvitationEmailControl(i)?.hasError('required')"
+							>
+								Email is required.
+							</mat-error>
+							<mat-error
+								*ngIf="getInvitationEmailControl(i)?.hasError('email')"
+							>
+								Invalid Email.
+							</mat-error>
 						</mat-form-field>
 						<button
 							mat-icon-button
@@ -115,6 +204,13 @@
 							<mat-icon>remove</mat-icon>
 						</button>
 					</div>
+
+					<mat-error
+						*ngIf="createForm.get('invitations')?.hasError('noEmails')"
+					>
+						At least one email must be added.
+					</mat-error>
+
 					<button mat-button (click)="addInvitation()" type="button">
 						Add Email for Invitation
 					</button>
