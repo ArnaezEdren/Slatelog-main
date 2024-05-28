@@ -1,24 +1,100 @@
-:host {
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap');
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+.main {
+  background: rgb(52,129,193);
+  background: linear-gradient(140deg, rgba(52,129,193,1) 1%, rgba(9,70,121,1) 35%, rgba(24,49,97,1) 87%);
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Quicksand', sans-serif;
+}
+
+
+.panel
+{
+  width: 50vw;
+  height: 100vh;
+  float: left;
   display: flex;
   justify-content: center;
-  margin: 100px;
+  align-items: center;
 }
 
-mat-card {
-  min-width: 500px;
-  padding: 2rem;
-
-  mat-card-title {
-    margin-bottom: 0.5rem;
-  }
-
-  mat-card-content {
-    form {
-      width: 100%;
-
-      mat-form-field {
-        width: 100%;
-      }
-    }
-  }
+.panel .leftContent
+{
+  width: auto;
+  height: auto;
+  text-align: center;
+  font-size: 3.5em;
+  font-weight: 600;
+  color: white;
 }
+
+
+
+mat-card
+{
+  width: 65%;
+  height: auto;
+  color: white;
+  background-color: transparent;
+  padding: 0.5%;
+}
+
+mat-card *
+{
+  color: white;
+}
+
+mat-form-field
+{
+  width: 100%;
+  height: auto;
+  color: white;
+  float: left;
+  color: white;
+}
+
+
+input
+{
+  color: white !important;
+}
+
+:host ::ng-deep .mdc-text-field--filled
+{
+  background-color: transparent !important;
+  border: 0.11vw rgba(255,255,255,0.4) solid;
+  border-radius: 0.8vw;
+}
+
+mat-card-title
+{
+  margin-bottom: 5vh;
+  margin-top: 1.5vh;
+  width: 100%;
+  font-size: 2em;
+  font-weight: 500;
+  text-align: center;
+}
+
+:host ::ng-deep .mdc-button
+{
+  float: right;
+  border-radius: 1.5vw/1.5vw;
+}
+
+:host ::ng-deep .mdc-button:hover
+{
+  transform: scale(1.05, 1.05);
+  transition: 0.10s;
+}
+
+.mat-mdc-card
+{
+  box-shadow: 0px 7px 10px -2px rgba(0,0,0,0.15);
+}
+
