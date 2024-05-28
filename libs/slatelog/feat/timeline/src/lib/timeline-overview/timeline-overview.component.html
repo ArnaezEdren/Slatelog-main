@@ -2,36 +2,28 @@
 	<header>
 		<h1 class="timeline-header">Timeline</h1>
 	</header>
-	<main class="timeline-container">
-		<div id="events-container">
-			<div id="pending-events" class="event-column">
-				<h2>Pending Events</h2>
-				<div *ngFor="let event of pendingEvents" class="event-item">
-					<button
-						[routerLink]="'/event/eventId=' + event.id"
-						class="details-button"
-					>
-						Details
-					</button>
-					<span>{{ event.title }}</span>
-					<span>{{ event.poll.pollCloseDate | date : 'medium' }}</span>
-				</div>
+	<main>
+		<!-- Sidebar is hidden, so this div can be omitted -->
+		<!-- <div id="sidebar">
+    <button>Button 1</button>
+    <button>Button 2</button>
+    <button>Button 3</button>
+  </div> -->
+		<div id="pending-events">
+			<h2>Pending Events</h2>
+			<div *ngFor="let event of inProgressEvents" class="event-item">
+				<button
+					[routerLink]="'/event/eventId=' + event.id"
+					class="details-button"
+				>
+					Details
+				</button>
+				{{ event.title }}
+				{{ event.description }}
 			</div>
-			<div id="confirmed-events" class="event-column">
-				<h2>Confirmed Events</h2>
-				<div *ngFor="let event of confirmedEvents" class="event-item">
-					<button
-						[routerLink]="'/event/eventId=' + event.id"
-						class="details-button"
-					>
-						Details
-					</button>
-					<span>{{ event.title }}</span>
-					<span *ngIf="event.poll.pollOptions.length > 0">{{
-						event.poll.pollOptions[0]
-					}}</span>
-				</div>
-			</div>
+			<!--div class="view-all-link">
+				<span routerLink="/allevents">View all</span>
+			</div-->
 		</div>
 		<div id="create-event">
 			<h2>Create Event</h2>

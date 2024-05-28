@@ -9,11 +9,10 @@ import { ButtonModule } from 'primeng/button';
 	standalone: true,
 	imports: [CommonModule, RouterLink, ButtonModule],
 	templateUrl: './timeline-overview.component.html',
-	styleUrls: ['./timeline-overview.component.css'],
+	styleUrl: './timeline-overview.component.css',
 })
 export class TimelineOverviewComponent implements OnInit {
-	pendingEvents: any[] = [];
-	confirmedEvents: any[] = [];
+	inProgressEvents: any[] = [];
 
 	constructor(private http: HttpClient, private router: Router) {}
 
@@ -23,13 +22,14 @@ export class TimelineOverviewComponent implements OnInit {
 
 	getEventsInProgress() {
 		this.http.get<any[]>('api/timeline').subscribe((events) => {
-			const currentDate = new Date();
-			this.pendingEvents = events.filter(
-				(event) => new Date(event.poll.pollCloseDate) > currentDate
-			);
-			this.confirmedEvents = events.filter(
-				(event) => new Date(event.poll.pollCloseDate) <= currentDate
-			);
+			this.inProgressEvents = events;
+			console.log(events);
 		});
+	}
+
+	goToEventDetails(eventId: string) {
+		this.router.navigateByUrl(`/events/${eventId}`);
+
+		//console.log('Navigating to event details for event ID:', eventId);
 	}
 }

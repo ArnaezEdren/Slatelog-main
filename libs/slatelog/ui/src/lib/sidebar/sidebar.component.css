@@ -1,34 +1,13 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f9;
-}
-
-header {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
-  text-align: center;
-}
-
-main {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  margin-top: 40px; /* Adjust the margin to create space between the header and main content */
-}
-
 .sidebar {
   width: 75px;
-  height: calc(100vh - 60px); /* Subtract the height of the header */
+  min-height: 80vh;
   background-color: #eee;
-  border-radius: 0; /* Remove border radius to make edges square */
+  border-radius: 50px;
   padding-top: 20px;
   padding-bottom: 20px;
-  position: fixed; /* Use fixed positioning to keep it aligned to the viewport */
-  left: 0; /* Aligns the sidebar to the left edge */
-  top: calc(60px + 75.6px); /* Start just below the header + 2 cm */
+  position: absolute;
+  left: 35px;
+  top: 95px;
   z-index: 999;
 }
 
@@ -38,21 +17,20 @@ main {
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  height: 100%; /* Make the list span the full height of the sidebar */
 }
 
 .sidebar-item {
   width: 50px;
   height: 50px;
-  line-height: 50px; /* Ensure text vertically centers if there's any */
+  line-height: 10px;
+  border-radius: 50%;
   background-color: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
-  border-radius: 50%; /* Keep the circular shape for individual items */
 }
 
 .sidebar-item:hover {
@@ -67,91 +45,4 @@ main {
 .sidebar-icon {
   font-size: 18px;
   margin-top: 2px;
-}
-
-#pending-events, #create-event {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: auto;
-}
-
-#pending-events {
-  flex: 1; /* Take up the remaining space */
-  margin-left: 100px; /* Adjust this value to control the left margin */
-  margin-top: 0; /* Remove top margin */
-}
-
-#create-event {
-  position: absolute;
-  top: 130px; /* Adjust this value to move the section down */
-  right: 25px;
-  width: 300px; /* Fixed width for the create event section */
-  display: flex;
-  flex-direction: column;
-}
-
-#create-event input[type="submit"] {
-  background-color: #373ab4;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: auto;
-  transition: background-color 0.3s ease;
-}
-
-#create-event input[type="submit"]:hover {
-  background-color: #2e3192;
-}
-
-.event-input-button {
-  display: block;
-  margin-top: auto;
-}
-
-.view-all-link {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  color: #888;
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.view-all-link:hover {
-  color: #555;
-}
-
-.timeline-header {
-  position: absolute;
-  top: 20px;
-  left: 100px; /* Adjust according to the sidebar width */
-  font-family: "Inter", sans-serif;
-  font-size: 1.75em;
-  color: #333;
-  font-weight: 600;
-}
-
-.details-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.details-button:hover {
-  background-color: #0056b3;
-}
-
-.details-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }

@@ -10,17 +10,11 @@ import { AppComponent } from './app.component';
 import { BasicAuthInterceptor, ErrorInterceptor } from '@frontend/data/auth';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { ConflictDialogComponent } from '../../../../libs/slatelog/feat/createevent/src/lib/createevent/conflict-dialog.component';
-import { DeleteConfirmSnackbarComponent } from '../../../../libs/slatelog/feat/timeline/src/lib/event-details/delete-confirm-snackbar.component';
 
 // A module is a container for components, directives, pipes, and services
 // All of our components, directives, pipes, and services must be declared in a module
 @NgModule({
-	declarations: [
-		AppComponent,
-		ConflictDialogComponent,
-		DeleteConfirmSnackbarComponent,
-	],
+	declarations: [AppComponent],
 	imports: [
 		HttpClientModule,
 		BrowserModule,
@@ -29,7 +23,6 @@ import { DeleteConfirmSnackbarComponent } from '../../../../libs/slatelog/feat/t
 		LoginContainerComponent,
 		RouterModule.forRoot(appRoutes, { useHash: false }), //Was set to true
 	],
-
 	providers: [
 		{
 			provide: HTTP_INTERCEPTORS,
@@ -42,7 +35,6 @@ import { DeleteConfirmSnackbarComponent } from '../../../../libs/slatelog/feat/t
 			multi: true,
 		},
 	],
-
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

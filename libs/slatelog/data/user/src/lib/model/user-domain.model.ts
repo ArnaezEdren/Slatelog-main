@@ -7,40 +7,21 @@
 
 // Model all our frontend data with interfaces
 export interface User {
-	id: string;
-	email: string;
-	password: string;
-	role: string[];
-	profile: {
-		firstName: string;
-		lastName: string;
-	};
-	social: {
-		// add social properties if any
-	};
-	account: {
-		enabled: boolean;
-		emailToken: {
-			verificationEmail: string;
-			encodedValue: string;
-			createdAt: string;
-			expiresAt: string;
-		};
-	};
-	createdAt: string;
-	lastModifiedAt: string;
-	version: number;
-	_class: string;
+  email: string;
+  role: Role;
+  profile: Profile;
+
+  // TODO
 }
 
 export interface Profile {
-	firstName: string;
-	lastName: string;
+  firstName: string;
+  lastName: string;
 }
 
 export enum Role {
-	Admin = 'ADMIN',
-	User = 'USER',
+  Admin = 'ADMIN',
+  User = 'USER',
 }
 
 // export enum Role {

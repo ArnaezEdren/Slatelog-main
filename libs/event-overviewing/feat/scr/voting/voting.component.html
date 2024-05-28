@@ -8,9 +8,12 @@
 		<div>
 			Street: {{ event?.location?.street }}
 			<br />
+			<br />
 			City: {{ event?.location?.city }}
 			<br />
+			<br />
 			Zip Code: {{ event?.location?.zipCode }}
+			<br />
 			<br />
 			Country: {{ event?.location?.state }}
 		</div>
@@ -18,10 +21,6 @@
 		<div class="event-deadline" *ngIf="event?.poll?.pollCloseDate">
 			<p>Deadline: {{ event.poll.pollCloseDate | date : 'medium' }}</p>
 		</div>
-
-		<button *ngIf="!radioSelected" (click)="downloadIcsFile()">
-			Event im Kalender blocken
-		</button>
 
 		<div *ngIf="pollResults.length > 0; else noPollData">
 			<h2>Poll Results:</h2>
@@ -36,7 +35,6 @@
 								[(ngModel)]="result.selectedVote"
 								value="Yes"
 								required
-								(change)="onRadioChange()"
 							/>
 							Yes ({{ result.counts.yes }})
 						</label>
@@ -47,7 +45,6 @@
 								[(ngModel)]="result.selectedVote"
 								value="No"
 								required
-								(change)="onRadioChange()"
 							/>
 							No ({{ result.counts.no }})
 						</label>
@@ -58,7 +55,6 @@
 								[(ngModel)]="result.selectedVote"
 								value="Maybe"
 								required
-								(change)="onRadioChange()"
 							/>
 							Maybe ({{ result.counts.maybe }})
 						</label>

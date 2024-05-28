@@ -9,7 +9,6 @@ export interface Event {
 	invitationEmails: string[];
 	deadlineDate: string;
 	deadlineTime: string;
-	icsFileData: string; // Ensure this field is included
 }
 
 interface Poll {

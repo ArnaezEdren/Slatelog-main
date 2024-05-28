@@ -11,15 +11,7 @@ import {
 	Validators,
 	FormArray,
 	ReactiveFormsModule,
-	FormControl,
 } from '@angular/forms';
-import {
-	atLeastOneEmailValidator,
-	futureDateValidator,
-	noOverlapValidator,
-} from '../../../../createevent/src/lib/createevent/validators';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeleteConfirmSnackbarComponent } from './delete-confirm-snackbar.component'; // Import MatSnackBar
 
 @Component({
 	selector: 'frontend-event-details',
@@ -37,7 +29,6 @@ export class EventDetailsComponent implements OnInit {
 	updateMode: boolean = false;
 	originalEventData: any;
 	createForm2: FormGroup;
-	formInvalid: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
@@ -45,8 +36,7 @@ export class EventDetailsComponent implements OnInit {
 		private http: HttpClient,
 		private eventHttpService: EventHttpService,
 		private router: Router,
-		private datePipe: DatePipe,
-		private snackBar: MatSnackBar // Inject MatSnackBar
+		private datePipe: DatePipe
 	) {
 		this.createForm2 = this.fb.group({
 			title: ['', [Validators.required, Validators.minLength(3)]],
@@ -55,10 +45,10 @@ export class EventDetailsComponent implements OnInit {
 			city: ['', [Validators.required]],
 			zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{4,}$/)]],
 			state: ['', [Validators.required]],
-			deadlineDate: ['', [Validators.required, futureDateValidator()]],
+			deadlineDate: ['', [Validators.required]],
 			deadlineTime: ['', [Validators.required]],
-			timePoints: this.fb.array([], noOverlapValidator),
-			invitations: this.fb.array([], atLeastOneEmailValidator),
+			timePoints: this.fb.array([]),
+			invitations: this.fb.array([]),
 		});
 	}
 
@@ -93,10 +83,6 @@ export class EventDetailsComponent implements OnInit {
 					};
 				});
 			});
-			// Optionally, reset the form with the updated event data
-			if (this.filteredEvents.length > 0) {
-				this.setFormData(this.filteredEvents[0]);
-			}
 		});
 	}
 
@@ -165,19 +151,10 @@ export class EventDetailsComponent implements OnInit {
 		if (pollOptions) {
 			Object.keys(pollOptions).forEach((key) => {
 				const [date, time] = key.split('T');
-				let formattedTime = time.split('Z')[0];
-
-				// Ensure formattedTime is in hh:mm:ss format
-				if (!formattedTime.includes(':')) {
-					formattedTime += ':00'; // Append seconds if missing
-				} else if (formattedTime.split(':').length === 2) {
-					formattedTime += ':00'; // Append seconds if only hours and minutes are provided
-				}
-
 				timePointsArray.push(
 					this.fb.group({
 						date: [date, Validators.required],
-						time: [formattedTime, Validators.required],
+						time: [time.split('Z')[0], Validators.required],
 					})
 				);
 			});
@@ -214,89 +191,24 @@ export class EventDetailsComponent implements OnInit {
 		this.invitationsControls.removeAt(index);
 	}
 
-	addTimePoint(): void {
-		this.timePointsControls.push(
-			this.fb.group({
-				date: ['', Validators.required],
-				time: ['', Validators.required],
-			})
-		);
-	}
-
-	removeTimePoint(index: number): void {
-		this.timePointsControls.removeAt(index);
-	}
-
 	updateEvent(): void {
-		if (this.createForm2.valid) {
-			const actualId = this.eventId.replace('eventId=', '');
-			this.eventData = this.formatEventData(this.createForm2.value);
-			this.eventHttpService
-				.updateEvent(actualId, this.eventData)
-				.pipe(
-					catchError((error) => {
-						console.error('Error updating event:', error);
-						return throwError(error);
-					})
-				)
-				.subscribe(() => {
-					console.log('Event updated successfully');
-					this.updateMode = false;
-					// Reload the events to refresh the data
-					this.getEvents();
-				});
-		} else {
-			this.validateAllFormFields(this.createForm2);
-			this.formInvalid = true;
-			console.log('Form is not valid');
-		}
-	}
-
-	confirmPollOption(eventId: string, dateTime: string): void {
-		// Extract the date and time from the selected dateTime string
-		const [date, timeWithZ] = dateTime.split('T');
-		const time = timeWithZ.split('Z')[0];
-
-		// Remove all other time points except the selected one
-		this.createForm2.setControl(
-			'timePoints',
-			this.fb.array(
-				[
-					this.fb.group({
-						date: [date, Validators.required],
-						time: [time, Validators.required],
-					}),
-				],
-				noOverlapValidator
+		const actualId = this.eventId.replace('eventId=', '');
+		this.eventData = this.formatEventData(this.createForm2.value);
+		this.eventHttpService
+			.updateEvent(actualId, this.eventData)
+			.pipe(
+				catchError((error) => {
+					console.error('Error updating event:', error);
+					throw error;
+				})
 			)
-		);
-
-		// Update the deadline date to the current date and the deadline time to one hour ago
-		const currentDate = new Date();
-		const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
-		this.createForm2.patchValue({
-			deadlineDate: this.datePipe.transform(currentDate, 'yyyy-MM-dd'),
-			deadlineTime: this.datePipe.transform(oneHourAgo, 'HH:mm'),
-		});
-
-		// Format the event data and update the event
-		this.updateEvent();
+			.subscribe(() => {
+				console.log('Event updated successfully');
+				this.updateMode = false;
+			});
 	}
 
 	private formatEventData(formData: any): any {
-		const formattedTimePoints = formData.timePoints.map((tp: any) => {
-			// Ensure tp.time is in hh:mm:ss format
-			let time = tp.time;
-			if (!time.includes(':')) {
-				time += ':00'; // Append seconds if missing
-			} else if (time.split(':').length === 2) {
-				time += ':00'; // Append seconds if only hours and minutes are provided
-			}
-
-			// Return the formatted datetime string
-			return `${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${time}Z`;
-		});
-
 		return {
 			title: formData.title,
 			description: formData.description,
@@ -304,7 +216,10 @@ export class EventDetailsComponent implements OnInit {
 			locationCity: formData.city,
 			locationZipCode: formData.zipCode,
 			locationState: formData.state,
-			pollOptions: formattedTimePoints,
+			pollOptions: formData.timePoints.map(
+				(tp: any) =>
+					`${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${tp.time}Z`
+			),
 			invitationEmails: formData.invitations.map((inv: any) => inv.email),
 			deadlineDate: this.datePipe.transform(
 				formData.deadlineDate,
@@ -316,78 +231,23 @@ export class EventDetailsComponent implements OnInit {
 
 	deleteEvent(): void {
 		const actualId = this.eventId.replace('eventId=', '');
-
-		const snackBarRef = this.snackBar.openFromComponent(
-			DeleteConfirmSnackbarComponent,
-			{
-				data: {
-					message: 'Do you really want to delete this Event?',
-					onConfirm: () => {
-						snackBarRef.dismiss();
-						this.eventHttpService
-							.deleteEvent(actualId)
-							.pipe(
-								catchError((error) => {
-									console.error('Error deleting Event:', error);
-									this.snackBar.open('Error deleting Event', 'Close', {
-										duration: 3000,
-									});
-									return throwError(error);
-								})
-							)
-							.subscribe({
-								next: () => {
-									console.log('Successfully deleted Event');
-									this.snackBar.open('Successfully deleted Event', 'Close', {
-										duration: 3000,
-									});
-									this.router.navigate(['/timeline']);
-								},
-							});
-					},
-					onCancel: () => {
-						snackBarRef.dismiss();
-					},
-				},
+		if (confirm('Do you really want to delete this Event?')) {
+			if (this.isEventId(actualId)) {
+				this.eventHttpService
+					.deleteEvent(actualId)
+					.pipe(
+						catchError((error) => {
+							console.error('Error deleting Event:', error);
+							return throwError(error);
+						})
+					)
+					.subscribe({
+						next: () => {
+							console.log('Successfully deleted Event');
+							this.router.navigate(['/timeline']);
+						},
+					});
 			}
-		);
-	}
-
-	goBack(): void {
-		this.router.navigate(['/timeline']);
-	}
-
-	downloadIcsFile(base64Data: string): void {
-		const binaryString = window.atob(base64Data);
-		const bytes = new Uint8Array(binaryString.length);
-		for (let i = 0; i < binaryString.length; i++) {
-			bytes[i] = binaryString.charCodeAt(i);
 		}
-		const blob = new Blob([bytes.buffer], { type: 'text/calendar' });
-		const link = document.createElement('a');
-		link.href = window.URL.createObjectURL(blob);
-		link.download = 'event.ics';
-		link.click();
-	}
-
-	private validateAllFormFields(formGroup: FormGroup): void {
-		Object.keys(formGroup.controls).forEach((field) => {
-			const control = formGroup.get(field);
-			if (control instanceof FormControl) {
-				control.markAsTouched({ onlySelf: true });
-			} else if (control instanceof FormGroup) {
-				this.validateAllFormFields(control);
-			} else if (control instanceof FormArray) {
-				control.controls.forEach((group) => {
-					this.validateAllFormFields(group as FormGroup);
-				});
-			}
-		});
-	}
-
-	isFutureDate(pollCloseDate: string): boolean {
-		const now = new Date();
-		const pollClose = new Date(pollCloseDate);
-		return pollClose > now;
 	}
 }

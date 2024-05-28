@@ -2,7 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
 import { User } from '../../../../../data/user/src';
-import { Event } from '../model/createEvent-view.model'; // Ensure this is the correct import
 
 @Injectable({
 	providedIn: 'root',
@@ -25,7 +24,7 @@ export class EventHttpService {
 	// }
 
 	createEvent(eventData: any): Observable<any> {
-		//	console.log('Sending data:', eventData);
+		console.log('Sending data:', eventData);
 		return this.http
 			.post(this.eventApiUrl, eventData)
 			.pipe(catchError(this.handleError));
@@ -65,7 +64,24 @@ export class EventHttpService {
 			() => new Error('Something bad happened; please try again later.')
 		);
 	}
-	getAllEvents(): Observable<Event[]> {
-		return this.http.get<Event[]>('/api/timeline');
+}
+
+export class DataService {
+	constructor(private http: HttpClient) {}
+
+	login(): Promise<User> {
+		// `firstValueFrom` turns an `Observable` into a `Promise`
+		// return lastValueFrom(this.http.get<User>('/api/user/login', { headers }));
+		// return lastValueFrom(this.http.get<User>('/api/user/login'));
+		return lastValueFrom(this.http.get<User>('/api/user'));
+	}
+
+	public getData(url: '/api/event'): Observable<any> {
+		return this.http.get(url).pipe(
+			catchError((error) => {
+				console.error('Error fetching data', error);
+				return throwError(() => new Error('Error fetching data'));
+			})
+		);
 	}
 }

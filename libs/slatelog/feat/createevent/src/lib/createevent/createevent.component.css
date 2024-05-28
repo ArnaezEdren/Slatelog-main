@@ -83,10 +83,5 @@
   width: 100%;
 }
 
-.snackbar-multiline .mat-snack-bar-container {
-  white-space: pre-line;
-  max-width: 800px; /* Adjust the width as needed */
-}
-
 
 
