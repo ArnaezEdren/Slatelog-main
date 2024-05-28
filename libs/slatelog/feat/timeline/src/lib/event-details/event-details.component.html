@@ -1,93 +1,253 @@
-<div *ngFor="let event of filteredEvents" class="event-details">
-	<div *ngIf="!updateMode">
-		<h2>{{ event.title }}</h2>
-		<p>Description: {{ event.description }}</p>
-		<p>Poll Close Date: {{ event.pollCloseDate | date : 'medium' }}</p>
-		<p>Votes:</p>
-		<div *ngFor="let result of event.pollResults">
-			<p>Key: {{ result.dateTime }}</p>
+<div class="centered-container">
+	<div
+		*ngFor="let event of filteredEvents"
+		class="event-details form-with-margin"
+	>
+		<div *ngIf="!updateMode">
+			<h2>{{ event.title }}</h2>
+			<p>Description: {{ event.description }}</p>
+			<p>
+				Location: {{ event.location.street }}, {{ event.location.zipCode }},
+				{{ event.location.city }}, {{ event.location.state }}
+			</p>
+			<p>Invitations:</p>
 			<ul>
-				<li>Yes: {{ result.yesCount }}</li>
-				<li>No: {{ result.noCount }}</li>
-				<li>Maybe: {{ result.maybeCount }}</li>
+				<li *ngFor="let invitation of event.invitations">
+					{{ invitation.email }}
+				</li>
 			</ul>
-		</div>
-		<p>
-			Location: {{ event.location.street }}, {{ event.location.zipCode }}
-			{{ event.location.city }}, {{ event.location.state }}
-		</p>
-		<p>Invitations:</p>
-		<ul>
-			<li *ngFor="let invitation of event.invitations">
-				{{ invitation.email }}
-			</li>
-		</ul>
-		<div class="button-container">
-			<button (click)="toggleUpdateMode()" class="edit-button">Change</button>
-			<button (click)="deleteEvent()" class="delete-button">Delete</button>
-		</div>
-	</div>
 
-	<div *ngIf="updateMode" class="update-form">
-		<form [formGroup]="createForm2">
-			<label for="title">Title:</label>
-			<input type="text" id="title" formControlName="title" />
-
-			<label for="description">Description:</label>
-			<textarea id="description" formControlName="description"></textarea>
-
-			<label for="street">Street:</label>
-			<input type="text" id="street" formControlName="street" />
-
-			<label for="city">City:</label>
-			<input type="text" id="city" formControlName="city" />
-
-			<label for="state">State:</label>
-			<input type="text" id="state" formControlName="state" />
-
-			<label for="zipCode">Zip Code:</label>
-			<input type="text" id="zipCode" formControlName="zipCode" />
-
-			<label for="deadlineDate">Poll Close Date:</label>
-			<input type="date" id="deadlineDate" formControlName="deadlineDate" />
-			<input type="time" id="deadlineTime" formControlName="deadlineTime" />
-
-			<div formArrayName="timePoints">
-				<div
-					*ngFor="let timePoint of getTimePointsArray(); let i = index"
-					[formGroupName]="i"
+			<p>Poll Close Date: {{ event.pollCloseDate | date : 'medium' }}</p>
+			<p>Votes:</p>
+			<div *ngFor="let result of event.pollResults">
+				<p>Key: {{ result.dateTime }}</p>
+				<ul>
+					<li>Yes: {{ result.yesCount }}</li>
+					<li>No: {{ result.noCount }}</li>
+					<li>Maybe: {{ result.maybeCount }}</li>
+				</ul>
+				<button
+					*ngIf="isFutureDate(event.pollCloseDate)"
+					(click)="confirmPollOption(event.id, result.dateTime)"
+					class="confirm-button"
 				>
-					<label for="date">Poll Option Date:</label>
-					<input type="date" formControlName="date" />
-					<label for="time">Poll Option Time:</label>
-					<input type="time" formControlName="time" />
-				</div>
+					Termin bestätigen
+				</button>
 			</div>
-
-			<div formArrayName="invitations">
-				<div
-					*ngFor="let invitation of getInvitationsArray(); let i = index"
-					[formGroupName]="i"
-				>
-					<label for="email">Invitation Email:</label>
-					<input type="email" formControlName="email" />
-					<button type="button" (click)="removeInvitation(i)">Remove</button>
-				</div>
-			</div>
-			<button type="button" (click)="addInvitation()">Add Invitation</button>
 
 			<div class="button-container">
-				<button type="button" (click)="updateEvent()" class="save-button">
-					Save
-				</button>
+				<button (click)="toggleUpdateMode()" class="edit-button">Change</button>
+				<button (click)="deleteEvent()" class="delete-button">Delete</button>
+				<button (click)="goBack()" class="back-button">Zurück</button>
 				<button
-					type="button"
-					(click)="toggleUpdateMode()"
-					class="cancel-button"
+					(click)="downloadIcsFile(event.icsFileData)"
+					class="calendar-button"
 				>
-					Cancel
+					In den Kalender eintragen
 				</button>
 			</div>
-		</form>
+		</div>
+
+		<div *ngIf="updateMode" class="update-form">
+			<form [formGroup]="createForm2">
+				<div class="form-group">
+					<label for="title">Title:</label>
+					<input type="text" id="title" formControlName="title" />
+					<div
+						*ngIf="
+							createForm2.get('title')?.invalid &&
+							createForm2.get('title')?.touched
+						"
+						class="error-message"
+					>
+						Title is required and must be at least 3 characters long.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="description">Description:</label>
+					<textarea id="description" formControlName="description"></textarea>
+					<div
+						*ngIf="
+							createForm2.get('description')?.invalid &&
+							createForm2.get('description')?.touched
+						"
+						class="error-message"
+					>
+						Description must not exceed 500 characters.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="street">Street:</label>
+					<input type="text" id="street" formControlName="street" />
+					<div
+						*ngIf="
+							createForm2.get('street')?.invalid &&
+							createForm2.get('street')?.touched
+						"
+						class="error-message"
+					>
+						Street is required.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="city">City:</label>
+					<input type="text" id="city" formControlName="city" />
+					<div
+						*ngIf="
+							createForm2.get('city')?.invalid &&
+							createForm2.get('city')?.touched
+						"
+						class="error-message"
+					>
+						City is required.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="state">State:</label>
+					<input type="text" id="state" formControlName="state" />
+					<div
+						*ngIf="
+							createForm2.get('state')?.invalid &&
+							createForm2.get('state')?.touched
+						"
+						class="error-message"
+					>
+						State is required.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="zipCode">Zip Code:</label>
+					<input type="text" id="zipCode" formControlName="zipCode" />
+					<div
+						*ngIf="
+							createForm2.get('zipCode')?.invalid &&
+							createForm2.get('zipCode')?.touched
+						"
+						class="error-message"
+					>
+						Zip Code is required and must be at least 4 digits.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="deadlineDate">Poll Close Date:</label>
+					<div class="form-group-inline">
+						<input
+							type="date"
+							id="deadlineDate"
+							formControlName="deadlineDate"
+						/>
+						<input
+							type="time"
+							id="deadlineTime"
+							formControlName="deadlineTime"
+						/>
+					</div>
+					<div
+						*ngIf="
+							createForm2.get('deadlineDate')?.invalid &&
+							createForm2.get('deadlineDate')?.touched
+						"
+						class="error-message"
+					>
+						Poll Close Date is required and must be in the future.
+					</div>
+				</div>
+
+				<div formArrayName="timePoints">
+					<div
+						*ngFor="let timePoint of getTimePointsArray(); let i = index"
+						[formGroupName]="i"
+					>
+						<label>Poll Option Date:</label>
+						<div class="form-group-inline">
+							<input type="date" formControlName="date" />
+							<input type="time" formControlName="time" />
+						</div>
+						<div
+							*ngIf="
+								timePoint.get('date')?.invalid && timePoint.get('date')?.touched
+							"
+							class="error-message"
+						>
+							Poll Option Date is required.
+						</div>
+						<div
+							*ngIf="
+								timePoint.get('time')?.invalid && timePoint.get('time')?.touched
+							"
+							class="error-message"
+						>
+							Poll Option Time is required.
+						</div>
+						<button type="button" (click)="removeTimePoint(i)">Remove</button>
+					</div>
+					<button type="button" (click)="addTimePoint()">Add Time Point</button>
+					<div
+						*ngIf="
+							createForm2.get('timePoints')?.errors?.['noOverlap'] &&
+							createForm2.get('timePoints')?.touched
+						"
+						class="error-message"
+					>
+						Time points must not overlap.
+					</div>
+				</div>
+
+				<div formArrayName="invitations">
+					<div
+						*ngFor="let invitation of getInvitationsArray(); let i = index"
+						[formGroupName]="i"
+					>
+						<label>Invitation Email:</label>
+						<input type="email" formControlName="email" />
+						<div
+							*ngIf="
+								invitation.get('email')?.invalid &&
+								invitation.get('email')?.touched
+							"
+							class="error-message"
+						>
+							Email is required and must be valid.
+						</div>
+						<button type="button" (click)="removeInvitation(i)">Remove</button>
+					</div>
+					<button type="button" (click)="addInvitation()">
+						Add Invitation
+					</button>
+					<div
+						*ngIf="
+							createForm2.get('invitations')?.errors?.['atLeastOneEmail'] &&
+							createForm2.get('invitations')?.touched
+						"
+						class="error-message"
+					>
+						At least one email is required.
+					</div>
+				</div>
+
+				<div *ngIf="formInvalid" class="alert">
+					Form is not valid. Please correct the errors and try again.
+				</div>
+
+				<div class="button-container">
+					<button type="button" (click)="updateEvent()" class="btn-primary">
+						Save
+					</button>
+					<button
+						type="button"
+						(click)="toggleUpdateMode()"
+						class="btn-primary"
+					>
+						Cancel
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>

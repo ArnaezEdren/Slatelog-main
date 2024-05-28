@@ -1,7 +1,4 @@
-// This is a model for the view e.g. `login.component.ts`.
-// It is not the model for our data e.g. `data/user/model`.
-
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 export interface TimePoint {
 	dateTime: DateTime[];
@@ -41,24 +38,37 @@ export interface CreateFormData {
 	country: string;
 	deadlineDate: string;
 	deadlineTime: string;
-	timePoints: TimePoint;
-	invitations: Invitation[];
-}
-
-export interface Event {
-	title: string;
-	description: string;
-	street: string;
-	city: string;
-	postalCode: string;
-	country: string;
-	deadlineDate: string;
-	deadlineTime: string;
 	timePoints: TimePoint[];
 	invitations: Invitation[];
 }
 
-// type FormKeyType = 'email' | 'password' | 'passwordConfirm';
+export interface Event {
+	id: string;
+	title: string;
+	description: string;
+	locationStreet: string;
+	locationCity: string;
+	locationZipCode: string;
+	locationState: string;
+	poll: Poll; // Verwendung des neuen Interface
+	invitationEmails: string[];
+	deadlineDate: string;
+	deadlineTime: string;
+	icsFileData: string; // Ensure this field is included
+	createdAt: string;
+}
+
+interface Poll {
+	pollOptions: { [key: string]: PollOption[] }; // Map of timestamp to array of PollOption
+	pollCloseDate: string;
+	pollOpen: boolean;
+}
+
+export interface PollOption {
+	voterEmail: string;
+	votedAt: string;
+	voteOption: string;
+}
 
 // Type for the form errors
 export type CreateFormErrorType = Record<
@@ -67,5 +77,4 @@ export type CreateFormErrorType = Record<
 >;
 
 // Type for the form controls
-// type RegisterFormType = Record<FormKeyType, FormControl<string>>;
 export type CreateFormType = Record<keyof CreateFormData, FormControl<string>>;

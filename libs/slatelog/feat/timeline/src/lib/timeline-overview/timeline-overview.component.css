@@ -13,17 +13,22 @@ header {
 }
 
 main {
-  display: flex;
-  justify-content: space-between;
   padding: 20px;
   margin-top: 60px; /* Adjust the margin to create space between the header and main content */
+  display: flex;
+  justify-content: center;
 }
 
-#sidebar {
-  display: none; /* Hide the sidebar */
+#events-container {
+  display: flex;
+  justify-content: space-between;
+  width: 70%; /* Adjust width to control the space occupied by events container */
+  gap: 20px; /* Add gap between columns */
+  margin-top: 37.8px; /* Move events container 1 cm down */
 }
 
-#pending-events, #create-event {
+.event-column {
+  flex: 1;
   background-color: #fff;
   padding: 20px;
   border-radius: 25px;
@@ -31,15 +36,39 @@ main {
   overflow: auto;
 }
 
-#pending-events {
-  flex: 1; /* Take up the remaining space */
-  margin-left: 160px; /* Adjust this value to control the left margin */
-  margin-top: 200px; /* 5 cm is approximately 200 px */
+.event-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.details-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.details-button:hover {
+  background-color: #0056b3;
+}
+
+.details-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.event-column span {
+  margin-right: 10px;
 }
 
 #create-event {
-  position: absolute;
-  top: 130px; /* Adjust this value to move the section down */
+  position: fixed;
+  top: 92.2px; /* 130px - 37.8px to move the section up by 1 cm */
   right: 25px;
   width: 300px; /* Fixed width for the create event section */
   display: flex;
@@ -89,23 +118,4 @@ main {
   font-size: 1.75em;
   color: #333;
   font-weight: 600;
-}
-
-.details-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.details-button:hover {
-  background-color: #0056b3;
-}
-
-.details-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }

@@ -1,76 +1,110 @@
-.event-details {
+.centered-container {
   display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  margin-top: -1cm; /* Adjusted to move the form down by 2 cm from the previous position */
 }
 
-.event-header {
+.form-with-margin {
+  width: 100%;
+  max-width: 500px; /* Adjusted max-width to better fit the form */
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+h2, h3, h4 {
   text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-.event-header h1 {
-  margin-bottom: 10px;
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.event-date {
-  font-size: 14px;
-  color: #888;
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-.event-info {
-  margin-top: 20px;
+.form-group-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px; /* Added margin-bottom for better spacing */
 }
 
-.event-info h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #666;
 }
 
-.event-info p {
-  font-size: 16px;
-  line-height: 1.5;
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-group .error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 
 .button-container {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-
-.edit-button,
-.delete-button,
-.save-button,
-.cancel-button {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-edit-button:hover,
-.delete-button:hover,
-.save-button:hover,
-.cancel-button:hover {
-  background-color: #0056b3;
-}
-
-.update-form label,
-.update-form input,
-.update-form textarea {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.update-form .button-container {
+  justify-content: space-between;
   margin-top: 20px;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+button[type="button"] {
+  background: #3551dc;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button[type="button"]:hover {
+  background: #233ec8;
+}
+
+.alert {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }
