@@ -1,101 +1,50 @@
-<div class="main">
-	<!-- Links -->
-	<div class="panel">
-		<div class="leftContent">Welcome back</div>
-	</div>
+<div>
+  <a routerLink="../register"> Go to Register </a>
 
-	<!-- Rechts -->
-	<div class="panel">
-		<!--
-    <div class="rightContent">
-      <div class="buttonArea">
-      </div>
-      <div class="buttonArea">
-      </div>
-    </div>
-    -->
-		<mat-card>
-			<mat-card-title>Login</mat-card-title>
-			<mat-card-content>
-				<form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-					<!--  EMAIL    -->
-					<div>
-						<mat-form-field>
-							<mat-label>Enter your email</mat-label>
-							<input
-								matInput
-								placeholder="pat@example.com"
-								formControlName="email"
-								required
-							/>
-							<mat-error *ngIf="hasControlError('email')">
-								{{ getControlErrorMessage('email') }}
-							</mat-error>
-						</mat-form-field>
-					</div>
+  <mat-card>
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+        <!--  EMAIL    -->
+        <div>
+          <mat-form-field>
+            <mat-label>Enter your email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="email" required />
+            <mat-error *ngIf="hasControlError('email')">
+              {{ getControlErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-					<!--  PASSWORD  -->
-					<div>
-						<mat-form-field>
-							<mat-label>Enter your password</mat-label>
-							<input
-								matInput
-								[type]="hide ? 'password' : 'text'"
-								formControlName="password"
-							/>
-							<button
-								mat-icon-button
-								matSuffix
-								type="button"
-								(click)="hide = !hide"
-								[attr.aria-label]="'Hide password'"
-								[attr.aria-pressed]="hide"
-							>
-								<mat-icon>{{
-									hide ? 'visibility_off' : 'visibility'
-								}}</mat-icon>
-							</button>
-							<mat-error *ngIf="hasControlError('password')">
-								{{ getControlErrorMessage('password') }}
-							</mat-error>
-						</mat-form-field>
-					</div>
+        <!--  PASSWORD  -->
+        <div>
+          <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" />
+            <button
 
-					<!--  LOGIN BUTTON -->
-					<div>
-						<button
-							[disabled]="loginForm.invalid"
-							type="submit"
-							mat-raised-button
-							color="primary"
-							style="
-								background-color: #e3e8ec;
-								color: #404040;
-								font-weight: 600;
-							"
-						>
-							Login
-						</button>
-					</div>
-					<div>
-						<a
-							routerLink="../register"
-							type="submit"
-							mat-raised-button
-							color="warn"
-							style="right: 5%; background-color: #e81d1d; color: white"
-						>
-							Sign Up
-						</a>
-					</div>
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+            >
+              <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="hasControlError('password')">
+              {{ getControlErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-					<div style="height: 100%; float: left; margin-top: 1.4%">
-						<a href="https://www.google.com/" target="_blank"
-							>Forgot Password</a
-						>
-					</div>
-				</form>
-			</mat-card-content>
-		</mat-card>
-	</div>
+        <!--  LOGIN BUTTON -->
+        <div>
+          <button [disabled]="loginForm.invalid" type="submit" mat-raised-button color="primary">
+            Login
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>
