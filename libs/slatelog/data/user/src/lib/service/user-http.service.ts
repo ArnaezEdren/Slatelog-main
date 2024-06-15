@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { lastValueFrom, catchError, throwError } from 'rxjs';
 import { User } from '../model/user-domain.model';
 import { UserRegistrationCommand } from '../action/user.actions';
+import { Router } from '@angular/router';
 
 // A Http Service is responsible for sending data to the server.
 
@@ -44,7 +45,7 @@ import { UserRegistrationCommand } from '../action/user.actions';
 export class UserHttpService {
 	// injection preferred over constructor injection
 	private http = inject(HttpClient);
-
+	private router = inject(Router);
 	// constructor(private http: HttpClient) {
 	// }
 

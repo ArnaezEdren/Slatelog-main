@@ -39,7 +39,7 @@
 				<button mat-menu-item [routerLink]="['/profile/settings']">
 					My Settings
 				</button>
-				<button mat-menu-item>
+				<button mat-menu-item (click)="logout()">
 					<mat-icon class="material-icons-outlined">logout</mat-icon>
 					<span>Logout</span>
 				</button>

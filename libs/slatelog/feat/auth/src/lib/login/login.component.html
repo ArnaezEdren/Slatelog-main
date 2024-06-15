@@ -51,9 +51,9 @@
 								[attr.aria-label]="'Hide password'"
 								[attr.aria-pressed]="hide"
 							>
-								<mat-icon>{{
-									hide ? 'visibility_off' : 'visibility'
-								}}</mat-icon>
+								<mat-icon
+									>{{ hide ? 'visibility_off' : 'visibility' }}
+								</mat-icon>
 							</button>
 							<mat-error *ngIf="hasControlError('password')">
 								{{ getControlErrorMessage('password') }}
@@ -88,11 +88,8 @@
 							Sign Up
 						</a>
 					</div>
-
 					<div style="height: 100%; float: left; margin-top: 1.4%">
-						<a href="https://www.google.com/" target="_blank"
-							>Forgot Password</a
-						>
+						<a routerLink="/forgot-password">Forgot Password?</a>
 					</div>
 				</form>
 			</mat-card-content>

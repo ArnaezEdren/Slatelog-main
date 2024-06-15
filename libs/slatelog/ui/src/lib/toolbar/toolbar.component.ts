@@ -4,8 +4,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatToolbar } from '@angular/material/toolbar';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
+import { BasicAuthService } from '../../../../data/auth/src';
 
 @Component({
 	selector: 'frontend-toolbar',
@@ -25,4 +26,13 @@ import { AvatarModule } from 'primeng/avatar';
 	templateUrl: './toolbar.component.html',
 	styleUrl: './toolbar.component.css',
 })
-export class ToolbarComponent {}
+export class ToolbarComponent {
+	constructor(
+		private basicAuthService: BasicAuthService,
+		private router: Router
+	) {}
+
+	logout() {
+		this.basicAuthService.logout();
+	}
+}
