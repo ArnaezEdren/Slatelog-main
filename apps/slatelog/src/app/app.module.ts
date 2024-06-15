@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { ConflictDialogComponent } from '../../../../libs/slatelog/feat/createevent/src/lib/createevent/conflict-dialog.component';
 import { DeleteConfirmSnackbarComponent } from '../../../../libs/slatelog/feat/timeline/src/lib/event-details/delete-confirm-snackbar.component';
+import { MatButton } from '@angular/material/button';
 
 // A module is a container for components, directives, pipes, and services
 // All of our components, directives, pipes, and services must be declared in a module
@@ -27,7 +28,9 @@ import { DeleteConfirmSnackbarComponent } from '../../../../libs/slatelog/feat/t
 		BrowserAnimationsModule,
 		RegisterContainerComponent,
 		LoginContainerComponent,
-		RouterModule.forRoot(appRoutes, { useHash: false }), //Was set to true
+		RouterModule.forRoot(appRoutes, { useHash: false }),
+		MatButton,
+		//Was set to true
 	],
 
 	providers: [
