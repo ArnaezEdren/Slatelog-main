@@ -54,7 +54,8 @@
 					"buildTarget": "event-voting:build:production"
 				},
 				"development": {
-					"buildTarget": "event-voting:build:development"
+					"buildTarget": "event-voting:build:development",
+					"port": 4200
 				}
 			},
 			"defaultConfiguration": "development"
