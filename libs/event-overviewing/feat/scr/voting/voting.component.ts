@@ -55,12 +55,25 @@ export class VotingComponent implements OnInit {
 			next: (event) => {
 				this.event = event;
 				if (event.poll && event.poll.pollOptions) {
-					this.processPollOptions(event.poll.pollOptions);
-					this.loadVotesDetail(eventId, emailToken); // Load votes details
+					const pollOptions = event.poll.pollOptions;
+					const latestDate = this.getLatestDate(Object.keys(pollOptions));
+					if (new Date(latestDate) < new Date()) {
+						this.missingParams = true; // Event is over, set missingParams to true to trigger the loading template
+					} else {
+						this.processPollOptions(pollOptions);
+						this.loadVotesDetail(eventId, emailToken); // Load votes details
+					}
 				}
 			},
 			error: (err) => console.error('Failed to load event:', err),
 		});
+	}
+
+	private getLatestDate(dates: string[]): string {
+		return dates.reduce(
+			(latest, date) => (date > latest ? date : latest),
+			dates[0]
+		);
 	}
 
 	private loadVotesDetail(eventId: string, emailToken: string): void {

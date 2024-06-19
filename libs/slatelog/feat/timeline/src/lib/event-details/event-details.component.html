@@ -45,6 +45,21 @@
 				>
 					In den Kalender eintragen
 				</button>
+				<button (click)="showParticipants()" class="participants-button">
+					Liste der Teilnehmer
+				</button>
+			</div>
+
+			<div *ngIf="showParticipantsList" class="participants-list">
+				<h3>Liste der Teilnehmer</h3>
+				<div *ngFor="let date of sortedParticipantsByDate">
+					<h4>{{ date.dateTime | date : 'medium' }}</h4>
+					<ul>
+						<li *ngFor="let participant of date.participants">
+							{{ participant }}
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 

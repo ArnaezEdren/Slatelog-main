@@ -19,7 +19,7 @@ import {
 	noOverlapValidator,
 } from '../../../../createevent/src/lib/createevent/validators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeleteConfirmSnackbarComponent } from './delete-confirm-snackbar.component'; // Import MatSnackBar
+import { DeleteConfirmSnackbarComponent } from './delete-confirm-snackbar.component';
 
 @Component({
 	selector: 'frontend-event-details',
@@ -38,6 +38,8 @@ export class EventDetailsComponent implements OnInit {
 	originalEventData: any;
 	createForm2: FormGroup;
 	formInvalid: boolean = false;
+	showParticipantsList: boolean = false;
+	sortedParticipantsByDate: any[] = [];
 
 	constructor(
 		private fb: FormBuilder,
@@ -46,7 +48,7 @@ export class EventDetailsComponent implements OnInit {
 		private eventHttpService: EventHttpService,
 		private router: Router,
 		private datePipe: DatePipe,
-		private snackBar: MatSnackBar // Inject MatSnackBar
+		private snackBar: MatSnackBar
 	) {
 		this.createForm2 = this.fb.group({
 			title: ['', [Validators.required, Validators.minLength(3)]],
@@ -93,7 +95,7 @@ export class EventDetailsComponent implements OnInit {
 					};
 				});
 			});
-			// Optionally, reset the form with the updated event data
+
 			if (this.filteredEvents.length > 0) {
 				this.setFormData(this.filteredEvents[0]);
 			}
@@ -161,17 +163,16 @@ export class EventDetailsComponent implements OnInit {
 
 	setTimePoints(pollOptions: any): void {
 		const timePointsArray = this.timePointsControls;
-		timePointsArray.clear(); // Clear existing controls
+		timePointsArray.clear();
 		if (pollOptions) {
 			Object.keys(pollOptions).forEach((key) => {
 				const [date, time] = key.split('T');
 				let formattedTime = time.split('Z')[0];
 
-				// Ensure formattedTime is in hh:mm:ss format
 				if (!formattedTime.includes(':')) {
-					formattedTime += ':00'; // Append seconds if missing
+					formattedTime += ':00';
 				} else if (formattedTime.split(':').length === 2) {
-					formattedTime += ':00'; // Append seconds if only hours and minutes are provided
+					formattedTime += ':00';
 				}
 
 				timePointsArray.push(
@@ -188,7 +189,7 @@ export class EventDetailsComponent implements OnInit {
 
 	setInvitations(invitations: any): void {
 		const invitationsArray = this.invitationsControls;
-		invitationsArray.clear(); // Clear existing controls
+		invitationsArray.clear();
 		if (invitations && Array.isArray(invitations)) {
 			invitations.forEach((invitation: any) => {
 				invitationsArray.push(
@@ -242,7 +243,6 @@ export class EventDetailsComponent implements OnInit {
 				.subscribe(() => {
 					console.log('Event updated successfully');
 					this.updateMode = false;
-					// Reload the events to refresh the data
 					this.getEvents();
 				});
 		} else {
@@ -253,11 +253,9 @@ export class EventDetailsComponent implements OnInit {
 	}
 
 	confirmPollOption(eventId: string, dateTime: string): void {
-		// Extract the date and time from the selected dateTime string
 		const [date, timeWithZ] = dateTime.split('T');
 		const time = timeWithZ.split('Z')[0];
 
-		// Remove all other time points except the selected one
 		this.createForm2.setControl(
 			'timePoints',
 			this.fb.array(
@@ -271,7 +269,6 @@ export class EventDetailsComponent implements OnInit {
 			)
 		);
 
-		// Update the deadline date to the current date and the deadline time to one hour ago
 		const currentDate = new Date();
 		const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
 		this.createForm2.patchValue({
@@ -279,21 +276,18 @@ export class EventDetailsComponent implements OnInit {
 			deadlineTime: this.datePipe.transform(oneHourAgo, 'HH:mm'),
 		});
 
-		// Format the event data and update the event
 		this.updateEvent();
 	}
 
 	private formatEventData(formData: any): any {
 		const formattedTimePoints = formData.timePoints.map((tp: any) => {
-			// Ensure tp.time is in hh:mm:ss format
 			let time = tp.time;
 			if (!time.includes(':')) {
-				time += ':00'; // Append seconds if missing
+				time += ':00';
 			} else if (time.split(':').length === 2) {
-				time += ':00'; // Append seconds if only hours and minutes are provided
+				time += ':00';
 			}
 
-			// Return the formatted datetime string
 			return `${this.datePipe.transform(tp.date, 'yyyy-MM-dd')}T${time}Z`;
 		});
 
@@ -389,5 +383,29 @@ export class EventDetailsComponent implements OnInit {
 		const now = new Date();
 		const pollClose = new Date(pollCloseDate);
 		return pollClose > now;
+	}
+	showParticipants(): void {
+		this.sortedParticipantsByDate = this.filteredEvents.flatMap((event) => {
+			return Object.keys(event.poll.pollOptions)
+				.map((dateTime: string) => {
+					const participants = event.poll.pollOptions[dateTime]
+						.filter(
+							(vote: any) =>
+								vote.voteOption === 'Yes' || vote.voteOption === 'Maybe'
+						)
+						.map((vote: any) => vote.voterEmail);
+					return {
+						dateTime: dateTime,
+						participants: participants,
+					};
+				})
+				.filter((result: any) => result.participants.length > 0)
+				.sort(
+					(a: any, b: any) =>
+						new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+				);
+		});
+
+		this.showParticipantsList = true;
 	}
 }

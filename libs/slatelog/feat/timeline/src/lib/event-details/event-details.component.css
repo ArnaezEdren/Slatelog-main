@@ -108,3 +108,26 @@ button[type="button"]:hover {
   font-weight: bold;
   margin-top: 10px;
 }
+
+.participants-list {
+  margin-top: 20px;
+}
+
+.participants-list h3 {
+  margin-bottom: 10px;
+}
+
+.participants-list h4 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.participants-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.participants-list li {
+  margin-left: 20px;
+}
+
