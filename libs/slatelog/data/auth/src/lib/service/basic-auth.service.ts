@@ -16,7 +16,7 @@
 // -> Remove Basic Auth Header
 
 import { inject, Injectable } from '@angular/core';
-import { HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 
 import { appendAuthHeader, generateAuthToken } from '../utils/auth.util';
 import { AuthToken } from '../model/auth.model';
@@ -34,6 +34,7 @@ export class BasicAuthService {
 	#authToken: AuthToken | null = null;
 
 	private userHttpService = inject(UserHttpService);
+	private http = inject(HttpClient);
 
 	get isAuthenticated() {
 		return this.#authToken != null;
@@ -72,5 +73,13 @@ export class BasicAuthService {
 		return req.clone({
 			headers: appendAuthHeader(req.headers, this.#authToken),
 		});
+	}
+
+	emailExists(email: string): Promise<boolean> {
+		return this.http
+			.get<void>(`/api/registration/check-email?email=${email}`)
+			.toPromise()
+			.then(() => false)
+			.catch(() => true);
 	}
 }
